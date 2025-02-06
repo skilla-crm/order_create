@@ -1,0 +1,58 @@
+import s from './Header.module.scss';
+import { useRef, useState, useEffect } from 'react';
+import { ReactComponent as IconPoints } from '../../../images/icons/iconPoints16-16-blue.svg';
+import { ReactComponent as BagePro } from '../../../images/icons/badgePro.svg';
+import { ReactComponent as IconInfo } from '../../../images/icons/header/iconInfo.svg';
+//components
+import Prompt from '../Prompt/Prompt';
+
+const Header = ({ title, buttonState, buttonText, handleButton, forPro, PromptText }) => {
+    const [openPopup, setOpenPopup] = useState(false);
+    const [openPrompt, setOpenPrompt] = useState(false);
+    const modalRef = useRef();
+
+    const handleOpenPopup = () => {
+        openPopup ? setOpenPopup(false) : setOpenPopup(true)
+    }
+
+    const handleOpenPrompt = () => {
+        setOpenPrompt(true)
+    }
+
+    const closeModal = (e) => {
+        e.stopPropagation()
+        if (modalRef.current && !modalRef.current.contains(e.target)) {
+            setOpenPopup(false);
+            return
+        }
+    }
+
+    const handlePro = () => {
+        document?.getElementById('pro-open')?.click();     
+      }
+    
+
+    useEffect(() => {
+        document.addEventListener('mousedown', closeModal);
+        return () => document.removeEventListener('mousedown', closeModal);
+    }, []);
+
+    return (
+        <div className={s.container}>
+            <Prompt openPrompt={openPrompt} setOpenPrompt={setOpenPrompt} PromptText={PromptText}/>
+            <div className={s.title}>
+                <h3>{title}</h3>
+                <div onClick={handleOpenPrompt} className={s.info}>
+                    <IconInfo />
+                </div>
+            </div>
+
+            <div ref={modalRef} onClick={handleOpenPopup} className={`${s.button} ${s.button_point} ${!buttonState && s.button_hidden}`}><IconPoints />
+                {!forPro && <button style={{paddingRight: '44px'}} onClick={handleButton} className={`${s.button} ${s.button_popup} ${!openPopup && s.button_hidden}`}>{buttonText}</button>}
+                {forPro && <button onClick={handlePro} className={`${s.button} ${s.button_popup} ${!openPopup && s.button_hidden}`}>{buttonText}<BagePro /></button>}
+            </div>
+        </div>
+    )
+};
+
+export default Header;

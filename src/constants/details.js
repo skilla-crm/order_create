@@ -1,0 +1,9 @@
+export const TITLE = 'Детали ';
+export const BUTTON_TEXT = 'Добавить адрес';
+export const SUB_TYPE = 'Тип услуги';
+export const SUB_COMMENT  = 'Комментарий менеджеру';
+export const SUB_DESCRIPTION  = 'Описание исполнителям в Скилла Работа';
+export const SUB_MINDURATION  = 'Минимальный заказ, ч';
+export const SUB_DURATION  = 'Предполагаемая длительность, ч';
+export const SUB_REQUIREMENTS  = 'Требования';
+export const SUB_ADDRESS  = 'Адрес';

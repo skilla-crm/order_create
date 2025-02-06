@@ -1,0 +1,47 @@
+@import '../../vendor/mixins.scss';
+
+.customer {
+   @include block;
+}
+
+.container {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.block {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.company {
+    width: calc(500px + 2px);
+    box-sizing: border-box;
+    max-height: 0;
+    visibility: hidden;
+    opacity: 0;
+    margin-bottom: 0;
+    padding: 1px;
+    transition: all 0.2s;
+    overflow: hidden;
+
+    &_vis {
+        visibility: visible;
+        overflow: visible;
+        opacity: 1;
+        max-height: 70px;
+        margin-bottom: 12px;
+    }
+}
+
+.contact {
+    width: 500px;
+    display: flex;
+    gap: 12px;
+}
+.switch {
+    height: 100%;
+   padding-top: 21px;
+}

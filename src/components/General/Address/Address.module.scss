@@ -1,0 +1,123 @@
+.container {
+  
+    display: flex;
+    flex-direction: column;
+}
+
+.sub {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--color-text-secondary);
+    user-select: none;
+    margin-bottom: 6px;
+}
+
+.field {
+    position: relative;
+    height: 40px;
+    width: 690px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    outline: 1px solid var(--color-input-outline);
+    transition: all 0.15s;
+
+    &_focus {
+        outline-color: var(--color-button-accent);
+    }
+
+    input {
+        width: 100%;
+        font-size: 16px;
+        line-height: 16px;
+    }
+}
+
+.button {
+    flex-shrink: 0;
+    text-wrap: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: opacity 0.1s;
+    
+    svg {
+        padding-left: 8px;
+    }
+
+    p {
+        font-size: 16px;
+        line-height: 16px;
+        font-weight: 400;
+        color: var(--color-button-accent);
+    }
+
+    &_hidden {
+        width: 0;
+        opacity: 0;
+    }
+}
+
+.list {
+    list-style-type: none;
+    width: 100%;
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    top: 34px;
+    padding: 0;
+    max-height: 320px;
+    overflow: auto;
+    border-radius: 4px;
+    background: var(--color-bg-card);
+    box-shadow: 0px 0px 10px 0px rgba(0, 32, 51, 0.10);
+    transition: all 0.2s;
+
+    &_scroll {
+        overflow: auto;
+    }
+
+
+    li {
+        padding: 8px 12px;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+        gap: 6px;
+        transition: all 0.15s;
+
+        &:hover {
+            background-color: #D4DFF32B;
+        }
+
+        p {
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 16px;
+        }
+
+        span {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+            line-height: 14px;
+        }
+
+        &:first-child {
+            margin-top: 6px;
+        }
+
+        &:last-child {
+            margin-bottom: 6px;
+        }
+    }
+}
+
+.block {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}

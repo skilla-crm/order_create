@@ -1,0 +1,53 @@
+@import '../../vendor/mixins.scss';
+
+.performers {
+   @include block;
+   padding-bottom: 0;
+   position: relative;
+}
+
+.container {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+
+   &_time {
+      height: 100%;
+   }
+
+   &_sub {
+      display: flex;
+      flex-direction: column;
+ /*      overflow: hidden; */
+      max-height: 372px;
+      height: fit-content;
+      transition: all 0.2s;
+      gap: 6px;
+      box-sizing: border-box;
+
+   }
+
+   &_dates {
+      display: flex;
+      flex-direction: column;
+      max-height: 672px;
+   /*    overflow: auto; */
+      padding: 1px;
+      margin-bottom: 20px;
+
+   }
+}
+
+.sub {
+   font-size: 16px;
+   font-weight: 400;
+   line-height: 16px;
+   color: var(--color-text-secondary);
+   user-select: none;
+}
+
+.hidden {
+   overflow: hidden;
+   max-height: 0;
+   opacity: 0;
+}

@@ -1,0 +1,134 @@
+.rmdp-calendar {
+    padding: 16px 12px 12px !important;
+}
+
+.rmdp-header {
+    padding: 0 0 12px !important;
+    font-size: 18px !important;
+    line-height: 23px;
+    font-weight: 600;
+    user-select: none;
+    margin-top: 0 !important;
+
+    div {
+        width: 100% !important;
+    }
+}
+
+.rmdp-day-picker {
+    padding: 0 !important;
+    gap: 26px !important;
+}
+
+.rmdp-day {
+    width: 32px !important;
+    height: 32px !important;
+    box-shadow: none !important;
+    /*     transition: all 0.2s !important; */
+
+    span {
+        font-size: 16px !important;
+        font-weight: 400 !important;
+        height: 32px;
+        width: 32px;
+        left: 0 !important;
+        top: 0 !important;
+    }
+}
+
+.rmdp-week-day {
+    width: 32px !important;
+    height: 32px !important;
+    color: #8E9AA8 !important;
+    font-size: 12px !important;
+    line-height: 16px !important;
+}
+
+.rmdp-today {
+
+    span {
+        background: none !important;
+        color: var(--color-button-accent) !important;
+    }
+}
+
+
+.rmdp-shadow {
+    box-shadow: none !important;
+}
+
+
+.rmdp-day:not(.rmdp-disabled, .rmdp-day-hidden, .start, .end) span:hover {
+    transition: all 0.2s !important;
+    background-color: #adbfdf38 !important;
+    color: inherit !important;
+}
+
+.rmdp-range {
+    border-radius: none !important;
+    background-color: #ECF2FC !important;
+    color: #0024CB !important;
+    transition: all 0.2s;
+}
+
+.start,
+.end,
+.rmdp-selected 
+ {
+
+
+    span {
+        color: #FFFFFF !important;
+        background-color: var(--color-button-accent) !important;
+        border-radius: 50%;
+        height: 32px;
+        width: 32px;
+        left: 0 !important;
+        top: 0 !important;
+    }
+}
+
+.start {
+    border-radius: 50% 0 0 50% !important;
+}
+
+.end {
+    border-radius: 0 50% 50% 0 !important;
+}
+
+.rmdp-arrow {
+    border-color: #ADBFDF !important;
+    flex-shrink: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    margin-top: 0 !important;
+}
+
+.rmdp-arrow-container {
+    height: 32px !important;
+    min-width: 32px !important;
+    display: flex;
+    align-items: center;
+    margin: 0 !important;
+    transition: all 0.15s;
+    border: none !important;
+
+    &:hover {
+        background-color: rgba(173, 191, 223, 0.2196078431) !important;
+        box-shadow: none !important;
+    }
+}
+
+.rmdp-header-values {
+    color: var(--color-text-primary) !important;
+}
+
+.rmdp-selected {
+   
+    background-color:  var(--color-button-accent) !important;
+    color: #FFFFFF !important;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+
