@@ -1,8 +1,7 @@
 import { useEffect, useRef } from 'react';
 import s from './MapAddress.module.scss';
 import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
-var metro = YMaps.Metro.Closest(new YMaps.GeoPoint(37.64,55.76));
-console.log(metro)
+
 /* const Icon = () => {
     return (
         <IconChewron />

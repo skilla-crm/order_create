@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { ReactComponent as IconLocation } from '../../../images/icons/iconLocation.svg';
 //API
 import { getAddress } from '../../../Api/ApiDadata';
+import { getAddressYandex, getMetro } from '../../../Api/ApiYandex';
 //components
 import MapAddress from '../MapAddress/MapAddress';
 import Switch from '../Switch/Switch';
@@ -16,9 +17,12 @@ const Address = ({ sub, address, setAddress, user }) => {
     const [onFocus, setOnFocus] = useState(false);
     const [openMap, setOpenMap] = useState(false);
     const [noAdress, setNoAdress] = useState(false);
+    const [metroCordinate, setMetroCordinate] = useState('')
 
-/*     var metro = new ymaps.Metro.Closest(new ymaps.GeoPoint([37.95, 55.65]), { results : 3 } );  */
-
+    useEffect(() => {
+        getMetro()
+        .then(res => console.log(res))
+    }, [])
 
     const handleNoAdress = () => {
         noAdress ? setNoAdress(false) : setNoAdress(true)
@@ -34,6 +38,9 @@ const Address = ({ sub, address, setAddress, user }) => {
                 setSuggestions(data)
             })
             .catch(err => console.log(err))
+
+            getAddressYandex('театральная', 37.6221, 55.7539)
+            .then(res => console.log(res))
     }
 
     const handleSelectAddress = (el) => {
