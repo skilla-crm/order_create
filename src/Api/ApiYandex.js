@@ -1,19 +1,18 @@
 import axios from 'axios'
-const API_KEY = '76ade9cc-95ac-4852-a20f-6e53fefa307c';
-const API_KEY_GEOSADGEST = 'a255bb43-0e41-4831-9c9d-ea921defed9a';
+const URL_YANDEX = process.env.REACT_APP_URL_YANDEX;
+const URL_GEOCODE = process.env.REACT_APP_URL_GEOCODE;
+const API_KEY_MAP = process.env.REACT_APP_API_KEY_MAP;
+const API_KEY_GEOSADGEST = process.env.REACT_APP_API_KEY_GEOSADGEST;
 
 
 const instanceWithToken = axios.create({
     withCredentials: false,
 })
 
-export const getAddressYandex = (query, lat, lng) => {
-    return instanceWithToken.get(`https://suggest-maps.yandex.ru/v1/suggest?apikey=${API_KEY_GEOSADGEST}&print_address=1&text=${query}&ll=${lat},${lng}&results=1`);
+export const getAddressSuggest = (query) => {
+    return instanceWithToken.get(`${URL_YANDEX}v1/suggest?apikey=${API_KEY_GEOSADGEST}&&print_address=1&text=${query}&results=5&lang=ru&attrs=uri&types=geo,street,district,locality,area,province,house`);
+}
+export const getAddressExact = (query) => {
+    return instanceWithToken.get(`${URL_GEOCODE}1.x/?apikey=${API_KEY_MAP}&geocode=${query}&rspn=0&results=1&format=json`);
 }
 
-export const getMetro = () => {
-    return instanceWithToken.get(`https://geocode-maps.yandex.ru/1.x/?apikey=${API_KEY}&geocode=37.6221,55.7539&kind=metro&rspn=0&results=3&format=json`);
-}
-
-
-/* https://geocode-maps.yandex.ru/1.x/?apikey=76ade9cc-95ac-4852-a20f-6e53fefa307c&geocode=${city}&format=json */

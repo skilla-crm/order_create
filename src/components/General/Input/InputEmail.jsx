@@ -1,28 +1,23 @@
 import s from './Input.module.scss';
-import { useState } from 'react';
-//utils 
-import { handleNumbers } from '../../../utils/HandleNumbers';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-const InputNum = ({ sub, disabled, value, setValue, error, errorEmpity, maxValue, errorText }) => {
+const InputEmail = ({ sub, disabled, value, setValue, error, errorEmpity, errorText }) => {
     const [errorState, setErrorState] = useState(false);
     const [errorStateEmpity, setErrorStateEmpity] = useState(false);
-    useEffect(() => {
-        disabled && setValue('')
-    }, [disabled])
+    console.log(error)
 
     useEffect(() => {
         errorEmpity && value == '' ? setErrorStateEmpity(true) : setErrorStateEmpity(false)
     }, [errorEmpity, value])
-
+/* 
     useEffect(() => {
         value.length > 0 && error ? setErrorState(true) : setErrorState(false)
-    }, [value])
+    }, [value]) */
 
     const handleValue = (e) => {
         setErrorState(false)
-        const value = handleNumbers(e.currentTarget.value)
-        value.length <= maxValue && setValue(value)
+        const value = e.currentTarget.value;
+        setValue(value)
     }
 
     const handleError = () => {
@@ -35,15 +30,15 @@ const InputNum = ({ sub, disabled, value, setValue, error, errorEmpity, maxValue
 
     return (
         <div className={s.container}>
-            <span className={`${s.sub} ${errorState && s.sub_err}`}>{sub}</span>
+            <span className={s.sub}>{sub}</span>
             <input
+                value={value || ''}
                 onBlur={handleError}
                 onFocus={handleResetError}
                 onChange={handleValue}
-                value={value || ''}
                 disabled={disabled}
-                className={`${s.input} ${errorState && s.input_err}`}
-                type='text'
+                className={s.input}
+                type='email'
             >
             </input>
 
@@ -52,9 +47,8 @@ const InputNum = ({ sub, disabled, value, setValue, error, errorEmpity, maxValue
                     {errorText}
                 </p>
             </div>
-
         </div>
     )
 };
 
-export default InputNum;
+export default InputEmail;

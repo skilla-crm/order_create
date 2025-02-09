@@ -2,18 +2,23 @@ import s from './App.module.scss';
 import { useState, useEffect } from 'react';
 import { ReactComponent as IconDone } from '../../images/icons/iconDone16-16-white.svg';
 import { ReactComponent as IconPoints } from '../../images/icons/iconPoints16-16-blue.svg';
-import { UserContext } from '../../contexts/UserContext';
+import { UserContext, ParametrsContext } from '../../contexts/UserContext';
+//Api
+import { getParametrs } from '../../Api/Api';
 //components
-import Button from './Button/Button';
+import Button from '../General/Button/Button';
 import Customer from '../Customer/Сustomer';
 import Performers from '../Performers/Performers';
 import Details from '../Details/Details';
 import Preview from '../Preview/Preview';
+import AddCustomer from '../AddCustomer/AddCustomer';
 const pro = document.getElementById(`root_order-create`).getAttribute('pro') == 1 ? true : false;
 const role = document.getElementById(`root_order-create`).getAttribute('role');
 
 const App = () => {
     const [theme, setTheme] = useState('light');
+    const [addCustomer, setAddCustomer] = useState(false);
+    const [parametrs, setParametrs] = useState({})
     //установка системной темы
     useEffect(() => {
         if (theme == '') {
@@ -22,6 +27,15 @@ const App = () => {
             return setTheme('dark')
         }
     }, [theme]);
+
+    useEffect(() => {
+        getParametrs()
+        .then(res => {
+            const data = res.data.data;
+            setParametrs(data)
+        })
+        .catch(err => console.log(err))
+    }, [])
 
     const handleSave = () => {
         console.log('сохранить')
@@ -35,6 +49,7 @@ const App = () => {
     document.documentElement.dataset.theme = theme;
     return (
         <UserContext.Provider value={{ pro, role }}>
+            <ParametrsContext.Provider value={parametrs}>
             <div className={s.app}>
                 <div className={s.header}>
                     <h2 className={s.title}>Создание заказа</h2>
@@ -49,15 +64,17 @@ const App = () => {
 
                 <div className={s.container}>
                     <div className={s.left}>
-                        <Customer />
+                        <Customer setAddCustomer={setAddCustomer}/>
+                        {addCustomer && <AddCustomer setAddCustomer={setAddCustomer}/>}
                         <Performers />
                         <Details />
                     </div>
                     <div className={s.right}>
                         <Preview />
                     </div>
-                </div>
+                </div> 
             </div>
+            </ParametrsContext.Provider>
         </UserContext.Provider>
     )
 };

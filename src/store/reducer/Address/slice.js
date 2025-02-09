@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-    address: {}
+    address: {},
+    metro: []
+
 };
 
 const AddressSlice = createSlice({
@@ -12,6 +14,14 @@ const AddressSlice = createSlice({
 
         setAddress(state, action) {
             state.address = action.payload
+        },
+
+        setMetro(state, action) {
+            if(action.payload) {
+                state.metro = [...state.metro, action.payload]
+            } else {
+                state.metro = []
+            }  
         },
 
 
@@ -43,7 +53,8 @@ const AddressSlice = createSlice({
 });
 
 export const {
-    setAddress
+    setAddress,
+    setMetro
 } = AddressSlice.actions;
 
 export default AddressSlice.reducer;

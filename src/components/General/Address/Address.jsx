@@ -2,27 +2,32 @@ import s from './Address.module.scss';
 import { useEffect, useState } from 'react';
 import { ReactComponent as IconLocation } from '../../../images/icons/iconLocation.svg';
 //API
-import { getAddress } from '../../../Api/ApiDadata';
-import { getAddressYandex, getMetro } from '../../../Api/ApiYandex';
+import { getCordinateInfo, getMetro } from '../../../Api/ApiDadata';
+import { getAddressExact, getAddressSuggest } from '../../../Api/ApiYandex';
 //components
 import MapAddress from '../MapAddress/MapAddress';
 import Switch from '../Switch/Switch';
+import Metro from '../Metro/Metro';
 //utils
-import { adressStringUtility, cityStringUtility } from '../../../utils/AdressUtility';
-//slice
+import { adressStringUtility, addressUtility } from '../../../utils/AdressUtility';
 
-const Address = ({ sub, address, setAddress, user }) => {
+const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCity }) => {
     const [query, setQuery] = useState(adressStringUtility(address) || '');
     const [suggestions, setSuggestions] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
     const [openMap, setOpenMap] = useState(false);
     const [noAdress, setNoAdress] = useState(false);
-    const [metroCordinate, setMetroCordinate] = useState('')
+    const [defaultCordinate, setDefaultCordinate] = useState([55.75, 37.57]);
+    console.log(metro)
 
     useEffect(() => {
-        getMetro()
-        .then(res => console.log(res))
-    }, [])
+        getAddressExact(defaultCity)
+            .then(res => {
+                const data = res.data.response?.GeoObjectCollection?.featureMember?.[0].GeoObject?.Point;
+                const cordinate = data.pos.split(' ')
+                setDefaultCordinate([cordinate[1], cordinate[0]])
+            })
+    }, [defaultCity])
 
     const handleNoAdress = () => {
         noAdress ? setNoAdress(false) : setNoAdress(true)
@@ -30,35 +35,53 @@ const Address = ({ sub, address, setAddress, user }) => {
 
     const handleAdress = (e) => {
         const value = e.currentTarget.value;
+        value == '' && setMetro(null)
         setAddress({})
         setQuery(value)
-        getAddress(value)
+        getAddressSuggest(value)
             .then(res => {
-                const data = res.data.suggestions;
-                setSuggestions(data)
+                const results = res.data.results
+                setSuggestions(results)
             })
             .catch(err => console.log(err))
-
-            getAddressYandex('театральная', 37.6221, 55.7539)
-            .then(res => console.log(res))
     }
 
     const handleSelectAddress = (el) => {
-        const data = el.data;
-        const city = cityStringUtility(data);
-        setAddress({
-            city: city,
-            street: data.street_with_type,
-            house: data.house ? `${data.house_type} ${data.house}` : null,
-            k: data.block ? `${data.block_type} ${data.block}` : null,
-            appartament: data.flat ? `${data.flat_type} ${data.flat}` : null,
-            lat: data.geo_lat,
-            lng: data.geo_lon
-        })
-        console.log(data)
-        setQuery(el.value);
-        setSuggestions([])
+        const data = el.address;
+        const { city, street, house, apartment } = addressUtility(data.component);
+        getAddressExact(`${city} ${street} ${house}`)
+            .then(res => {
+                const data = res.data.response?.GeoObjectCollection?.featureMember?.[0].GeoObject?.Point;
+                const cordinate = data.pos.split(' ')
+                setAddress({
+                    city,
+                    street,
+                    house,
+                    apartment,
+                    lat: cordinate?.[1],
+                    lng: cordinate?.[0]
+                })
+                setMetro(null)
+                getCordinateInfo(cordinate?.[1], cordinate?.[0])
+                    .then(res => {
+                        const data = res.data.suggestions?.[0]?.data?.metro;
+                        if (data) {
+                            data.forEach(el => {
+                                getMetro(`${el.name} ${city}`)
+                                    .then(res => {
+                                        const color = res.data.suggestions?.[0]?.data?.color;
+                                        setMetro({ ...el, color })
+                                    })
+                            })
+                        }
+                    })
+            })
+            .catch(err => console.log(err))
 
+
+
+        setQuery(el.address.formatted_address);
+        setSuggestions([])
     }
 
     const handleFocus = () => {
@@ -83,15 +106,15 @@ const Address = ({ sub, address, setAddress, user }) => {
             <div className={s.block}>
                 <div className={`${s.field} ${onFocus && s.field_focus}`}>
                     <input onFocus={handleFocus} onBlur={handleBlur} value={query || ''} onChange={handleAdress}></input>
-                    <button onClick={handleMap} className={`${s.button} ${(onFocus || !address.lat) && s.button_hidden}`}>
+                    <button onClick={handleMap} className={`${s.button} ${(onFocus || (!address.lat && !openMap)) && s.button_hidden}`}>
                         <IconLocation />
                         {!openMap && <p>На карте</p>}
                         {openMap && <p>Скрыть</p>}
                     </button>
 
                     <ul className={s.list}>
-                        {suggestions.map((el) => {
-                            return <li onClick={() => handleSelectAddress(el)} id={el.data.fias_id}>{el.value}</li>
+                        {suggestions?.map((el) => {
+                            return <li onClick={() => handleSelectAddress(el)} key={el.uri}>{el.address.formatted_address}</li>
                         })}
                     </ul>
                 </div>
@@ -104,8 +127,13 @@ const Address = ({ sub, address, setAddress, user }) => {
                     forPro={!user.pro}
                 />
             </div>
+            <div className={`${s.metro} ${metro.length >= 2 && s.metro_open}`}>
+                <Metro station={metro} />
+            </div>
+            <div className={`${s.map} ${!openMap && s.map_hidden}`}>
+                <MapAddress openMap={openMap} lat={address?.lat} lng={address?.lng} defaultCordinate={defaultCordinate}/>
+            </div>
 
-            <MapAddress openMap={openMap} lat={address?.lat} lng={address?.lng} />
         </div>
     )
 };

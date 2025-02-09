@@ -1,5 +1,6 @@
 import s from './Customer.module.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { ParametrsContext } from '../../contexts/UserContext';
 //constants
 import { PromptCustomer } from '../../constants/prompts';
 import { TITLE, BUTTON_TEXT, SUB_NAME, SUB_COMPANY, SUB_PHONE, SWITCH_NAME, segments } from '../../constants/customer';
@@ -11,13 +12,14 @@ import InputCompany from '../General/Input/InputCompany';
 import InputPhone from '../General/Input/InputPhone';
 import Switch from '../General/Switch/Switch';
 
-const Customer = () => {
+const Customer = ({setAddCustomer}) => {
+    const companies = useContext(ParametrsContext).companies;
     const [type, setType] = useState(1);
     const [noContactPerson, setNoContactPerson] = useState(false);
 
 
     const handleAdd = () => {
-        console.log('Нажал кнопку')
+        setAddCustomer(true)
     }
 
     const handleContactPersonState = () => {
@@ -44,7 +46,7 @@ const Customer = () => {
             <div className={s.container}>
                 <div className={s.block}>
                     <div className={`${s.company} ${type == 1 && s.company_vis}`}>
-                        <InputCompany sub={SUB_COMPANY} />
+                        <InputCompany sub={SUB_COMPANY} list={companies} value={{}}/>
                     </div>
                     <div className={s.container}>
                         <div className={s.contact}>

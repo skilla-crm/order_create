@@ -3,6 +3,7 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
+    position: relative;
 
     &_data {
         position: relative;
@@ -29,6 +30,11 @@
     line-height: 16px;
     color: var(--color-text-secondary);
     user-select: none;
+    transition: all 0.1s;
+
+    &_err {
+        color: #E10D0D;
+    }
 }
 
 .input {
@@ -50,6 +56,10 @@
         &::placeholder {
             opacity: 0;
         }
+    }
+
+    &_err {
+        outline-color: #E10D0D;
     }
 
 }
@@ -166,12 +176,21 @@
             opacity: 0.6;
         }
     }
+
+    &_select {
+        cursor: pointer;
+    }
+
+    &_error {
+        outline-color: #E10D0D;
+    }
 }
 
 .chewron {
     cursor: pointer;
     display: flex;
     align-items: center;
+    margin-left: auto;
     transition: all 0.15s;
 
     svg path {
@@ -346,7 +365,103 @@
 
 }
 
+.block {
+    width: 100%;
+    position: relative;
+}
+
+.kpp {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    width: 0;
+    gap: 6px;
+    opacity: 0;
+    overflow: hidden;
+    visibility: hidden;
+    transition: all 0.25s ease-in-out;
+
+    span {
+        text-wrap: nowrap;
+    }
+
+    input {
+        color: var(--color-text-secondary);
+    }
+
+    &_vis {
+        width: 240px;
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
 .number_active {
     color: var(--color-button-accent) !important;
     background-color: #D4DFF32B;
+}
+
+.nofound {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+    opacity: 0;
+    height: 0;
+    margin-top: -6px;
+    transition: all 0.15s;
+
+    p {
+        font-size: 16px;
+        line-height: 16px;
+        color: #F89500;
+    }
+
+    &_vis {
+        margin-top: 0;
+        height: 16px;
+        opacity: 1;
+    }
+}
+
+.error {
+    overflow: hidden;
+    opacity: 0;
+    height: 0;
+    margin-top: -6px;
+    transition: all 0.15s;
+
+    p {
+        font-size: 16px;
+        line-height: 16px;
+        color: #E10D0D;
+    }
+
+    &_vis {
+        margin-top: 0;
+        height: 16px;
+        opacity: 1;
+    }
+
+    &_2 {
+        position: absolute;
+        right: -140px;
+        top: 32px
+    }
+}
+
+.item {
+    &_active {
+        pointer-events: none;
+        background-color: #d4dff389;
+    }
+}
+
+.inn {
+    width: 244px;
+    transition: width 0.2s;
+
+    &_wide {
+        width: 500px;
+    }
 }

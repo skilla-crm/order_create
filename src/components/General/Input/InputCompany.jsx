@@ -1,8 +1,9 @@
 import s from './Input.module.scss';
 import { ReactComponent as IconChewron } from '../../../images/icons/iconChewron.svg';
 import { useRef, useState, useEffect } from 'react';
+import CompanyList from '../CompanyList/CompanyList';
 
-const InputCompany = ({ sub }) => {
+const InputCompany = ({ sub, list, value }) => {
     const [openList, setOpenList] = useState(false);
     const [fieldFocus, setFieldFocus] = useState(false);
     const [query, setQuery] = useState('');
@@ -59,67 +60,7 @@ const InputCompany = ({ sub }) => {
                     <IconChewron />
                 </div>
 
-                <ul className={`${s.list} ${openList && s.list_open} ${listScroll && s.list_scroll}`}>
-                    <li>
-                        <p>ПАО “Газпром”</p>
-                        <span>ИНН 5464646464 КПП 780601001 ООО Длинное Скилла Инновации</span>
-                    </li>
-
-                    <li>
-                        <p>ПАО “Газпром”</p>
-                        <span>ИНН 5464646464 КПП 780601001 ООО Длинное Скилла Инновации</span>
-                    </li>
-
-                    <li>
-                        <p>ПАО “Газпром”</p>
-                        <span>ИНН 5464646464 КПП 780601001 ООО Длинное Скилла Инновации</span>
-                    </li>
-
-                    <li>
-                        <p>ПАО “Газпром”</p>
-                        <span>ИНН 5464646464 КПП 780601001 ООО Длинное Скилла Инновации</span>
-                    </li>
-
-                    <li>
-                        <p>ПАО “Газпром”</p>
-                        <span>ИНН 5464646464 КПП 780601001 ООО Длинное Скилла Инновации</span>
-                    </li>
-
-                    <li>
-                        <p>ПАО “Газпром”</p>
-                        <span>ИНН 5464646464 КПП 780601001 ООО Длинное Скилла Инновации</span>
-                    </li>
-
-                    <li>
-                        <p>ПАО “Газпром”</p>
-                        <span>ИНН 5464646464 КПП 780601001 ООО Длинное Скилла Инновации</span>
-                    </li>
-
-                    <li>
-                        <p>ПАО “Газпром”</p>
-                        <span>ИНН 5464646464 КПП 780601001 ООО Длинное Скилла Инновации</span>
-                    </li>
-
-                    <li>
-                        <p>ПАО “Газпром”</p>
-                        <span>ИНН 5464646464 КПП 780601001 ООО Длинное Скилла Инновации</span>
-                    </li>
-
-                    <li>
-                        <p>ПАО “Газпром”</p>
-                        <span>ИНН 5464646464 КПП 780601001 ООО Длинное Скилла Инновации</span>
-                    </li>
-
-                    <li>
-                        <p>ПАО “Газпром”</p>
-                        <span>ИНН 5464646464 КПП 780601001 ООО Длинное Скилла Инновации</span>
-                    </li>
-
-                    <li>
-                        <p>ПАО “Газпром”</p>
-                        <span>ИНН 5464646464 КПП 780601001 ООО Длинное Скилла Инновации</span>
-                    </li>
-                </ul>
+               <CompanyList list={list} value={value} openList={openList} listScroll={listScroll}/>
             </div>
 
         </div>

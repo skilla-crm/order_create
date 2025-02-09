@@ -5,13 +5,19 @@ import { useSelector, useDispatch } from 'react-redux';
 //selectors
 import { selectorAddress } from '../../store/reducer/Address/selector';
 //slice
-import { setAddress } from '../../store/reducer/Address/slice';
+import { setAddress, setMetro } from '../../store/reducer/Address/slice';
 //constants
-import { TITLE, BUTTON_TEXT, SUB_TYPE, SUB_COMMENT, SUB_DESCRIPTION, SUB_MINDURATION, SUB_DURATION, SUB_REQUIREMENTS, SUB_ADDRESS } from '../../constants/details';
+import {
+    TITLE, BUTTON_TEXT,
+    SUB_TYPE, SUB_COMMENT,
+    SUB_DESCRIPTION, SUB_MINDURATION,
+    SUB_DURATION, SUB_REQUIREMENTS,
+    SUB_ADDRESS
+} from '../../constants/details';
 import { PromptDetails } from '../../constants/prompts';
 //components
 import Header from '../General/Header/Header';
-import InputSelect from '../General/Input/InputSelect';
+import InputSelectSearch from '../General/Input/InputSelectSearch';
 import Comment from '../General/Comment/Comment';
 import TabsNumbers from '../General/Tabs/TabsNumbers';
 import Tags from '../General/Tags/Tags';
@@ -23,18 +29,18 @@ const tagList = ['Паспорт', 'Пропуск', 'Мед. книжка', 'П
 
 const Details = () => {
     const user = useContext(UserContext);
-    const { address } = useSelector(selectorAddress);
+    const { address, metro } = useSelector(selectorAddress);
     const dispatch = useDispatch();
     const [service, setService] = useState({});
     const [commentSupervisor, setCommentSupervisor] = useState('');
     const [descriptionOrder, setDescriptionOrder] = useState('');
-  
+    console.log(address)
 
     const handleAdd = () => {
     }
 
-  
-  
+
+
 
     return (
         <div className={s.details}>
@@ -47,7 +53,7 @@ const Details = () => {
                 PromptText={PromptDetails}
             />
 
-            <InputSelect
+            <InputSelectSearch
                 sub={SUB_TYPE}
                 value={service}
                 setValue={setService}
@@ -93,14 +99,17 @@ const Details = () => {
                 forPro={false}
             />
 
-            
-                <Address
-                    setAddress={(data) => dispatch(setAddress(data))}
-                    address={address}
-                    sub={SUB_ADDRESS}
-                    user={user}
-                />
-               
+
+            <Address
+                address={address}
+                metro={metro}
+                sub={SUB_ADDRESS}
+                user={user}
+                defaultCity={'Санкт-петербург'}
+                setAddress={(data) => dispatch(setAddress(data))}
+                setMetro={(data) => dispatch(setMetro(data))}
+            />
+
         </div>
     )
 };

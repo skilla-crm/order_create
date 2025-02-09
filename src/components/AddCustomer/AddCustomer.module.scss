@@ -1,0 +1,60 @@
+@import '../../vendor/mixins.scss';
+
+
+.add {
+    max-height: 0;
+    height: fit-content;
+    overflow: hidden;
+    margin-bottom: -16px;
+    opacity: 0;
+    transition: max-height 0.3s ease-in-out, margin-bottom 0.3s ease-in-out, opacity 0.25s;
+
+    &_open {
+        overflow: visible;
+        max-height: 972px;
+        margin-bottom: 0;
+        opacity: 1;
+
+    }
+}
+
+.container {
+    @include block;
+    height: 100%;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.form {
+    width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.block {
+    display: flex;
+    gap: 12px;
+    width: 500px;
+}
+
+.sum {
+    padding-left: 1px;
+    padding-bottom: 1px;
+    height: fit-content;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    visibility: hidden;
+    transition: all 0.2s;
+
+    &_open {
+        max-height: 100px;
+        opacity: 1;
+        visibility: visible;
+    }
+}

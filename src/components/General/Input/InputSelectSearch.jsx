@@ -2,31 +2,27 @@ import s from './Input.module.scss';
 import { ReactComponent as IconChewron } from '../../../images/icons/iconChewron.svg';
 import { useRef, useState, useEffect } from 'react';
 
-const InputSelect = ({ sub, list, value, setValue }) => {
+const InputSelectSearch = ({ sub, value, setValue }) => {
     const [openList, setOpenList] = useState(false);
-    const [name, setName] = useState(list[0].name || '')
-  
+    const [fieldFocus, setFieldFocus] = useState(false);
+    const [query, setQuery] = useState('');
+    const [searchResult, setSearchResult] = useState([]);
     const listRef = useRef();
-
-    useEffect(() => {
-        if(value !== '') {
-            const result = list.find(el => el.id == value)
-            setName(result?.name)
-        } else {
-            setName(list[0]?.name)
-            setValue(list[0]?.id)
-        }
-    }, [list, value])
 
 
     const handleOpenList = () => {
         openList ? setOpenList(false) : setOpenList(true)
     }
 
-    const handleValue = (e) => {
-        const id = e.currentTarget.id;
-        setValue(id)
+    const handleFocus = () => {
+        setFieldFocus(true)
     }
+
+
+    const handleBlur = () => {
+        setFieldFocus(false)
+    }
+
 
     const handleClose = () => {
         setOpenList(false)
@@ -48,18 +44,22 @@ const InputSelect = ({ sub, list, value, setValue }) => {
     return (
         <div className={`${s.container} ${s.container_select}`}>
             <span className={s.sub}>{sub}</span>
-            <div onClick={handleOpenList} ref={listRef} className={`${s.field} ${s.field_select}`}>
-                <p>{name}</p>
-                <div  className={`${s.chewron} ${openList && s.chewron_open}`}>
+            <div ref={listRef} className={`${s.field} ${fieldFocus && s.field_focus}`}>
+                <input onFocus={handleFocus} onBlur={handleBlur} type='text'></input>
+                <div onClick={handleOpenList} className={`${s.chewron} ${openList && s.chewron_open}`}>
                     <IconChewron />
                 </div>
 
                 <ul className={`${s.list} ${openList && s.list_open}`}>
-                    {list.map(el => {
-                        return <li onClick={handleValue} key={el.id} id={el.id} className={`${s.item} ${el.id == value && s.item_active}`}>
-                            <p>{el.name}</p>
-                        </li>
-                    })}
+                    <li>
+                        <p>Услуги исполнителей</p>
+
+                    </li>
+
+                    <li>
+                        <p>Услуги исполнителей</p>
+
+                    </li>
                 </ul>
             </div>
 
@@ -67,4 +67,4 @@ const InputSelect = ({ sub, list, value, setValue }) => {
     )
 };
 
-export default InputSelect; 
+export default InputSelectSearch; 

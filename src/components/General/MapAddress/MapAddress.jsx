@@ -8,19 +8,20 @@ import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
     )
 } */
 
-const MapAddress = ({ openMap, lat, lng }) => {
+const MapAddress = ({ lat, lng, defaultCordinate }) => {
     const mapRef = useRef();
-  
+
 
     return (
-        <div className={`${s.container} ${!openMap && s.container_hidden}`}>
+        <div className={`${s.container}`}>
             <YMaps>
-         
+
                 <Map
                     ref={mapRef}
                     width={'100%'}
                     height={280}
-                    state={{ center: [lat, lng], zoom: 16 }}
+                    defaultState={{ center: defaultCordinate, zoom: 10 }}
+                    state={{ center: lat ? [lat, lng] : defaultCordinate, zoom: lat ? 16 : 10 }}
                 >
                     <Placemark geometry={[lat, lng]} /* iconContent={<Icon />} options={{
 
@@ -28,6 +29,7 @@ const MapAddress = ({ openMap, lat, lng }) => {
                     }} */
                     />
                 </Map>
+
             </YMaps>
         </div >
     )

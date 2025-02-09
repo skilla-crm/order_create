@@ -8,7 +8,7 @@ import { ReactComponent as IconClose } from '../../../images/icons/iconClose.svg
 //components
 import InputData from '../../General/Input/InputData';
 import InputTime from '../../General/Input/InputTime';
-import InputNum from '../../General/Input/InputNum';
+import InputNumList from '../../General/Input/InputNumList';
 //slice
 import { deleteAdditionalDates, editAdditionalDates } from '../../../store/reducer/AdditionalDates/slice';
 
@@ -66,7 +66,7 @@ const AdditionalDate = ({ id, performers, date, time, disabledDates, setProType,
         <div className={`${s.container} ${anim && s.container_anim}`}>
             <InputData nosub={true} date={dayjs(dateEdit).locale('ru')} setDate={setDateEdit} disabledDates={disabledDates} />
             <InputTime nosub={true} time={timeEdit} setTime={setTimeEdit} />
-            <InputNum nosub={true} inputWidth={64} Icon={IconBuilder} max={100} value={performersNum} setValue={setPerformersNum} />
+            <InputNumList nosub={true} inputWidth={64} Icon={IconBuilder} max={100} value={performersNum} setValue={setPerformersNum} />
             <div id={id} onClick={handleDelete} className={s.delete}><IconClose /></div>
         </div>
     )
