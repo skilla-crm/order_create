@@ -8,37 +8,39 @@ import CompanyList from '../CompanyList/CompanyList';
 import { addSpaceNumber } from '../../../utils/addSpaceNumber';
 import { handleSearchCompany } from '../../../utils/SearchCompany';
 
-const InputCompany = ({ sub, list, value, setValue }) => {
+const InputCompany = ({ sub, list, value, setValue, setAddCustomer }) => {
     const [openList, setOpenList] = useState(false);
     const [fieldFocus, setFieldFocus] = useState(false);
     const [valueText, setValueText] = useState('');
     const [companyInfo, setCompanyInfo] = useState({});
-    const [query, setQuery] = useState('');
     const [searchResult, setSearchResult] = useState(list || []);
     const [listScroll, setListScroll] = useState(false);
+    const [notFound, setNotFound] = useState(false);
     const listRef = useRef();
-
-    /*   useEffect(() => {
-          setSearchResult(list)
-      }, [list]) */
 
     useEffect(() => {
         const result = list.find(el => el.id == value)
         setCompanyInfo(result)
-        setValueText(result ? result?.name : '')
+        result && setValueText(result?.name)
     }, [value])
 
     useEffect(() => {
         const search = handleSearchCompany(valueText, list);
+        console.log(search)
         valueText !== '' && setSearchResult(search)
         valueText == '' && setSearchResult(list);
         valueText == '' && fieldFocus && setOpenList(true);
-        search.length == 0 && valueText !== '' && setOpenList(false);
+        if (search?.length == 0) {
+            setNotFound(true)
+        } else {
+            setNotFound(false)
+        }
     }, [valueText, list])
 
     const handleChangeValue = (e) => {
         const value = e.currentTarget.value;
         setValueText(value);
+        setValue('')
     }
 
 
@@ -64,6 +66,7 @@ const InputCompany = ({ sub, list, value, setValue }) => {
 
     const handleBlur = () => {
         setFieldFocus(false)
+       
     }
 
 
@@ -93,7 +96,18 @@ const InputCompany = ({ sub, list, value, setValue }) => {
                     <IconChewron />
                 </div>
 
-                <CompanyList list={searchResult} value={value} setValue={setValue} openList={openList} listScroll={listScroll} setOpenList={setOpenList} setValueText={setValueText} />
+                <CompanyList
+                    list={searchResult}
+                    value={value}
+                    setValue={setValue}
+                    openList={openList}
+                    listScroll={listScroll}
+                    setOpenList={setOpenList}
+                    setValueText={setValueText}
+                    notFound={notFound}
+                    valueText={valueText}
+                    setAddCustomer={setAddCustomer}
+                />
             </div>
 
             <div className={`${s.bill} ${(companyInfo?.billState || companyInfo?.contractState) && s.bill_vis}`}>

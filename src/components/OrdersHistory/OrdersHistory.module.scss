@@ -1,4 +1,5 @@
 @import '../../vendor/mixins.scss';
+
 .window {
     max-height: 0;
     height: 258px;
@@ -14,11 +15,125 @@
         opacity: 1;
 
     }
-
-
 }
 
 .container {
     @include block;
     height: 100%;
+}
+
+.history {
+    width: 100%;
+    padding: 6px 0;
+    border-radius: 4px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 32, 51, 0.10);
+    display: flex;
+    flex-direction: column;
+}
+
+.item {
+    padding: 9px 9px 9px 0;
+    height: 56px;
+    width: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    flex: 0 1 auto;
+    max-width: 100%;
+}
+
+.repeat {
+    padding: 8px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        transform: rotate(-30deg);
+    }
+}
+
+.block {
+    display: flex;
+    flex-direction: column;
+    padding: 0 12px;
+    box-sizing: border-box;
+    gap: 6px;
+
+    p {
+        max-width: 99%;
+        overflow: hidden;
+        text-wrap: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: var(--color-text-secondary);
+
+        input {
+            color: var(--color-text-secondary);
+        }
+    }
+
+    &_date {
+        width: 120px;
+        flex-shrink: 0;
+    }
+
+    &_address {
+        position: relative;
+        width: 100%;
+        flex-shrink: 20;
+        overflow: hidden;
+    }
+
+    &_contact {
+        width: 240px;
+        flex-shrink: 0;
+    }
+
+    &_bit {
+        flex-shrink: 0;
+        width: 180px;
+    }
+}
+
+.bage {
+    width: 145px;
+    height: 28px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    border-radius: 4px;
+    background-color: #DBF8EF;
+
+    p {
+        color: #28A879;
+    }
+
+    &_yellow {
+        background-color: #FFD50026;
+
+        p {
+            color: #F89500;
+        }
+    }
+
+    &_red {
+        background-color: #FEE9EF;
+
+        p {
+            color: #CC0101;
+        }
+    }
 }

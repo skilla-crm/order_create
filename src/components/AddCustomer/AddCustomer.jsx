@@ -77,7 +77,7 @@ const AddCustomer = ({ setAddCustomer }) => {
     }, [companyData])
 
     const handleSave = () => {
-        setLoad(true)
+
         const data = {
             partnership_id: companyData.partyContract,
             name: companyData.name,
@@ -100,7 +100,7 @@ const AddCustomer = ({ setAddCustomer }) => {
             emailValidate(companyData.email)
 
         setFormValidate(validate)
-
+        validate && setLoad(true)
         validate && createCompany(data)
             .then(res => {
                 setLoad(false)

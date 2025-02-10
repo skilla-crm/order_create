@@ -22,6 +22,14 @@
     &_select {
         width: 500px;
     }
+
+    &_select2 {
+        width: 244px;
+
+        p {
+            color: var(--color-text-secondary);
+        }
+    }
 }
 
 .sub {

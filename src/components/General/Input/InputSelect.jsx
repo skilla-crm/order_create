@@ -1,15 +1,16 @@
 import s from './Input.module.scss';
 import { ReactComponent as IconChewron } from '../../../images/icons/iconChewron.svg';
+import { ReactComponent as IconChewron2 } from '../../../images/icons/iconChewron2.svg';
 import { useRef, useState, useEffect } from 'react';
 
-const InputSelect = ({ sub, list, value, setValue }) => {
+const InputSelect = ({ sub, list, value, setValue, type }) => {
     const [openList, setOpenList] = useState(false);
     const [name, setName] = useState(list[0].name || '')
-  
+
     const listRef = useRef();
 
     useEffect(() => {
-        if(value !== '') {
+        if (value !== '') {
             const result = list.find(el => el.id == value)
             setName(result?.name)
         } else {
@@ -46,12 +47,13 @@ const InputSelect = ({ sub, list, value, setValue }) => {
     }, []);
 
     return (
-        <div className={`${s.container} ${s.container_select}`}>
-           {sub && <span className={s.sub}>{sub}</span>}
+        <div className={`${s.container} ${s.container_select} ${type == 2 && s.container_select2}`}>
+            {sub && <span className={s.sub}>{sub}</span>}
             <div onClick={handleOpenList} ref={listRef} className={`${s.field} ${s.field_select}`}>
                 <p>{name}</p>
-                <div  className={`${s.chewron} ${openList && s.chewron_open}`}>
-                    <IconChewron />
+                <div className={`${s.chewron} ${openList && s.chewron_open}`}>
+                    {type !== 2 && <IconChewron />}
+                    {type == 2 && <IconChewron2 />}
                 </div>
 
                 <ul className={`${s.list} ${openList && s.list_open}`}>

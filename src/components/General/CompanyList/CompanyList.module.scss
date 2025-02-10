@@ -64,6 +64,37 @@
     }
 }
 
+.nofound {
+    font-size: 16px;
+    line-height: 16px;
+    color: var(--color-text-secondary);
+    padding: 6px 12px !important;
+    margin: 0 !important;
+    cursor: default !important;
+    gap: 0 !important;
+
+    &:hover {
+        background-color: #ffffff00 !important;
+    }
+
+    p {
+        height: 40px;
+        display: flex;
+        align-items: center;
+    }
+
+    button {
+        height: 40px;
+        display: flex;
+        align-items: center;
+        font-weight: 400;
+        gap: 6px;
+        cursor: pointer;
+        color: var(--color-button-accent);
+    }
+}
+
 .item_active {
     background-color: #d4dff389;
 }
+

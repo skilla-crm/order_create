@@ -38,6 +38,7 @@ const Customer = ({ setAddCustomer }) => {
     const [phoneWithMask, setPhoneWithMask] = useState('');
     const { companies, customer, payType, name, phone } = useSelector(selectorCustomer);
     const dispatch = useDispatch();
+    console.log(payType, customer)
 
 
     useEffect(() => {
@@ -76,8 +77,6 @@ const Customer = ({ setAddCustomer }) => {
             setHistoryLoad(false)
             return
         }
-
-
     }, [phone, customer, payType])
 
     const handleAdd = () => {
@@ -108,14 +107,20 @@ const Customer = ({ setAddCustomer }) => {
 
                 <SegmentControl
                     segments={segments}
-                    setActive={(data) => dispatch(setPayType(data))}
+                    setActive={(data) => dispatch(setPayType(Number(data)))}
                     active={payType}
                 />
 
                 <div className={s.container}>
                     <div className={s.block}>
                         <div className={`${s.company} ${payType == 1 && s.company_vis}`}>
-                            <InputCompany sub={SUB_COMPANY} list={companies} value={customer?.id} setValue={(data) => dispatch(setCustomer(data))} />
+                            <InputCompany 
+                            sub={SUB_COMPANY} 
+                            list={companies} 
+                            value={customer?.id} 
+                            setValue={(data) => dispatch(setCustomer(data))} 
+                            setAddCustomer={setAddCustomer}
+                            />
                         </div>
                         <div className={s.container}>
                             <div className={s.contact}>
@@ -146,7 +151,7 @@ const Customer = ({ setAddCustomer }) => {
                 <div className={`${s.loader} ${historyLoad && s.loader_vis}`}><IconLoader /><p>Проверяем историю заказов</p></div>
             </div>
 
-            <OrdersHistory vis={historyList?.length > 0} client={historyName}/>
+            <OrdersHistory vis={historyList?.length > 0} client={historyName} historyList={historyList}/>
         </>
 
     )
