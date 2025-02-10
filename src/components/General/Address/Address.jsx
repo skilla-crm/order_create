@@ -18,7 +18,6 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCity 
     const [openMap, setOpenMap] = useState(false);
     const [noAdress, setNoAdress] = useState(false);
     const [defaultCordinate, setDefaultCordinate] = useState([55.75, 37.57]);
-    console.log(metro)
 
     useEffect(() => {
         getAddressExact(defaultCity)

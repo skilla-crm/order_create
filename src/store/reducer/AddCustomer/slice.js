@@ -13,6 +13,7 @@ const initialState = {
     partyContract: '',
     billState: false,
     billSum: '',
+    contractState: true,
 };
 
 const AddCustomerSlice = createSlice({
@@ -69,6 +70,10 @@ const AddCustomerSlice = createSlice({
             state.billSum = action.payload;
         },
 
+        setContractState(state, action) {
+            state.contractState = action.payload;
+        },
+
     },
 });
 
@@ -84,7 +89,8 @@ export const {
     setEmail,
     setPartyContract,
     setBillState,
-    setBillSum
+    setBillSum,
+    setContractState
 } = AddCustomerSlice.actions;
 
 export default AddCustomerSlice.reducer;

@@ -9,13 +9,19 @@
     opacity: 0;
     transition: max-height 0.3s ease-in-out, margin-bottom 0.3s ease-in-out, opacity 0.25s;
 
+    &_2 {
+        transition: max-height 0.2s, margin-bottom 0.2s, opacity 0.15s;
+    }
+
     &_open {
         overflow: visible;
-        max-height: 972px;
+        max-height: 1005px;
         margin-bottom: 0;
         opacity: 1;
 
     }
+
+
 }
 
 .container {
@@ -31,15 +37,38 @@
 
 .form {
     width: 900px;
+    max-height: 900;
+    height: fit-content;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    transition: max-height 0.3s ease-in-out, opacity 0.25s;
+
+    &_hidden {
+        margin-bottom: -16px;
+        opacity: 0;
+        max-height: 0;
+        overflow: hidden;
+    }
 }
 
 .block {
     display: flex;
     gap: 12px;
     width: 500px;
+
+    &_email {
+        position: relative;
+        align-items: center;
+    }
+}
+
+.switch {
+    position: absolute;
+    right: -200px;
+    top: 30px;
+    display: flex;
+    align-items: center;
 }
 
 .sum {

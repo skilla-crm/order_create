@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 const InputEmail = ({ sub, disabled, value, setValue, error, errorEmpity, errorText }) => {
     const [errorState, setErrorState] = useState(false);
     const [errorStateEmpity, setErrorStateEmpity] = useState(false);
-    console.log(error)
 
     useEffect(() => {
         errorEmpity && value == '' ? setErrorStateEmpity(true) : setErrorStateEmpity(false)

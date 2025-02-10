@@ -20,11 +20,9 @@ const AdditionalDate = ({ id, performers, date, time, disabledDates, setProType,
     const [timeEdit, setTimeEdit] = useState(time);
     const [firstLoad, setFirstLoad] = useState(true);
     const dispatch = useDispatch();
-    console.log(disabledDates)
 
     const handleDelete = (e) => {
         const id = e.currentTarget.id;
-        console.log(id)
         disabledDates.length > 2 && setAnim(false)
         disabledDates.length <= 2 && setHiddenAddDates(true)
 

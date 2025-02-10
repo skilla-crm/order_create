@@ -3,15 +3,16 @@ import { useState, useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReactComponent as IconDone } from '../../images/icons/iconDone16-16-white.svg';
 import { ReactComponent as IconClose } from '../../images/icons/iconClose.svg';
+import { ReactComponent as IconReturn } from '../../images/icons/IconGoToBack.svg';
 //Api
 import { createCompany } from '../../Api/Api';
 //constants
 import {
-    TITLE, BUTTON_TEXT_SAVE, BUTTON_TEXT_CANCLE,
+    TITLE, BUTTON_TEXT_SAVE, BUTTON_TEXT_CANCLE, BUTTON_TEXT_EXIST,
     SUB_INN, SUB_NAME, SUB_KPP, SUB_OGRN, SUB_OGRNIP,
     SUB_DIRECTOR, SUB_JOP_TITLE, SUB_LEGAL, SUB_ADDRESS,
     SUB_EMAIL, SUB_SWITCH, SUB_SUM, SUB_PARTY, ERR_KPP,
-    ERR_ОГРN, ERR_EMAIL, ERR_FILLIN
+    ERR_ОГРN, ERR_EMAIL, ERR_FILLIN, SUB_SWITCH_CONTRACT
 } from '../../constants/addCustomer'
 import { PromptCustomer } from '../../constants/prompts';
 //utils
@@ -31,10 +32,13 @@ import {
     setEmail,
     setBillState,
     setBillSum,
+    setContractState,
     setPartyContract
 } from '../../store/reducer/AddCustomer/slice';
+import { setAddCompanies, setCustomer } from '../../store/reducer/Customer/slice';
 //selector
 import { selectorAddCustomer } from '../../store/reducer/AddCustomer/selector';
+import { selectorCustomer } from '../../store/reducer/Customer/selector';
 //components
 import Header from '../General/Header/Header';
 import Button from '../General/Button/Button';
@@ -48,13 +52,14 @@ import InputSelect from '../General/Input/InputSelect';
 const AddCustomer = ({ setAddCustomer }) => {
     const dispatch = useDispatch();
     const companyData = useSelector(selectorAddCustomer);
+    const { companies } = useSelector(selectorCustomer);
     const partnerships = useContext(ParametrsContext).partnerships;
-    const companies = useContext(ParametrsContext).companies;
     const [anim, setAnim] = useState(false);
     const [openListInn, setOpenListInn] = useState(false);
     const [load, setLoad] = useState(false);
     const [formValidate, setFormValidate] = useState(true);
     const [kppValidate, setKppValidate] = useState(false);
+    const [existCompany, setExistCompany] = useState(false);
 
     useEffect(() => {
         setTimeout(() => {
@@ -94,17 +99,37 @@ const AddCustomer = ({ setAddCustomer }) => {
             (!companyData.billState || (companyData.billState && companyData.billSum.length > 0)) &&
             emailValidate(companyData.email)
 
-            setFormValidate(validate)
-            console.log('Валидация', validate, companyData.billSum.length == 0)
+        setFormValidate(validate)
 
         validate && createCompany(data)
             .then(res => {
                 setLoad(false)
+                const data = res.data.data;
+                const partnership_name = partnerships.find(el => el.id == data.partnership_id).name
+                const company = {
+                    id: data.id,
+                    name: data.name,
+                    inn: data.inn,
+                    kpp: data.kpp,
+                    partnership_name,
+                    email: companyData.email,
+                    billState: companyData.billState,
+                    billSum: companyData.billSum,
+                    contractState: companyData.billState ? false : companyData.contractState
+                }
+                dispatch(setCustomer(company))
+                dispatch(setAddCompanies(company))
+
+
                 handleCancel()
-                console.log(res)
             })
             .catch(err => console.log(err))
+    }
 
+    const handleSelectCompany = () => {
+        const result = companies.find(el => el.inn == companyData.inn)
+        result && dispatch(setCustomer(result))
+        handleCancel()
     }
 
 
@@ -134,7 +159,6 @@ const AddCustomer = ({ setAddCustomer }) => {
     }
 
     const handleChose = (data) => {
-        console.log(data)
         dispatch(setKpp(data?.kpp ? data.kpp : ''))
         dispatch(setName(data?.name?.short_with_opf))
         dispatch(setOgrn(data?.ogrn))
@@ -151,13 +175,20 @@ const AddCustomer = ({ setAddCustomer }) => {
             dispatch(setBillSum(''))
         } else {
             dispatch(setBillState(true))
+            dispatch(setContractState(true))
         }
     }
 
-    console.log(companyData)
+    const handleChangeContractState = () => {
+        if (companyData.contractState) {
+            dispatch(setContractState(false))
+        } else {
+            dispatch(setContractState(true))
+        }
+    }
 
     return (
-        <div className={`${s.add} ${anim && s.add_open}`}>
+        <div className={`${s.add} ${existCompany && s.add_2} ${anim && s.add_open}`}>
             <div className={s.container}>
                 <Header
                     title={TITLE}
@@ -178,137 +209,157 @@ const AddCustomer = ({ setAddCustomer }) => {
                         handleReset={handleReset}
                         companies={companies}
                         errorEmpity={!formValidate}
+                        existCompany={existCompany}
+                        setExistCompany={setExistCompany}
                     />
-                    <div className={s.block}>
-                        <InputText
-                            sub={SUB_NAME}
-                            disabled={false}
-                            value={companyData.name}
-                            setValue={(data) => dispatch(setName(data))}
-                            error={!formValidate}
-                            errorText={ERR_FILLIN}
-                        />
-                    </div>
 
-                    <div className={s.block}>
-                        <InputNum
-                            sub={SUB_KPP}
-                            disabled={companyData.inn.length == 12}
-                            value={companyData.kpp}
-                            error={companyData.kpp.length !== 9 ? true : false}
-                            errorEmpity={!formValidate && companyData.inn.length < 12}
-                            errorText={ERR_KPP}
-                            maxValue={9}
-                            setValue={(data) => dispatch(setKpp(data))}
-                        />
-                        <InputNum
-                            sub={companyData.inn.length == 12 ? SUB_OGRNIP : SUB_OGRN}
-                            disabled={false}
-                            value={companyData.ogrn}
-                            error={companyData.ogrn.length !== 13 && companyData.ogrn.length !== 15 ? true : false}
-                            errorEmpity={!formValidate}
-                            errorText={ERR_ОГРN}
-                            maxValue={15}
-                            setValue={(data) => dispatch(setOgrn(data))}
-                        />
-                    </div>
+                    <div className={`${s.form} ${existCompany && anim && s.form_hidden}`}>
+                        <div className={s.block}>
+                            <InputText
+                                sub={SUB_NAME}
+                                disabled={false}
+                                value={companyData.name}
+                                setValue={(data) => dispatch(setName(data))}
+                                error={!formValidate}
+                                errorText={ERR_FILLIN}
+                            />
+                        </div>
 
-                    <div className={s.block}>
-                        <InputText
-                            sub={SUB_DIRECTOR}
-                            disabled={false}
-                            value={companyData.director}
-                            error={!formValidate}
-                            errorText={ERR_FILLIN}
-                            setValue={(data) => dispatch(setDirector(data))}
-                        />
-                    </div>
+                        <div className={s.block}>
+                            <InputNum
+                                sub={SUB_KPP}
+                                disabled={companyData.inn.length == 12}
+                                value={companyData.kpp}
+                                error={companyData.kpp.length !== 9 ? true : false}
+                                errorEmpity={!formValidate && companyData.inn.length < 12}
+                                errorText={ERR_KPP}
+                                maxValue={9}
+                                setValue={(data) => dispatch(setKpp(data))}
+                            />
+                            <InputNum
+                                sub={companyData.inn.length == 12 ? SUB_OGRNIP : SUB_OGRN}
+                                disabled={false}
+                                value={companyData.ogrn}
+                                error={companyData.ogrn.length !== 13 && companyData.ogrn.length !== 15 ? true : false}
+                                errorEmpity={!formValidate}
+                                errorText={ERR_ОГРN}
+                                maxValue={15}
+                                setValue={(data) => dispatch(setOgrn(data))}
+                            />
+                        </div>
 
-                    <div className={s.block}>
-                        <InputText
-                            sub={SUB_JOP_TITLE}
-                            disabled={false}
-                            value={companyData.jobTitle}
-                            error={!formValidate}
-                            errorText={ERR_FILLIN}
-                            setValue={(data) => dispatch(setJobTitle(data))}
-                        />
-                    </div>
+                        <div className={s.block}>
+                            <InputText
+                                sub={SUB_DIRECTOR}
+                                disabled={false}
+                                value={companyData.director}
+                                error={!formValidate}
+                                errorText={ERR_FILLIN}
+                                setValue={(data) => dispatch(setDirector(data))}
+                            />
+                        </div>
 
-                    <div className={s.block}>
-                        <InputText
-                            sub={SUB_LEGAL}
-                            disabled={false}
-                            value={companyData.legalBasis}
-                            error={!formValidate}
-                            errorText={ERR_FILLIN}
-                            setValue={(data) => dispatch(setLegalBasis(data))}
-                        />
-                    </div>
+                        <div className={s.block}>
+                            <InputText
+                                sub={SUB_JOP_TITLE}
+                                disabled={false}
+                                value={companyData.jobTitle}
+                                error={!formValidate}
+                                errorText={ERR_FILLIN}
+                                setValue={(data) => dispatch(setJobTitle(data))}
+                            />
+                        </div>
 
-                    <div className={s.block}>
-                        <InputText
-                            sub={SUB_ADDRESS}
-                            disabled={false}
-                            value={companyData.address}
-                            error={!formValidate}
-                            errorText={ERR_FILLIN}
-                            setValue={(data) => dispatch(setAddress(data))}
-                        />
-                    </div>
+                        <div className={s.block}>
+                            <InputText
+                                sub={SUB_LEGAL}
+                                disabled={false}
+                                value={companyData.legalBasis}
+                                error={!formValidate}
+                                errorText={ERR_FILLIN}
+                                setValue={(data) => dispatch(setLegalBasis(data))}
+                            />
+                        </div>
 
-                    <div className={s.block}>
-                        <InputEmail
-                            sub={SUB_EMAIL}
-                            disabled={false}
-                            value={companyData.email}
-                            error={!emailValidate(companyData.email)}
-                            errorEmpity={!formValidate}
-                            errorText={ERR_EMAIL}
-                            setValue={(data) => dispatch(setEmail(data))}
-                        />
-                    </div>
+                        <div className={s.block}>
+                            <InputText
+                                sub={SUB_ADDRESS}
+                                disabled={false}
+                                value={companyData.address}
+                                error={!formValidate}
+                                errorText={ERR_FILLIN}
+                                setValue={(data) => dispatch(setAddress(data))}
+                            />
+                        </div>
 
-                    <div>
-                        <Switch
-                            text={SUB_SWITCH}
-                            switchState={companyData.billState}
-                            handleSwitch={handleChangeBillState}
-                            hidden={false}
-                            forPro={false}
-                        />
-                        <div className={`${s.sum} ${companyData.billState && s.sum_open}`}>
-                            <div style={{ paddingTop: '12px', width: '244px' }}>
-                                <InputNum
-                                    sub={SUB_SUM}
+                        <div className={`${s.block} ${s.block_email}`}>
+                            <div className={s.block}>
+                                <InputEmail
+                                    sub={SUB_EMAIL}
                                     disabled={false}
-                                    value={companyData.billSum}
-                                    maxValue={10}
-                                    error={companyData.billSum.length == 0 ? true : false}
+                                    value={companyData.email}
+                                    error={!emailValidate(companyData.email)}
                                     errorEmpity={!formValidate}
-                                    errorText={'Укажите сумму'}
-                                    setValue={(data) => dispatch(setBillSum(data))}
+                                    errorText={ERR_EMAIL}
+                                    setValue={(data) => dispatch(setEmail(data))}
                                 />
                             </div>
-                        </div>
-                    </div>
+                            <div className={s.switch}>
+                                <Switch
+                                    text={SUB_SWITCH_CONTRACT}
+                                    switchState={companyData.contractState}
+                                    handleSwitch={handleChangeContractState}
+                                    hidden={companyData.email.length == 0}
+                                    forPro={false}
+                                    disabled={companyData.billState}
+                                />
+                            </div>
 
-                    <InputSelect
-                        sub={SUB_PARTY}
-                        list={partnerships}
-                        value={companyData.partyContract}
-                        setValue={(data) => dispatch(setPartyContract(data))}
-                    />
+                        </div>
+
+                        <div>
+                            <Switch
+                                text={SUB_SWITCH}
+                                switchState={companyData.billState}
+                                handleSwitch={handleChangeBillState}
+                                hidden={false}
+                                forPro={false}
+                            />
+                            <div className={`${s.sum} ${companyData.billState && s.sum_open}`}>
+                                <div style={{ paddingTop: '12px', width: '244px' }}>
+                                    <InputNum
+                                        sub={SUB_SUM}
+                                        disabled={false}
+                                        value={companyData.billSum}
+                                        maxValue={10}
+                                        error={companyData.billSum.length == 0 ? true : false}
+                                        errorEmpity={!formValidate}
+                                        errorText={'Укажите сумму'}
+                                        setValue={(data) => dispatch(setBillSum(data))}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <InputSelect
+                            sub={SUB_PARTY}
+                            list={partnerships}
+                            value={companyData.partyContract}
+                            setValue={(data) => dispatch(setPartyContract(data))}
+                        />
+                    </div>
 
                 </div>
 
 
 
-                <div className={s.buttons}>
+                {!existCompany && <div className={s.buttons}>
                     <Button
                         handleClick={handleSave}
                         text={BUTTON_TEXT_SAVE}
                         Icon={IconDone}
+                        width={335}
+                        load={load}
                     />
                     <Button
                         handleClick={handleCancel}
@@ -317,6 +368,16 @@ const AddCustomer = ({ setAddCustomer }) => {
                         Icon={IconClose}
                     />
                 </div>
+                }
+
+                {existCompany && <div className={s.buttons}>
+                    <Button
+                        handleClick={handleSelectCompany}
+                        text={BUTTON_TEXT_EXIST}
+                        Icon={IconReturn}
+                    />
+                </div>
+                }
             </div>
 
         </div>

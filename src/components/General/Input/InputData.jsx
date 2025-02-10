@@ -44,7 +44,7 @@ const InputData = ({ sub, nosub, setDate, date, disabledDates }) => {
         let reg = /[A-Za-zA-Яа-яЁё]/g;
         const value = e.currentTarget.value;
         value.length < 11 && setDateVis(value.replace(reg, ""))
-        console.log(value)
+
         value.length == 2 && dateVis.length < 2 && setDateVis(prevState => prevState + '.')
         value.length == 5 && dateVis.length < 5 && setDateVis(prevState => prevState + '.')
         const isValid = dayjs(value, 'DD.MM.YYYY', true).isValid()
@@ -80,7 +80,6 @@ const InputData = ({ sub, nosub, setDate, date, disabledDates }) => {
     }
 
     const handleBlur = () => {
-        console.log(date)
         setFieldFocus(false);
         !date && setDateVis('')
     }

@@ -1,7 +1,7 @@
 @import '../../vendor/mixins.scss';
 
 .customer {
-   @include block;
+    @include block;
 }
 
 .container {
@@ -17,7 +17,7 @@
 }
 
 .company {
-    width: calc(500px + 2px);
+
     box-sizing: border-box;
     max-height: 0;
     visibility: hidden;
@@ -31,7 +31,7 @@
         visibility: visible;
         overflow: visible;
         opacity: 1;
-        max-height: 70px;
+        max-height: 86px;
         margin-bottom: 12px;
     }
 }
@@ -41,7 +41,39 @@
     display: flex;
     gap: 12px;
 }
+
 .switch {
     height: 100%;
-   padding-top: 21px;
+    padding-top: 21px;
+}
+
+.loader {
+    margin-top: -20px;
+    overflow: hidden;
+    height: 0;
+    opacity: 0;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    svg {
+        animation: load 10s linear infinite;
+    }
+
+    p {
+        color: var(--color-text-secondary);
+    }
+
+    &_vis {
+        height: 18px;
+        margin-top: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes load {
+    from {
+        transform: rotate(360deg);
+    }
 }

@@ -34,12 +34,9 @@ const Details = () => {
     const [service, setService] = useState({});
     const [commentSupervisor, setCommentSupervisor] = useState('');
     const [descriptionOrder, setDescriptionOrder] = useState('');
-    console.log(address)
 
     const handleAdd = () => {
     }
-
-
 
 
     return (

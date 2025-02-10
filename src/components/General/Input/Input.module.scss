@@ -110,7 +110,7 @@
     &_focus {
         outline: 1px solid var(--color-button-accent);
 
-     /*    svg path {
+        /*    svg path {
             fill: #ADBFDF;
         } */
     }
@@ -177,6 +177,10 @@
         }
     }
 
+    &_company {
+        width: 500px;
+    }
+
     &_select {
         cursor: pointer;
     }
@@ -184,6 +188,8 @@
     &_error {
         outline-color: #E10D0D;
     }
+
+
 }
 
 .chewron {
@@ -279,6 +285,12 @@
         &::placeholder {
             transition: all 0.1s;
             opacity: 1;
+        }
+    }
+
+    &_error {
+        input {
+            outline-color: #E10D0D;
         }
     }
 }
@@ -412,8 +424,8 @@
     transition: all 0.15s;
 
     p {
-        font-size: 16px;
-        line-height: 16px;
+        font-size: 14px;
+        line-height: 14px;
         color: #F89500;
     }
 
@@ -432,14 +444,14 @@
     transition: all 0.15s;
 
     p {
-        font-size: 16px;
-        line-height: 16px;
+        font-size: 14px;
+        line-height: 14px;
         color: #E10D0D;
     }
 
     &_vis {
         margin-top: 0;
-        height: 16px;
+        height: 18px;
         opacity: 1;
     }
 
@@ -447,6 +459,30 @@
         position: absolute;
         right: -140px;
         top: 32px
+    }
+}
+
+.bill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow: hidden;
+    opacity: 0;
+    height: 0;
+    margin-top: -6px;
+    transition: all 0.15s;
+
+    p {
+        font-size: 14px;
+        line-height: 14px;
+        color: var(--color-text-secondary);
+    }
+
+    &_vis {
+        margin-top: 0;
+        margin-bottom: 16px;
+        height: 20px;
+        opacity: 1;
     }
 }
 

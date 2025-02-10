@@ -59,7 +59,6 @@ const TabsNumbers = ({ sub, value, setValue, max, maxVis, forPro }) => {
 
     const handleInputBlur = () => {
         setActiveOptional(false)
-        console.log(value, maxVis)
         inputNumberValue == '' && value > maxVis && setValue(0);
         inputNumberValue !== '' && setValue(inputNumberValue);
 

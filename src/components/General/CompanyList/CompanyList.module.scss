@@ -4,7 +4,7 @@
     position: absolute;
     z-index: 2;
     left: 0;
-    top: 34px;
+    top: 31px;
     padding: 0;
     max-height: 0;
     overflow: hidden;
@@ -65,6 +65,5 @@
 }
 
 .item_active {
-    pointer-events: none;
     background-color: #d4dff389;
 }

@@ -47,7 +47,7 @@ const InputSelect = ({ sub, list, value, setValue }) => {
 
     return (
         <div className={`${s.container} ${s.container_select}`}>
-            <span className={s.sub}>{sub}</span>
+           {sub && <span className={s.sub}>{sub}</span>}
             <div onClick={handleOpenList} ref={listRef} className={`${s.field} ${s.field_select}`}>
                 <p>{name}</p>
                 <div  className={`${s.chewron} ${openList && s.chewron_open}`}>

@@ -15,10 +15,6 @@ const InputNum = ({ sub, disabled, value, setValue, error, errorEmpity, maxValue
         errorEmpity && value == '' ? setErrorStateEmpity(true) : setErrorStateEmpity(false)
     }, [errorEmpity, value])
 
-    useEffect(() => {
-        value.length > 0 && error ? setErrorState(true) : setErrorState(false)
-    }, [value])
-
     const handleValue = (e) => {
         setErrorState(false)
         const value = handleNumbers(e.currentTarget.value)

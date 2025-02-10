@@ -29,7 +29,6 @@ const DataPickerCalendar = ({ value, setValue, setOpenCalendar, nosub, disabledD
 
     function onChange(newValue) {
         setValue(dayjs(newValue))
-        console.log(dayjs(newValue))
         setTimeout(() => {
             setAnim(false)
         }, 200)

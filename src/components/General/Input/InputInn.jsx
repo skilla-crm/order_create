@@ -8,14 +8,13 @@ import CompanyListInn from '../CompanyList/CompanyListInn';
 //utils 
 import { handleNumbers } from '../../../utils/HandleNumbers';
 
-const InputInn = ({ sub, disabled, value, setValue, valueKpp, handleChose, openList, setOpenList, handleReset, companies, errorEmpity }) => {
+const InputInn = ({ sub, disabled, value, setValue, valueKpp, handleChose, openList, setOpenList, handleReset, companies, errorEmpity, existCompany, setExistCompany }) => {
     const [suggestions, setSuggestions] = useState([]);
     const [fieldFocus, setFieldFocus] = useState(false);
     const [fieldWide, setFieldWide] = useState(false)
     const [noFind, setNoFind] = useState(false)
     const [noFindKpp, setNoFindKpp] = useState(false)
     const [addKppValue, setAddKppValue] = useState('');
-    const [existCompany, setExistCompany] = useState(false);
     const [lengthError, setLengthError] = useState(false);
     const [errorStateEmpity, setErrorStateEmpity] = useState(false);
     const inputKppRef = useRef();
@@ -89,12 +88,23 @@ const InputInn = ({ sub, disabled, value, setValue, valueKpp, handleChose, openL
 
     useEffect(() => {
         const result = companies.find(el => el.inn + el.kpp == value + valueKpp)
-        result ? setExistCompany(true) : setExistCompany(false)
-    }, [companies, value, valueKpp])
+        const resultIp = companies.find(el => el.inn == value)
+        if (value.length == 10) {
+            result && !fieldFocus && setExistCompany(true)
+            return
+        }
+
+        if (value.length == 12) {
+            resultIp && !fieldFocus && setExistCompany(true)
+            return
+        }
+
+    }, [companies, value, valueKpp, fieldFocus])
 
     const handleValue = (e) => {
         setAddKppValue('')
         setNoFindKpp(false)
+    
         setExistCompany(false)
         const numValue = handleNumbers(e.currentTarget.value);
         numValue == '' && setSuggestions([])
@@ -158,14 +168,14 @@ const InputInn = ({ sub, disabled, value, setValue, valueKpp, handleChose, openL
                 }
             </div>
 
-            <div className={`${s.nofound} ${(noFind || noFindKpp) && !openList && s.nofound_vis}`}>
+            <div className={`${s.nofound} ${(noFind || noFindKpp) && !existCompany && !openList && s.nofound_vis}`}>
                 <IconWarning />
                 <p>
                     {noFindKpp ? 'КПП' : 'ИНН'} не найден. Проверь правильность или заполни форму вручную
                 </p>
             </div>
 
-            <div className={`${s.nofound} ${existCompany && !openList && s.nofound_vis}`}>
+            <div className={`${s.nofound} ${existCompany && s.nofound_vis}`}>
                 <IconWarning />
                 <p>
                     Данный заказчик уже есть в базе

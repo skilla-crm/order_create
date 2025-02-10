@@ -28,5 +28,8 @@ export const createCompany = (data) => {
     url: `${baseURL}api/companies/create`,
     data: data
   })
+}
 
+export const getHistoryOrders = (type, query) => {
+  return instanceWithToken.get(`${baseURL}api/orders/history?${type == 1 ? 'company_id' : 'phone'}=${query}`)
 }

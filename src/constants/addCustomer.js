@@ -1,6 +1,7 @@
 export const TITLE = 'Новый заказчик';
 export const BUTTON_TEXT_SAVE = 'Сохранить';
 export const BUTTON_TEXT_CANCLE = 'Отменить';
+export const BUTTON_TEXT_EXIST = 'Выбрать заказчика и закрыть';
 export const SUB_INN = 'ИНН';
 export const SUB_NAME = 'Наименование';
 export const SUB_KPP = 'КПП';
@@ -12,6 +13,7 @@ export const SUB_LEGAL = 'Действующего на основании';
 export const SUB_ADDRESS = 'Юридический адрес';
 export const SUB_EMAIL = 'Эл. почта для отправки договора';
 export const SUB_SWITCH = 'Прикрепить счет на предоплату';
+export const SUB_SWITCH_CONTRACT = 'Отправить договор';
 export const SUB_SUM = 'Сумма';
 export const SUB_PARTY = 'С кем договор';
 export const ERR_KPP = 'Должен состоять из 9 цифр';
