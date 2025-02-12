@@ -1,9 +1,122 @@
 import s from './Preview.module.scss';
+import { useContext, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
+import InputMask from 'comigo-tech-react-input-mask/lib/react-input-mask.development';
+import { ParametrsContext } from '../../contexts/UserContext';
+//selector
+import { selectorPerformers } from '../../store/reducer/Performers/selector';
+import { selectorCustomer } from '../../store/reducer/Customer/selector';
+import { selectorDetails } from '../../store/reducer/Details/selector';
+import { selectorAddress } from '../../store/reducer/Address/selector';
+import { selectorRates } from '../../store/reducer/Rates/selector';
+//components
+import Overlay from './Overlay';
+import MapAddress from '../General/MapAddress/MapAddress';
+//utils
+import { handleTextNumEnding } from '../../utils/HandleTextNumEndind';
+import { addSpaceNumber } from '../../utils/addSpaceNumber';
 
 const Preview = () => {
+    const { requirements } = useContext(ParametrsContext)
+    const { performersNum, date, time } = useSelector(selectorPerformers);
+    const { customer, payType, name, phone } = useSelector(selectorCustomer);
+    const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
+    const { address, metro, defaultCordinate, noAddress } = useSelector(selectorAddress);
+    const { rate, rateWorker } = useSelector(selectorRates);
+    const [total, setTotal] = useState(0);
+    const [totalMin, setTotalMin] = useState(0);
+    console.log('ставки', rate, rateWorker)
+
+    useEffect(() => {
+        setTotal(rate * duration)
+        setTotalMin(rate * minDuration)
+    }, [rate, minDuration, duration])
+
     return (
         <div className={s.preview}>
-            превью
+            <div className={s.header}>
+                <h2 className={s.title}>
+                    Заказ {dayjs(date).format('D MMMM')} <span className={`${s.time} ${time && s.time_vis}`}>
+                        {time && dayjs(time).format('H:mm')}
+                    </span>
+                </h2>
+            </div>
+
+
+            <div className={s.container}>
+                <div className={s.block}>
+                    <span>Заказчик</span>
+                    <div className={s.item}>
+                        <Overlay active={phone?.length !== 11} />
+                        <InputMask
+                            value={phone}
+                            disabled={true}
+                            mask="+7 (999) 999-99-99"
+                            placeholder='+7 (___) ___-__-__'
+                        />
+                    </div>
+                    <div className={`${s.item} ${s.item_name}`}>
+                        <Overlay active={name?.length == 0} />
+                        <p>{name}</p>
+                    </div>
+                </div>
+
+                <div className={`${s.block} ${notes?.length == 0 && s.block_hidden}`}>
+                    <span>Комментарий менеджеру</span>
+                    <p className={s.comment}>{notes.length > 145 ? `${notes.slice(0, 145)}...` : notes}</p>
+                </div>
+
+                <div className={`${s.block} ${s.block_bages} ${tags?.length == 0 && s.block_hidden}`}>
+                    {tags?.map(el => {
+                        const result = requirements?.find(item => item.id == el)
+                        return <div className={s.bage}>
+                            <p>{result.description}</p>
+                        </div>
+                    })}
+                </div>
+
+                <div className={`${s.block} ${noAddress && s.block_hidden}`}>
+                    <span>Адрес</span>
+                    <div className={`${s.item} ${s.item_address}`}>
+                        <Overlay active={!address.city} />
+                        <p>{`${address.city} ${address.street} ${address.house}`}</p>
+                    </div>
+                    <div className={s.map}>
+                        <MapAddress lat={address.lat} lng={address.lng} defaultCordinate={defaultCordinate} width={'100%'} height={180} />
+                    </div>
+
+                </div>
+
+                <div className={s.block}>
+                    <span>Ставка заказчику и исполнителю</span>
+                    <div className={`${s.item} ${s.item_name}`}>
+                        <Overlay active={(rate == '' || rateWorker == '')} />
+                        <p>{rate}/{rateWorker}</p>
+                    </div>
+                </div>
+
+                <div className={s.block}>
+                    <span>Исполнители</span>
+                    <div className={`${s.item} ${s.item_name}`}>
+                        <Overlay active={performersNum == 0} />
+                        {minDuration < duration && <p>{performersNum} чел на {minDuration} - {duration} {handleTextNumEnding(duration)}</p>}
+                        {minDuration == duration && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
+                        {minDuration > duration && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
+                    </div>
+                </div>
+            </div>
+
+            <div className={s.total}>
+                <p>Итого</p>
+                <div className={`${s.item} ${s.item_total}`}>
+                    {totalMin < total && <h2 className={s.title}>{addSpaceNumber(totalMin)} – {addSpaceNumber(total)} руб.</h2>}
+                    {totalMin >= total && <h2 className={s.title}>{addSpaceNumber(totalMin)} руб.</h2>}
+                    <Overlay active={total == 0} />
+                </div>
+
+            </div>
+
         </div>
     )
 };

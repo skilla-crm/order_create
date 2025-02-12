@@ -1,0 +1,104 @@
+@import '../../vendor/mixins.scss';
+
+.app {
+    @include block;
+    max-height: 38%;
+    height: fit-content;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+
+    &_app {
+        display: flex;
+        gap: 12px;
+    }
+}
+
+.title {
+    font-size: 18px;
+    line-height: 24px;
+    padding: 0;
+    font-weight: 500;
+}
+
+.container {
+    width: 100%;
+    height: 156px;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0px -1px 2px 0px #00000014, 0px 1px 3px 0px #9494941F, 0px 2px 3px 0px #B9B9B91A;
+}
+
+.avatar {
+    width: 72px;
+    height: 72px;
+    overflow: hidden;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        width: 104%;
+        height: 104%;
+    }
+}
+
+.block {
+    display: flex;
+    flex-direction: column;
+
+    p {
+        line-height: 24px;
+    }
+}
+
+.item {
+    width: fit-content;
+    height: fit-content;
+    position: relative;
+    flex-shrink: 0;
+
+    &_time {
+        min-width: 50px;
+        max-width: 70px;
+        overflow: hidden;
+        height: 24px;
+    }
+
+    &_price {
+        min-width: 120px;
+        height: 24px;
+    }
+
+    &_comment {
+        min-height: 48px;
+        width: 100%;
+    }
+
+    &_service {
+        height: 24px;
+        width: 100%;
+    }
+}
+
+.comment {
+    margin-top: 12px;
+    color: #71869D;
+
+}
+
+.date {
+    display: flex;
+    gap: 4px;
+}
+
+.price {
+    margin-top: 2px;
+
+    p {
+        color: #8037DC;
+    }
+}

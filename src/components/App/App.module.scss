@@ -53,7 +53,13 @@
 .right {
     width: calc(28.5% - 8px);
     flex-shrink: 0;
+}
+
+.sticky {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    position: sticky;
+    top: 16px;
+    height: calc(100vh - 182px);
 }

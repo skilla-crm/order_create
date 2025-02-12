@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectorAddress } from '../../store/reducer/Address/selector';
 import { selectorDetails } from '../../store/reducer/Details/selector';
 //slice
-import { setAddress, setMetro } from '../../store/reducer/Address/slice';
+import { setAddress, setMetro, setNoAddress, deleteMetro } from '../../store/reducer/Address/slice';
 import {
     setService,
     addRequirements,
@@ -33,26 +33,31 @@ import TabsNumbers from '../General/Tabs/TabsNumbers';
 import Tags from '../General/Tags/Tags';
 import Address from '../General/Address/Address';
 
-const tagList = ['Паспорт', 'Пропуск', 'Мед. книжка', 'Пед. книжка', 'Пропуск', 'Мед. книжка', 'Пед. книжка', 'Паспорт', 'Пропуск', 'Мед. книжка', 'Пед. книжка', 'Пропуск', 'Мед. книжка', 'Пед. книжка', 'Паспорт', 'Пропуск', 'Мед. книжка', 'Пед. книжка', 'Пропуск', 'Мед. книжка', 'Пед. книжка',]
-
 const Details = () => {
     const user = useContext(UserContext);
     const { types, requirements } = useContext(ParametrsContext)
-    const { address, metro } = useSelector(selectorAddress);
+    const { address, metro, defaultCordinate, noAddress } = useSelector(selectorAddress);
     const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
     const dispatch = useDispatch();
-    console.log(service)
-    const handleAdd = () => {
-    }
+    console.log(address)
 
+    const handleNoAdress = () => {
+        if (noAddress) {
+            dispatch(setNoAddress(false))
+        } else {
+            dispatch(setNoAddress(true))
+            dispatch(setAddress({}))
+            dispatch(deleteMetro())
+        }
+    }
 
     return (
         <div className={s.details}>
             <Header
                 title={TITLE}
-                buttonState={true}
-                buttonText={BUTTON_TEXT}
-                handleButton={handleAdd}
+                /*  buttonState={true}
+                 buttonText={BUTTON_TEXT} */
+                /*  handleButton={handleAdd} */
                 forPro={!user.pro}
                 PromptText={PromptDetails}
             />
@@ -111,9 +116,12 @@ const Details = () => {
                 metro={metro}
                 sub={SUB_ADDRESS}
                 user={user}
-                defaultCity={'Санкт-петербург'}
+                defaultCordinate={defaultCordinate}
                 setAddress={(data) => dispatch(setAddress(data))}
                 setMetro={(data) => dispatch(setMetro(data))}
+                first={true}
+                handleNoAdress={handleNoAdress}
+                noAddress={noAddress}
             />
 
         </div>

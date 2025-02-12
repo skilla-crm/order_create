@@ -11,26 +11,15 @@ import Metro from '../Metro/Metro';
 //utils
 import { adressStringUtility, addressUtility } from '../../../utils/AdressUtility';
 
-const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCity }) => {
+const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordinate, first, handleNoAdress, noAddress }) => {
     const [query, setQuery] = useState(adressStringUtility(address) || '');
     const [suggestions, setSuggestions] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
     const [openMap, setOpenMap] = useState(false);
-    const [noAdress, setNoAdress] = useState(false);
-    const [defaultCordinate, setDefaultCordinate] = useState([55.75, 37.57]);
 
     useEffect(() => {
-        getAddressExact(defaultCity)
-            .then(res => {
-                const data = res.data.response?.GeoObjectCollection?.featureMember?.[0].GeoObject?.Point;
-                const cordinate = data.pos.split(' ')
-                setDefaultCordinate([cordinate[1], cordinate[0]])
-            })
-    }, [defaultCity])
-
-    const handleNoAdress = () => {
-        noAdress ? setNoAdress(false) : setNoAdress(true)
-    }
+        noAddress && setQuery('')
+    }, [noAddress])
 
     const handleAdress = (e) => {
         const value = e.currentTarget.value;
@@ -103,8 +92,8 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCity 
         <div className={s.container}>
             <span className={s.sub}>{sub}</span>
             <div className={s.block}>
-                <div className={`${s.field} ${onFocus && s.field_focus}`}>
-                    <input onFocus={handleFocus} onBlur={handleBlur} value={query || ''} onChange={handleAdress}></input>
+                <div className={`${s.field} ${noAddress && s.field_disabled} ${onFocus && s.field_focus}`}>
+                    <input disabled={noAddress} onFocus={handleFocus} onBlur={handleBlur} value={query || ''} onChange={handleAdress}></input>
                     <button onClick={handleMap} className={`${s.button} ${(onFocus || (!address.lat && !openMap)) && s.button_hidden}`}>
                         <IconLocation />
                         {!openMap && <p>На карте</p>}
@@ -118,19 +107,20 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCity 
                     </ul>
                 </div>
 
-                <Switch
+                {first && <Switch
                     text={'Без адреса'}
-                    switchState={noAdress}
+                    switchState={noAddress}
                     handleSwitch={!user.pro ? handleProModal : handleNoAdress}
                     hidden={false}
                     forPro={!user.pro}
                 />
+                }
             </div>
             <div className={`${s.metro} ${metro.length >= 2 && s.metro_open}`}>
                 <Metro station={metro} />
             </div>
             <div className={`${s.map} ${!openMap && s.map_hidden}`}>
-                <MapAddress openMap={openMap} lat={address?.lat} lng={address?.lng} defaultCordinate={defaultCordinate}/>
+                <MapAddress openMap={openMap} lat={address?.lat} lng={address?.lng} defaultCordinate={defaultCordinate} width={690} height={292} />
             </div>
 
         </div>

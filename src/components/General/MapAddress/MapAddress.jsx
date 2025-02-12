@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import s from './MapAddress.module.scss';
-import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
+import { YMaps, Map, Placemark, YMapMarker } from '@pbe/react-yandex-maps';
+const API_KEY_MAP = process.env.REACT_APP_API_KEY_MAP;
 
 /* const Icon = () => {
     return (
@@ -8,30 +9,44 @@ import { YMaps, Map, Placemark } from '@pbe/react-yandex-maps';
     )
 } */
 
-const MapAddress = ({ lat, lng, defaultCordinate }) => {
+const MapAddress = ({ lat, lng, defaultCordinate, width, height }) => {
     const mapRef = useRef();
 
 
     return (
-        <div className={`${s.container}`}>
-            <YMaps>
+        <YMaps
+            query={{
+                apikey: API_KEY_MAP
+            }}>
 
-                <Map
-                    ref={mapRef}
-                    width={'100%'}
-                    height={280}
-                    defaultState={{ center: defaultCordinate, zoom: 10 }}
-                    state={{ center: lat ? [lat, lng] : defaultCordinate, zoom: lat ? 16 : 10 }}
-                >
-                    <Placemark geometry={[lat, lng]} /* iconContent={<Icon />} options={{
+            <Map
+                ref={mapRef}
+                width={width}
+                height={height}
+                defaultState={{
+                    center: defaultCordinate, zoom: 10,
+                    controls: [],
+                    suppressMapOpenBlock: true
+                }}
+                state={{
+                    center: lat ? [lat, lng] : defaultCordinate, zoom: lat ? 16 : 10,
+                    controls: [],
+                    suppressMapOpenBlock: true
+                }}
+                suppressMapOpenBlock={true}
+
+            >
+                {lat && <Placemark geometry={[lat, lng]}
+            
+                /* iconContent={<Icon />} options={{
 
                         iconCaption: 'хуй',
                     }} */
-                    />
-                </Map>
+                />
+                }
+            </Map>
 
-            </YMaps>
-        </div >
+        </YMaps>
     )
 };
 export default MapAddress;

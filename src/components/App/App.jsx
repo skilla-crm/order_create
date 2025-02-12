@@ -7,8 +7,10 @@ import { ReactComponent as IconPoints } from '../../images/icons/iconPoints16-16
 import { UserContext, ParametrsContext } from '../../contexts/UserContext';
 //Api
 import { getParametrs, createOrder } from '../../Api/Api';
+import { getAddressExact } from '../../Api/ApiYandex';
 //slice
 import { setCompaniesList } from '../../store/reducer/Customer/slice';
+import { setDefaultCordinate } from '../../store/reducer/Address/slice';
 //selector
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorPerformers } from '../../store/reducer/Performers/selector';
@@ -23,6 +25,7 @@ import Customer from '../Customer/Сustomer';
 import Performers from '../Performers/Performers';
 import Details from '../Details/Details';
 import Preview from '../Preview/Preview';
+import PreviewApp from '../PreviewApp/PreviewApp';
 import AddCustomer from '../AddCustomer/AddCustomer';
 import Rates from '../Rates/Rates';
 import Manager from '../Manager/Manager';
@@ -65,8 +68,18 @@ const App = () => {
             .catch(err => console.log(err))
     }, [])
 
+
+    useEffect(() => {
+        parametrs.city && getAddressExact(parametrs.city)
+            .then(res => {
+                const data = res.data.response?.GeoObjectCollection?.featureMember?.[0].GeoObject?.Point;
+                const cordinate = data.pos.split(' ')
+                dispatch(setDefaultCordinate([cordinate[1], cordinate[0]]))
+            })
+    }, [parametrs.city])
+
     const handleCreate = (e) => {
-     
+
         const id = e.currentTarget.id;
         id == 'create' ? setLoadCreate(true) : setLoadSave(true)
         const dopDates = additionalDates.length > 0 ?
@@ -145,8 +158,8 @@ const App = () => {
                         <h2 className={s.title}>Создание заказа</h2>
                         <div className={s.buttons}>
                             {/*  <Button Icon={IconPoints} type={'points'} /> */}
-                            <Button id={'save'} handleClick={handleCreate} text={'Сохранить черновик'} type={'second'}/>
-                            <Button id={'create'} handleClick={handleCreate} text={'Создать заказ'} Icon={IconDone} load={loadCreate}/>
+                            <Button id={'save'} handleClick={handleCreate} text={'Сохранить черновик'} type={'second'} />
+                            <Button id={'create'} handleClick={handleCreate} text={'Создать заказ'} Icon={IconDone} load={loadCreate} />
                         </div>
                     </div>
 
@@ -161,7 +174,10 @@ const App = () => {
                             <Manager />
                         </div>
                         <div className={s.right}>
-                            <Preview />
+                            <div className={s.sticky}>
+                                <Preview />
+                                <PreviewApp/>
+                            </div>
                         </div>
                     </div>
                 </div>

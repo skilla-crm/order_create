@@ -47,12 +47,24 @@ const Customer = ({ setAddCustomer }) => {
         payType == 1 ? setBeznal(true) : setBeznal(false)
     }, [payType])
 
+    useEffect(() => {
+        if (!customer.id && payType == 1) {
+            setLoadBage(false)
+            return
+        }
+
+        if (phone?.length !== 11 && payType !== 1) {
+            setLoadBage(false)
+            return
+        }
+    }, [customer, payType, phone])
+
 
     useEffect(() => {
         if ((phone?.length !== 11) || !customer.id) {
             setHistoryList([])
             setHistoryLoad(false)
-            setLoadBage(false)
+
             setHistoryName('')
             return
         }
