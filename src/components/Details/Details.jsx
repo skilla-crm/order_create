@@ -28,6 +28,7 @@ import { PromptDetails } from '../../constants/prompts';
 //components
 import Header from '../General/Header/Header';
 import InputSelectSearch from '../General/Input/InputSelectSearch';
+import InputSelect from '../General/Input/InputSelect';
 import Comment from '../General/Comment/Comment';
 import TabsNumbers from '../General/Tabs/TabsNumbers';
 import Tags from '../General/Tags/Tags';
@@ -62,12 +63,19 @@ const Details = () => {
                 PromptText={PromptDetails}
             />
 
-            <InputSelectSearch
+            <InputSelect 
+             sub={SUB_TYPE}
+             value={service}
+             setValue={(data) => dispatch(setService(data))}
+             list={types}
+            />
+
+           {/*  <InputSelectSearch
                 sub={SUB_TYPE}
                 value={service}
                 setValue={(data) => dispatch(setService(data))}
                 list={types}
-            />
+            /> */}
             <Comment
                 sub={SUB_COMMENT}
                 maxLength={1000}

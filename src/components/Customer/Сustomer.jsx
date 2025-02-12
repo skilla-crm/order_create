@@ -1,10 +1,12 @@
 import s from './Customer.module.scss';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ReactComponent as IconLoader } from '../../images/icons/IconLoader.svg';
+import { ReactComponent as IconLoader } from '../../images/icons/IconLoader.svg'; 
 import { ReactComponent as IconInfo } from '../../images/icons/header/iconInfo.svg';
+import { ReactComponent as IconInfoErr } from '../../images/icons/iconInfoErr.svg';
+import { ReactComponent as IconInfoWarning } from '../../images/icons/iconWarning.svg';
 //Api
-import { getHistoryOrders } from '../../Api/Api';
+import { getHistoryOrders, checkCompany } from '../../Api/Api';
 //selector
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 //slice
@@ -12,7 +14,10 @@ import {
     setCustomer,
     setPayType,
     setName,
-    setPhone
+    setPhone,
+    setIsBlack,
+    setDebt,
+    setDebtThreshold
 } from '../../store/reducer/Customer/slice';
 //constants
 import { PromptCustomer } from '../../constants/prompts';
@@ -21,6 +26,8 @@ import {
     SUB_NAME, SUB_COMPANY, SUB_PHONE,
     SWITCH_NAME, ERROR_PHONE, segments
 } from '../../constants/customer';
+//utils
+import { addSpaceNumber } from '../../utils/addSpaceNumber';
 //components
 import Header from '../General/Header/Header';
 import SegmentControl from '../General/SegmentControl/SegmentControl';
@@ -31,7 +38,7 @@ import Switch from '../General/Switch/Switch';
 import OrdersHistory from '../OrdersHistory/OrdersHistory';
 
 
-const Customer = ({ setAddCustomer }) => {
+const Customer = ({ setAddCustomer, addCustomer }) => {
     const [noContactPerson, setNoContactPerson] = useState(false);
     const [historyLoad, setHistoryLoad] = useState(false);
     const [historyList, setHistoryList] = useState([]);
@@ -39,13 +46,24 @@ const Customer = ({ setAddCustomer }) => {
     const [phoneWithMask, setPhoneWithMask] = useState('');
     const [beznal, setBeznal] = useState(true);
     const [loadBage, setLoadBage] = useState(false);
-    const { companies, customer, payType, name, phone } = useSelector(selectorCustomer);
+    const { companies, customer, payType, name, phone, isBlack, debt, debtThreshold } = useSelector(selectorCustomer);
     const dispatch = useDispatch();
     console.log(payType, customer)
 
     useEffect(() => {
         payType == 1 ? setBeznal(true) : setBeznal(false)
     }, [payType])
+
+    useEffect(() => {
+        customer.id && checkCompany(customer.id)
+            .then(res => {
+                const data = res.data.data;
+                dispatch(setIsBlack(data.is_black))
+                dispatch(setDebt(data.debt))
+                dispatch(setDebtThreshold(data.debt_threshold))
+            })
+            .catch(err => console.log(err))
+    }, [customer])
 
     useEffect(() => {
         if (!customer.id && payType == 1) {
@@ -126,7 +144,7 @@ const Customer = ({ setAddCustomer }) => {
             <div className={s.customer}>
                 <Header
                     title={TITLE}
-                    buttonState={true}
+                    buttonState={addCustomer ? false : true}
                     buttonText={BUTTON_TEXT}
                     handleButton={handleAdd}
                     forPro={false}
@@ -148,6 +166,7 @@ const Customer = ({ setAddCustomer }) => {
                                 value={customer?.id}
                                 setValue={(data) => dispatch(setCustomer(data))}
                                 setAddCustomer={setAddCustomer}
+                                payType={payType}
                             />
                         </div>
                         <div className={s.container}>
@@ -176,6 +195,21 @@ const Customer = ({ setAddCustomer }) => {
 
                     </div>
                 </div>
+                <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && s.loader_vis}`}>
+                    <IconInfoErr />
+                    <p>Заказчик в черном списке</p>
+                </div>
+
+                <div className={`${s.loader} ${s.loader_error} ${debt > debtThreshold && s.loader_vis}`}>
+                    <IconInfoErr />
+                    <p>Превышен лимит по задолженности</p>
+                </div>
+
+                <div className={`${s.loader} ${s.loader_warning} ${debt <= debtThreshold && debt !== 0 && s.loader_vis}`}>
+                    <IconInfoWarning />
+                    <p>Задолженность {addSpaceNumber(debt)} ₽</p>
+                </div>
+
                 <div className={`${s.loader} ${loadBage && historyList?.length == 0 && s.loader_vis}`}>
                     {historyLoad && <div className={s.loader_anim}><IconLoader /></div>}
                     {historyLoad && <p>Проверяем историю заказов</p>}

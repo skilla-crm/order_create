@@ -6,14 +6,13 @@ import { ReactComponent as IconBuilder } from '../../images/icons/IconBuilder.sv
 import { ReactComponent as IconDone } from '../../images/icons/bage/iconDone.svg';
 import { ReactComponent as IconDoneYellow } from '../../images/icons/bage/iconDoneYellow.svg';
 import { ReactComponent as IconClose } from '../../images/icons/bage/iconClose.svg';
+import dayjs from 'dayjs';
 //components
 import Header from '../General/Header/Header';
 import InputSelect from '../General/Input/InputSelect';
 //constants
 import { PromptCustomer } from '../../constants/prompts';
 const list = [{ id: 5, name: 'Последние 5 заказов' }, { id: 10, name: 'Последние 10 заказов' }, { id: 20, name: 'Последние 20 заказов' }, { id: 0, name: 'Все' }]
-
-
 
 const Bage = ({ status }) => {
     return (
@@ -50,7 +49,7 @@ const Item = ({ el }) => {
             </button>
 
             <div className={`${s.block} ${s.block_date}`}>
-                <p>{el?.date}</p>
+                <p>{dayjs(el?.date).locale('ru').format('D MMMM')}</p>
                 <span>
                     <IconBuilder />
                     {el?.worker_count}
@@ -78,7 +77,9 @@ const Item = ({ el }) => {
             <div className={`${s.block} ${s.block_bit}`}>
                 <p>{el?.client_bit} / {el.worker_bit}</p>
                 <span>
-                    на р/с
+                    {el.beznal == 1 && 'на р/с'}
+                    {el.beznal == 0 && el.to_card == 1 && 'на карту'}
+                    {el.beznal == 0 && el.to_card == 0 && 'наличные'}
                 </span>
             </div>
 

@@ -57,6 +57,10 @@ const App = () => {
     }, [theme]);
 
     useEffect(() => {
+        addCustomer && window.scroll({top: 320})
+    }, [addCustomer])
+
+    useEffect(() => {
         getParametrs()
             .then(res => {
                 const data = res.data.data;
@@ -166,7 +170,7 @@ const App = () => {
 
                     <div className={s.container}>
                         <div className={s.left}>
-                            <Customer setAddCustomer={setAddCustomer} />
+                            <Customer setAddCustomer={setAddCustomer} addCustomer={addCustomer}/>
                             {addCustomer && <AddCustomer setAddCustomer={setAddCustomer} />}
                             <Performers />
                             <Details />

@@ -72,6 +72,18 @@
             animation: load 10s linear infinite;
         }
     }
+
+    &_error {
+        p {
+            color: #E10D0D;
+        }
+    }
+
+    &_warning {
+        p {
+            color: #F89500;
+        }
+    }
 }
 
 @keyframes load {

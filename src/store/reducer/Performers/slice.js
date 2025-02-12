@@ -5,7 +5,8 @@ import 'dayjs/locale/ru'
 const initialState = {
     performersNum: 1,
     date: dayjs().locale('ru'),
-    time: null
+    time: null,
+    timerDisabled: false
 };
 
 const PerformersSlice = createSlice({
@@ -23,14 +24,19 @@ const PerformersSlice = createSlice({
 
         setTime(state, action) {
             state.time = action.payload;
-        }
+        },
+
+        setTimerDisabled(state, action) {
+            state.timerDisabled = action.payload;
+        },
     },
 });
 
 export const {
     setPerformersNum,
     setDate,
-    setTime
+    setTime,
+    setTimerDisabled
 } = PerformersSlice.actions;
 
 export default PerformersSlice.reducer;

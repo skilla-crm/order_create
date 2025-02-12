@@ -19,14 +19,13 @@ import { addSpaceNumber } from '../../utils/addSpaceNumber';
 
 const Preview = () => {
     const { requirements } = useContext(ParametrsContext)
-    const { performersNum, date, time } = useSelector(selectorPerformers);
+    const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { customer, payType, name, phone } = useSelector(selectorCustomer);
     const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
     const { address, metro, defaultCordinate, noAddress } = useSelector(selectorAddress);
     const { rate, rateWorker } = useSelector(selectorRates);
     const [total, setTotal] = useState(0);
     const [totalMin, setTotalMin] = useState(0);
-    console.log('ставки', rate, rateWorker)
 
     useEffect(() => {
         setTotal(rate * duration)
@@ -100,9 +99,10 @@ const Preview = () => {
                     <span>Исполнители</span>
                     <div className={`${s.item} ${s.item_name}`}>
                         <Overlay active={performersNum == 0} />
-                        {minDuration < duration && <p>{performersNum} чел на {minDuration} - {duration} {handleTextNumEnding(duration)}</p>}
-                        {minDuration == duration && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
-                        {minDuration > duration && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
+                        {minDuration < duration && !timerDisabled && <p>{performersNum} чел на {minDuration} - {duration} {handleTextNumEnding(duration)}</p>}
+                        {minDuration == duration && !timerDisabled && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
+                        {minDuration > duration && !timerDisabled && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
+                        {timerDisabled && <p>{performersNum} человек</p>}
                     </div>
                 </div>
             </div>

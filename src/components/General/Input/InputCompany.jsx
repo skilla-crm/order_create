@@ -8,7 +8,7 @@ import CompanyList from '../CompanyList/CompanyList';
 import { addSpaceNumber } from '../../../utils/addSpaceNumber';
 import { handleSearchCompany } from '../../../utils/SearchCompany';
 
-const InputCompany = ({ sub, list, value, setValue, setAddCustomer }) => {
+const InputCompany = ({ sub, list, value, setValue, setAddCustomer, payType }) => {
     const [openList, setOpenList] = useState(false);
     const [fieldFocus, setFieldFocus] = useState(false);
     const [valueText, setValueText] = useState('');
@@ -21,8 +21,13 @@ const InputCompany = ({ sub, list, value, setValue, setAddCustomer }) => {
     useEffect(() => {
         const result = list.find(el => el.id == value)
         setCompanyInfo(result)
-        result && setValueText(result?.name)
+        result && setValueText(result?.name) 
     }, [value])
+
+    useEffect(() => {
+        payType !== 1 && setValueText('')
+        payType !== 1 && setValue('')
+    }, [payType])
 
     useEffect(() => {
         const search = handleSearchCompany(valueText, list);
@@ -61,14 +66,14 @@ const InputCompany = ({ sub, list, value, setValue, setAddCustomer }) => {
             setListScroll(true)
         }, 100)
         setFieldFocus(true)
+        value !== '' && setSearchResult(list)
     }
 
 
     const handleBlur = () => {
         setFieldFocus(false)
-       
+        
     }
-
 
     const handleClose = () => {
         setOpenList(false)

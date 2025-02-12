@@ -7,7 +7,7 @@ const initialState = {
     notes: '',
     minDuration: 1,
     duration: 1,
-    service: null,
+    service: 15,
 };
 
 const DetailsSlice = createSlice({

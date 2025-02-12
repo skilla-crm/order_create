@@ -146,7 +146,7 @@ const AddCustomer = ({ setAddCustomer }) => {
 
     const handleCancel = () => {
         setAnim(false)
-
+        window.scroll({top: -340})
         setTimeout(() => {
             setAddCustomer(false)
             dispatch(setInn(''))

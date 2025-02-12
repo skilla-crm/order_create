@@ -16,7 +16,7 @@ import { addSpaceNumber } from '../../utils/addSpaceNumber';
 const PreviewApp = () => {
     const { types } = useContext(ParametrsContext)
     const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
-    const { performersNum, date, time } = useSelector(selectorPerformers);
+    const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { rate, rateWorker } = useSelector(selectorRates);
     const [activeType, setActiveType] = useState('')
 
@@ -48,15 +48,15 @@ const PreviewApp = () => {
                                 <p>{dayjs(date).format('D MMMM')}</p>
                             </div>
 
-                            <div className={`${s.item} ${s.item_time}`}>
+                            {!timerDisabled && <div className={`${s.item} ${s.item_time}`}>
                                 <Overlay active={!time} />
                                 {time && <p>c {dayjs(time).format('H:mm')}</p>}
-                            </div>
+                            </div>}
 
-                            <div className={`${s.item} ${s.item_time}`}>
+                            {!timerDisabled && <div className={`${s.item} ${s.item_time}`}>
                                 <Overlay active={!time} />
                                 {time && <p>до {dayjs(time).hour(duration + 1).format('H:mm')}</p>}
-                            </div>
+                            </div>}
                         </div>
 
                         <div className={s.price}>
@@ -71,8 +71,8 @@ const PreviewApp = () => {
 
                 <div className={s.comment}>
                     <div className={`${s.item} ${s.item_comment}`}>
-                        <Overlay active={notes == ''} />
-                        {notes !== '' && <p>{notes.length > 105 ? `${notes.slice(0, 105)}...` : notes}</p>}
+                        <Overlay active={commentSupervisor == ''} />
+                        {commentSupervisor !== '' && <p>{commentSupervisor.length > 105 ? `${commentSupervisor.slice(0, 105)}...` : commentSupervisor}</p>}
                     </div>
                 </div>
             </div>

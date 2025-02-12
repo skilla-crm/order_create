@@ -6,6 +6,9 @@ const initialState = {
     payType: 1,
     name: '',
     phone: '',
+    isBlack: 0,
+    debt: 0,
+    debtThreshold: 0
 };
 
 const CustomerSlice = createSlice({
@@ -36,6 +39,18 @@ const CustomerSlice = createSlice({
         setPhone(state, action) {
             state.phone = action.payload;
         },
+
+        setIsBlack(state, action) {
+            state.isBlack = action.payload;
+        },
+
+        setDebt(state, action) {
+            state.debt = action.payload;
+        },
+
+        setDebtThreshold(state, action) {
+            state.debtThreshold = action.payload;
+        },
     },
 });
 
@@ -45,7 +60,10 @@ export const {
     setCustomer,
     setPayType,
     setName,
-    setPhone
+    setPhone,
+    setIsBlack,
+    setDebt,
+    setDebtThreshold
 } = CustomerSlice.actions;
 
 export default CustomerSlice.reducer;

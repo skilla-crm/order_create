@@ -249,6 +249,7 @@
         padding: 8px 12px;
         min-height: 40px;
         box-sizing: border-box;
+        flex-shrink: 0;
         display: flex;
         justify-content: center;
         flex-direction: column;

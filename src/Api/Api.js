@@ -46,3 +46,11 @@ export const createOrder = (data) => {
     data: data
   })
 }
+
+export const checkCompany = (id) => {
+  return instanceWithToken.get(`${baseURL}api/orders/check_company/${id}`)
+}
+
+export const contactCompany = (id) => {
+  return instanceWithToken.get(`${baseURL}api/orders/company_contacts/${id}`)
+}

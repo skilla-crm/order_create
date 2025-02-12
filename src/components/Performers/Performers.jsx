@@ -17,7 +17,7 @@ import TabsNumbers from '../General/Tabs/TabsNumbers';
 import AdditionalDate from './AdditionalDate/AdditionalDate';
 import ProCalendar from './ProCalendar/ProCalendar';
 //slice
-import { setPerformersNum, setDate, setTime } from '../../store/reducer/Performers/slice';
+import { setPerformersNum, setDate, setTime, setTimerDisabled } from '../../store/reducer/Performers/slice';
 import { setAdditionalDates } from '../../store/reducer/AdditionalDates/slice';
 //selector
 import { selectorPerformers } from '../../store/reducer/Performers/selector';
@@ -25,7 +25,6 @@ import { selectorAdditionalDates } from '../../store/reducer/AdditionalDates/sel
 
 
 const Performers = () => {
-    const [timerDisabled, setTimerDisabled] = useState(false);
     const [proCalendar, setProCalendar] = useState(false);
     const [proType, setProType] = useState(1);
     const [periodDates, setPeriodDates] = useState([]);
@@ -34,7 +33,7 @@ const Performers = () => {
     const [scrollState, setScrollState] = useState(false);
     const user = useContext(UserContext);
     const dispatch = useDispatch();
-    const { performersNum, date, time } = useSelector(selectorPerformers);
+    const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { additionalDates, disabledDates } = useSelector(selectorAdditionalDates);
 
     console.log(additionalDates, performersNum, date, time)
@@ -45,7 +44,7 @@ const Performers = () => {
     }, [additionalDates])
 
     const handleTimerDisabled = () => {
-        timerDisabled ? setTimerDisabled(false) : setTimerDisabled(true)
+        timerDisabled ? dispatch(setTimerDisabled(false)) : dispatch(setTimerDisabled(true))
     }
 
     const handleAdd = () => {
