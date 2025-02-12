@@ -3,20 +3,29 @@ import { ReactComponent as IconChewron } from '../../../images/icons/iconChewron
 import { ReactComponent as IconChewron2 } from '../../../images/icons/iconChewron2.svg';
 import { useRef, useState, useEffect } from 'react';
 
-const InputSelect = ({ sub, list, value, setValue, type }) => {
+const InputSelect = ({ sub, list, value, setValue, type, defaultRow }) => {
     const [openList, setOpenList] = useState(false);
-    const [name, setName] = useState(list[0].name || '')
-
+    const [name, setName] = useState('')
     const listRef = useRef();
 
     useEffect(() => {
-        if (value !== '') {
-            const result = list.find(el => el.id == value)
-            setName(result?.name)
-        } else {
-            setName(list[0]?.name)
-            setValue(list[0]?.id)
+        if (((value == 0 || value == null) && defaultRow)) {
+            setName(defaultRow.name)
+            return
         }
+
+        if (value !== '') {
+            const result = list?.find(el => el.id == value)
+            setName(result?.name)
+            return
+        }
+        if (value == '') {
+            setName(list?.[0]?.name)
+            setValue(list?.[0]?.id)
+            return
+        }
+
+
     }, [list, value])
 
 
@@ -57,9 +66,10 @@ const InputSelect = ({ sub, list, value, setValue, type }) => {
                 </div>
 
                 <ul className={`${s.list} ${openList && s.list_open}`}>
-                    {list.map(el => {
+                    {defaultRow && <li onClick={handleValue} id={defaultRow.id} className={`${s.item} ${(value == 0 || value == null) && s.item_active}`}>{defaultRow.name}</li>}
+                    {list?.map(el => {
                         return <li onClick={handleValue} key={el.id} id={el.id} className={`${s.item} ${el.id == value && s.item_active}`}>
-                            <p>{el.name}</p>
+                            <p>{el.name} {el.position == 'director' && <span>Руководитель</span>}</p>
                         </li>
                     })}
                 </ul>

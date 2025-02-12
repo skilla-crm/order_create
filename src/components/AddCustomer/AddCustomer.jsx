@@ -195,6 +195,7 @@ const AddCustomer = ({ setAddCustomer }) => {
                     buttonState={false}
                     forPro={false}
                     PromptText={PromptCustomer}
+                    hiddenPrompt={true}
                 />
                 <div className={s.form}>
                     <InputInn

@@ -19,20 +19,8 @@ const AdditionalDate = ({ id, performers, date, time, disabledDates, setProType,
     const [dateEdit, setDateEdit] = useState(date);
     const [timeEdit, setTimeEdit] = useState(time);
     const [firstLoad, setFirstLoad] = useState(true);
+
     const dispatch = useDispatch();
-
-    const handleDelete = (e) => {
-        const id = e.currentTarget.id;
-        disabledDates.length > 2 && setAnim(false)
-        disabledDates.length <= 2 && setHiddenAddDates(true)
-
-        setTimeout(() => {
-            dispatch(deleteAdditionalDates(id))
-            setProType(1)
-        }, 200)
-
-
-    }
 
     useEffect(() => {
         setTimeout(() => {
@@ -50,6 +38,17 @@ const AdditionalDate = ({ id, performers, date, time, disabledDates, setProType,
     useEffect(() => {
         !firstLoad && setProType(1)
     }, [dateEdit])
+
+    const handleDelete = (e) => {
+        const id = e.currentTarget.id;
+        disabledDates.length > 2 && setAnim(false)
+        disabledDates.length <= 2 && setHiddenAddDates(true)
+
+        setTimeout(() => {
+            dispatch(deleteAdditionalDates(id))
+            setProType(1)
+        }, 200)
+    }
 
     useEffect(() => {
         !firstLoad && dispatch(editAdditionalDates({

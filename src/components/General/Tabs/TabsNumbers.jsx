@@ -36,7 +36,7 @@ const TabsNumbers = ({ sub, value, setValue, max, maxVis, forPro }) => {
 
     const handleScroll = (value) => {
         if (value <= max && value > maxVis) {
-            activeRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+            activeRef.current?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: "smooth" });
             return
         }
     }

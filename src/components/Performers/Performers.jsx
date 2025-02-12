@@ -30,19 +30,18 @@ const Performers = () => {
     const [proType, setProType] = useState(1);
     const [periodDates, setPeriodDates] = useState([]);
     const [allDatesRange, setAllDatesRange] = useState([]);
-    const [hiddenAddDates, setHiddenAddDates] = useState(true)
+    const [hiddenAddDates, setHiddenAddDates] = useState(true);
+    const [scrollState, setScrollState] = useState(false);
     const user = useContext(UserContext);
     const dispatch = useDispatch();
-    const data = useSelector(selectorPerformers);
-    const additionalDates = useSelector(selectorAdditionalDates).additionalDates;
-    const disabledDates = useSelector(selectorAdditionalDates).disabledDates;
-    const performersNum = data.performersNum;
-    const date = data.date;
-    const time = data.time;
-    console.log(proType)
-    
+    const { performersNum, date, time } = useSelector(selectorPerformers);
+    const { additionalDates, disabledDates } = useSelector(selectorAdditionalDates);
+
+    console.log(additionalDates, performersNum, date, time)
+
     useEffect(() => {
-        additionalDates.length > 0 && setHiddenAddDates(false)
+        additionalDates.length > 0 ? setHiddenAddDates(false) : setHiddenAddDates(true)
+        additionalDates.length > 15 ? setScrollState(true) : setScrollState(false)
     }, [additionalDates])
 
     const handleTimerDisabled = () => {
@@ -92,10 +91,10 @@ const Performers = () => {
 
             <div className={`${s.container_sub} ${hiddenAddDates && s.hidden}`}>
                 <span className={s.sub}>{SUB_DATES}</span>
-                <div className={s.container_dates}>
+                <div className={`${s.container_dates} ${scrollState && s.container_scroll}`}>
 
                     {additionalDates.map((el) => {
-                        return <AdditionalDate key={el.id} id={el.id} date={el.date} time={el.time} performers={el.performers} disabledDates={[date, ...disabledDates]} setProType={setProType} setHiddenAddDates={setHiddenAddDates}/>
+                        return <AdditionalDate key={el.id} id={el.id} date={el.date} time={el.time} performers={el.performers} disabledDates={[date, ...disabledDates]} setProType={setProType} setHiddenAddDates={setHiddenAddDates} />
                     })}
                 </div>
             </div>

@@ -11,28 +11,28 @@ import Header from '../General/Header/Header';
 import InputSelect from '../General/Input/InputSelect';
 //constants
 import { PromptCustomer } from '../../constants/prompts';
-const list = [{ id: 1, name: 'Последние 5 заказов' }, { id: 2, name: 'Последние 10 заказов' }, { id: 3, name: 'Последние 20 заказов' }, { id: 4, name: 'Все' }]
+const list = [{ id: 5, name: 'Последние 5 заказов' }, { id: 10, name: 'Последние 10 заказов' }, { id: 20, name: 'Последние 20 заказов' }, { id: 0, name: 'Все' }]
 
 
 
 const Bage = ({ status }) => {
     return (
         <>
-            {status == 2 &&
+            {(status == 4 || status == 20) &&
                 <div className={s.bage}>
                     <IconDone />
                     <p>Завершен</p>
                 </div>
             }
 
-            {status == 3 &&
+            {status < 4 &&
                 <div className={`${s.bage} ${s.bage_yellow}`}>
                     <IconDoneYellow />
                     <p>Не завершен</p>
                 </div>
             }
 
-            {status == 1 &&
+            {(status == 5 || status == 21) &&
                 <div className={`${s.bage} ${s.bage_red}`}>
                     <IconClose />
                     <p>Отменен</p>
@@ -91,7 +91,8 @@ const Item = ({ el }) => {
 
 
 const OrdersHistory = ({ vis, client, historyList }) => {
-    const [historyLength, setHistoryLength] = useState(1);
+    const [historyLength, setHistoryLength] = useState(5);
+    console.log(historyList.slice(0, historyLength))
     return (
         <div className={`${s.window} ${vis && s.window_vis}`}>
             <div className={s.container}>
@@ -100,16 +101,17 @@ const OrdersHistory = ({ vis, client, historyList }) => {
                     buttonState={false}
                     PromptText={PromptCustomer}
                 />
-                <InputSelect
+                {historyList.length > 5 && <InputSelect
                     sub={false}
-                    list={list}
+                    list={list.filter(el => el.id < historyList.length)}
                     value={historyLength}
                     setValue={setHistoryLength}
                     type={2}
                 />
+                }
 
                 <div className={s.history}>
-                    {historyList.map(el => {
+                    {historyList.slice(0, historyLength == 0 ? 1000 : historyLength).map(el => {
                         return <Item key={el.id} el={el} />
                     })}
                 </div>

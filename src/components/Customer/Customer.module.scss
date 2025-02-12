@@ -57,10 +57,6 @@
     align-items: center;
     gap: 6px;
 
-    svg {
-        animation: load 10s linear infinite;
-    }
-
     p {
         color: var(--color-text-secondary);
     }
@@ -69,6 +65,12 @@
         height: 18px;
         margin-top: 0;
         opacity: 1;
+    }
+
+    &_anim {
+        svg {
+            animation: load 10s linear infinite;
+        }
     }
 }
 

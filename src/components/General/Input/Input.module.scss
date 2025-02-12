@@ -13,6 +13,7 @@
     &_time {
         position: relative;
         width: 110px;
+
     }
 
     &_num {
@@ -117,10 +118,6 @@
 
     &_focus {
         outline: 1px solid var(--color-button-accent);
-
-        /*    svg path {
-            fill: #ADBFDF;
-        } */
     }
 
 
@@ -236,19 +233,24 @@
     border-radius: 4px;
     background: var(--color-bg-card);
     box-shadow: 0px 0px 10px 0px rgba(0, 32, 51, 0.10);
-    transition: all 0.2s;
+    opacity: 0;
+    /*  transition: all 0.15s; */
 
     &_scroll {
         overflow: auto;
     }
 
     &_open {
+        opacity: 1;
         max-height: 320px;
     }
 
     li {
         padding: 8px 12px;
+        min-height: 40px;
+        box-sizing: border-box;
         display: flex;
+        justify-content: center;
         flex-direction: column;
         cursor: pointer;
         gap: 6px;
@@ -495,9 +497,19 @@
 }
 
 .item {
+
     &_active {
         pointer-events: none;
         background-color: #d4dff389;
+    }
+
+    p {
+        display: flex;
+        align-items: center;
+    }
+
+    span {
+        margin-left: auto;
     }
 }
 

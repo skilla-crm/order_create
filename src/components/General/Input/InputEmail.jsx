@@ -8,10 +8,10 @@ const InputEmail = ({ sub, disabled, value, setValue, error, errorEmpity, errorT
     useEffect(() => {
         errorEmpity && value == '' ? setErrorStateEmpity(true) : setErrorStateEmpity(false)
     }, [errorEmpity, value])
-/* 
-    useEffect(() => {
-        value.length > 0 && error ? setErrorState(true) : setErrorState(false)
-    }, [value]) */
+    /* 
+        useEffect(() => {
+            value.length > 0 && error ? setErrorState(true) : setErrorState(false)
+        }, [value]) */
 
     const handleValue = (e) => {
         setErrorState(false)
@@ -29,7 +29,7 @@ const InputEmail = ({ sub, disabled, value, setValue, error, errorEmpity, errorT
 
     return (
         <div className={s.container}>
-            <span className={s.sub}>{sub}</span>
+            {sub && <span className={s.sub}>{sub}</span>}
             <input
                 value={value || ''}
                 onBlur={handleError}

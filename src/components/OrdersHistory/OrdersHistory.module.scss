@@ -2,15 +2,16 @@
 
 .window {
     max-height: 0;
-    height: 258px;
+    height: fit-content;
     overflow: hidden;
     margin-bottom: -16px;
+    max-width: 100%;
     opacity: 0;
-    transition: max-height 0.3s ease-in-out, margin-bottom 0.3s ease-in-out, opacity 0.25s;
+/*     transition: max-height 0.3s ease-in-out, margin-bottom 0.3s ease-in-out, opacity 0.25s; */
 
     &_vis {
         overflow: visible;
-        max-height: 300px;
+        max-height: 520px;
         margin-bottom: 0;
         opacity: 1;
 
@@ -23,7 +24,9 @@
 }
 
 .history {
-    width: 100%;
+    max-height: 292px;
+    box-sizing: border-box;
+    overflow: auto;
     padding: 6px 0;
     border-radius: 4px;
     box-shadow: 0px 0px 10px 0px rgba(0, 32, 51, 0.10);
@@ -33,15 +36,12 @@
 
 .item {
     padding: 9px 9px 9px 0;
-    height: 56px;
-    width: auto;
-    max-width: 100%;
+    min-height: 56px;
     box-sizing: border-box;
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     overflow: hidden;
-    flex: 0 1 auto;
-    max-width: 100%;
 }
 
 .repeat {
@@ -68,7 +68,7 @@
     p {
         max-width: 99%;
         overflow: hidden;
-        text-wrap: nowrap;
+        white-space: nowrap;
         text-overflow: ellipsis;
     }
 
@@ -76,6 +76,7 @@
         display: flex;
         align-items: center;
         gap: 6px;
+        max-width: 96%;
         color: var(--color-text-secondary);
 
         input {
@@ -89,9 +90,8 @@
     }
 
     &_address {
-        position: relative;
         width: 100%;
-        flex-shrink: 20;
+        flex-shrink: 500;
         overflow: hidden;
     }
 

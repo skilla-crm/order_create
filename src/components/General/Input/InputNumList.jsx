@@ -19,7 +19,7 @@ const InputNumList = ({ sub, disabled, nosub, inputWidth, Icon, max, value, setV
 
     const handleScroll = () => {
         if (value <= max && value > 0) {
-            activeRef.current?.scrollIntoView({ block: "center", behavior: "smooth" });
+            activeRef.current?.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: "smooth" });
             return
         }
     }
@@ -31,7 +31,7 @@ const InputNumList = ({ sub, disabled, nosub, inputWidth, Icon, max, value, setV
         setTimeout(() => {
             handleScroll()
         }, 50)
- 
+
     }
 
     const handleTab = (e) => {

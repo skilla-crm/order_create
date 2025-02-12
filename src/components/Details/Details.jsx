@@ -1,11 +1,21 @@
 import s from './Details.module.scss';
 import { useContext, useState } from 'react';
-import { UserContext } from '../../contexts/UserContext';
+import { UserContext, ParametrsContext } from '../../contexts/UserContext';
 import { useSelector, useDispatch } from 'react-redux';
 //selectors
 import { selectorAddress } from '../../store/reducer/Address/selector';
+import { selectorDetails } from '../../store/reducer/Details/selector';
 //slice
 import { setAddress, setMetro } from '../../store/reducer/Address/slice';
+import {
+    setService,
+    addRequirements,
+    deleteRequirements,
+    setCommentSupervisor,
+    setNotes,
+    setMinDurqtion,
+    setDuration
+} from '../../store/reducer/Details/slice';
 //constants
 import {
     TITLE, BUTTON_TEXT,
@@ -22,19 +32,16 @@ import Comment from '../General/Comment/Comment';
 import TabsNumbers from '../General/Tabs/TabsNumbers';
 import Tags from '../General/Tags/Tags';
 import Address from '../General/Address/Address';
-import Switch from '../General/Switch/Switch';
-
 
 const tagList = ['Паспорт', 'Пропуск', 'Мед. книжка', 'Пед. книжка', 'Пропуск', 'Мед. книжка', 'Пед. книжка', 'Паспорт', 'Пропуск', 'Мед. книжка', 'Пед. книжка', 'Пропуск', 'Мед. книжка', 'Пед. книжка', 'Паспорт', 'Пропуск', 'Мед. книжка', 'Пед. книжка', 'Пропуск', 'Мед. книжка', 'Пед. книжка',]
 
 const Details = () => {
     const user = useContext(UserContext);
+    const { types, requirements } = useContext(ParametrsContext)
     const { address, metro } = useSelector(selectorAddress);
+    const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
     const dispatch = useDispatch();
-    const [service, setService] = useState({});
-    const [commentSupervisor, setCommentSupervisor] = useState('');
-    const [descriptionOrder, setDescriptionOrder] = useState('');
-
+    console.log(service)
     const handleAdd = () => {
     }
 
@@ -53,34 +60,36 @@ const Details = () => {
             <InputSelectSearch
                 sub={SUB_TYPE}
                 value={service}
-                setValue={setService}
+                setValue={(data) => dispatch(setService(data))}
+                list={types}
             />
             <Comment
                 sub={SUB_COMMENT}
                 maxLength={1000}
                 rows={4}
-                value={commentSupervisor}
-                setValue={setCommentSupervisor}
+                value={notes}
+                setValue={(data) => dispatch(setNotes(data))}
             />
             <Comment
                 sub={SUB_DESCRIPTION}
                 maxLength={200}
                 rows={2}
-                value={descriptionOrder}
-                setValue={setDescriptionOrder}
+                value={commentSupervisor}
+                setValue={(data) => dispatch(setCommentSupervisor(data))}
             />
 
             <Tags
                 sub={SUB_REQUIREMENTS}
-                value={1}
+                value={tags}
                 maxVis={3}
-                tagList={tagList}
-            /* setValue={(data) => dispatch(setPerformersNum(data))} */
+                tagList={requirements}
+                setValue={(data) => dispatch(addRequirements(data))}
+                deleteValue={(data) => dispatch(deleteRequirements(data))}
             />
 
             <TabsNumbers
-                value={1}
-                /* setValue={(data) => dispatch(setPerformersNum(data))} */
+                value={minDuration}
+                setValue={(data) => dispatch(setMinDurqtion(Number(data)))}
                 sub={SUB_MINDURATION}
                 max={23}
                 maxVis={6}
@@ -88,8 +97,8 @@ const Details = () => {
             />
 
             <TabsNumbers
-                value={1}
-                /*   setValue={(data) => dispatch(setPerformersNum(data))} */
+                value={duration}
+                setValue={(data) => dispatch(setDuration(Number(data)))}
                 sub={SUB_DURATION}
                 max={24}
                 maxVis={8}

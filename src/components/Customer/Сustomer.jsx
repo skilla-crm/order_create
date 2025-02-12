@@ -2,6 +2,7 @@ import s from './Customer.module.scss';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ReactComponent as IconLoader } from '../../images/icons/IconLoader.svg';
+import { ReactComponent as IconInfo } from '../../images/icons/header/iconInfo.svg';
 //Api
 import { getHistoryOrders } from '../../Api/Api';
 //selector
@@ -36,16 +37,33 @@ const Customer = ({ setAddCustomer }) => {
     const [historyList, setHistoryList] = useState([]);
     const [historyName, setHistoryName] = useState('');
     const [phoneWithMask, setPhoneWithMask] = useState('');
+    const [beznal, setBeznal] = useState(true);
+    const [loadBage, setLoadBage] = useState(false);
     const { companies, customer, payType, name, phone } = useSelector(selectorCustomer);
     const dispatch = useDispatch();
     console.log(payType, customer)
 
+    useEffect(() => {
+        payType == 1 ? setBeznal(true) : setBeznal(false)
+    }, [payType])
+
 
     useEffect(() => {
-        if (payType == 1 && customer.id) {
+        if ((phone?.length !== 11) || !customer.id) {
+            setHistoryList([])
+            setHistoryLoad(false)
+            setLoadBage(false)
+            setHistoryName('')
+            return
+        }
+    }, [phone, customer, beznal])
+
+    useEffect(() => {
+        if (beznal && customer.id) {
             setHistoryName(customer.name)
             setHistoryList([])
             setHistoryLoad(true)
+            setLoadBage(true)
             getHistoryOrders(payType, customer.id)
                 .then(res => {
                     const data = res.data.data;
@@ -56,11 +74,14 @@ const Customer = ({ setAddCustomer }) => {
                 })
             return
         }
+    }, [customer, beznal])
 
-        if (payType !== 1 && phone?.length == 11) {
+    useEffect(() => {
+        if (!beznal && phone?.length == 11) {
             setHistoryName(phoneWithMask)
             setHistoryList([])
             setHistoryLoad(true)
+            setLoadBage(true)
             getHistoryOrders(payType, phone)
                 .then(res => {
                     const data = res.data.data;
@@ -72,12 +93,7 @@ const Customer = ({ setAddCustomer }) => {
             return
         }
 
-        if ((phone?.length !== 11) || !customer.id) {
-            setHistoryList([])
-            setHistoryLoad(false)
-            return
-        }
-    }, [phone, customer, payType])
+    }, [phone, beznal])
 
     const handleAdd = () => {
         setAddCustomer(true)
@@ -114,12 +130,12 @@ const Customer = ({ setAddCustomer }) => {
                 <div className={s.container}>
                     <div className={s.block}>
                         <div className={`${s.company} ${payType == 1 && s.company_vis}`}>
-                            <InputCompany 
-                            sub={SUB_COMPANY} 
-                            list={companies} 
-                            value={customer?.id} 
-                            setValue={(data) => dispatch(setCustomer(data))} 
-                            setAddCustomer={setAddCustomer}
+                            <InputCompany
+                                sub={SUB_COMPANY}
+                                list={companies}
+                                value={customer?.id}
+                                setValue={(data) => dispatch(setCustomer(data))}
+                                setAddCustomer={setAddCustomer}
                             />
                         </div>
                         <div className={s.container}>
@@ -148,10 +164,15 @@ const Customer = ({ setAddCustomer }) => {
 
                     </div>
                 </div>
-                <div className={`${s.loader} ${historyLoad && s.loader_vis}`}><IconLoader /><p>Проверяем историю заказов</p></div>
+                <div className={`${s.loader} ${loadBage && historyList?.length == 0 && s.loader_vis}`}>
+                    {historyLoad && <div className={s.loader_anim}><IconLoader /></div>}
+                    {historyLoad && <p>Проверяем историю заказов</p>}
+                    {!historyLoad && <IconInfo />}
+                    {!historyLoad && <p>Заказы не найдены</p>}
+                </div>
             </div>
 
-            <OrdersHistory vis={historyList?.length > 0} client={historyName} historyList={historyList}/>
+            <OrdersHistory vis={historyList?.length > 0} client={historyName} historyList={historyList} />
         </>
 
     )

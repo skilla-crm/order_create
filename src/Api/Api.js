@@ -33,3 +33,16 @@ export const createCompany = (data) => {
 export const getHistoryOrders = (type, query) => {
   return instanceWithToken.get(`${baseURL}api/orders/history?${type == 1 ? 'company_id' : 'phone'}=${query}`)
 }
+
+export const createOrder = (data) => {
+  return instanceWithToken({
+    method: 'post',
+    mode: "cors",
+    headers: {
+      "Content-type": "application/json",
+      "Accept": "application/json",
+    },
+    url: `${baseURL}api/orders/create`,
+    data: data
+  })
+}

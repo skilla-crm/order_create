@@ -6,7 +6,7 @@ import { ReactComponent as IconInfo } from '../../../images/icons/header/iconInf
 //components
 import Prompt from '../Prompt/Prompt';
 
-const Header = ({ title, buttonState, buttonText, handleButton, forPro, PromptText }) => {
+const Header = ({ title, buttonState, buttonText, handleButton, forPro, PromptText, hiddenPrompt }) => {
     const [openPopup, setOpenPopup] = useState(false);
     const [openPrompt, setOpenPrompt] = useState(false);
     const modalRef = useRef();
@@ -28,9 +28,9 @@ const Header = ({ title, buttonState, buttonText, handleButton, forPro, PromptTe
     }
 
     const handlePro = () => {
-        document?.getElementById('pro-open')?.click();     
-      }
-    
+        document?.getElementById('pro-open')?.click();
+    }
+
 
     useEffect(() => {
         document.addEventListener('mousedown', closeModal);
@@ -39,16 +39,17 @@ const Header = ({ title, buttonState, buttonText, handleButton, forPro, PromptTe
 
     return (
         <div className={s.container}>
-            <Prompt openPrompt={openPrompt} setOpenPrompt={setOpenPrompt} PromptText={PromptText}/>
+            <Prompt openPrompt={openPrompt} setOpenPrompt={setOpenPrompt} PromptText={PromptText} />
             <div className={s.title}>
                 <h3>{title}</h3>
-                <div onClick={handleOpenPrompt} className={s.info}>
+                {!hiddenPrompt && <div onClick={handleOpenPrompt} className={s.info}>
                     <IconInfo />
                 </div>
+                }
             </div>
 
             <div ref={modalRef} onClick={handleOpenPopup} className={`${s.button} ${s.button_point} ${!buttonState && s.button_hidden}`}><IconPoints />
-                {!forPro && <button style={{paddingRight: '44px'}} onClick={handleButton} className={`${s.button} ${s.button_popup} ${!openPopup && s.button_hidden}`}>{buttonText}</button>}
+                {!forPro && <button style={{ paddingRight: '44px' }} onClick={handleButton} className={`${s.button} ${s.button_popup} ${!openPopup && s.button_hidden}`}>{buttonText}</button>}
                 {forPro && <button onClick={handlePro} className={`${s.button} ${s.button_popup} ${!openPopup && s.button_hidden}`}>{buttonText}<BagePro /></button>}
             </div>
         </div>
