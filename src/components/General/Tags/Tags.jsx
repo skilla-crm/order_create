@@ -4,11 +4,9 @@ import { ReactComponent as IconClose } from '../../../images/icons/iconClose.svg
 
 const Tab = ({ id, tab, value, setValue, deleteValue }) => {
     const [active, setActive] = useState(false);
-    console.log(value, id)
 
     useEffect(() => {
         const result = value.find((el) => el == id)
-        console.log(result)
         setActive(result ? true : false)
     }, [value])
 

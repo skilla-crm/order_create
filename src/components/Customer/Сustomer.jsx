@@ -50,7 +50,6 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
     const [loadBage, setLoadBage] = useState(false);
     const { companies, customer, payType, name, phone, isBlack, debt, debtThreshold, contacts, noContactPerson } = useSelector(selectorCustomer);
     const dispatch = useDispatch();
-    console.log(payType, customer)
 
     useEffect(() => {
         payType == 1 ? setBeznal(true) : setBeznal(false)
@@ -95,10 +94,14 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
 
 
     useEffect(() => {
-        if ((phone?.length !== 11) || !customer.id) {
+        if ((phone?.length !== 11) && !beznal) {
             setHistoryList([])
-            setHistoryLoad(false)
+            setHistoryName('')
+            return
+        }
 
+        if (beznal && !customer.id) {
+            setHistoryList([])
             setHistoryName('')
             return
         }
@@ -113,10 +116,16 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
             getHistoryOrders(payType, customer.id)
                 .then(res => {
                     const data = res.data.data;
+
                     setTimeout(() => {
+                        data.length > 0 && setLoadBage(false)
+                    }, 100)
+
+                    setTimeout(() => {
+                        setHistoryList(data);
                         setHistoryLoad(false)
                     }, 200)
-                    setHistoryList(data);
+
                 })
             return
         }
@@ -131,10 +140,15 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
             getHistoryOrders(payType, phone)
                 .then(res => {
                     const data = res.data.data;
-                    setHistoryList(data);
+
+                    setTimeout(() => {
+                        data.length > 0 && setLoadBage(false)
+                    }, 150)
+
                     setTimeout(() => {
                         setHistoryLoad(false)
-                    }, 100)
+                        setHistoryList(data);
+                    }, 300)
                 })
             return
         }
@@ -210,30 +224,32 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                             </div>
 
                         </div>
+                        <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && customer.id && s.loader_vis}`}>
+                            <IconInfoErr />
+                            <p>Заказчик в черном списке</p>
+                        </div>
 
+                        <div className={`${s.loader} ${s.loader_error} ${debt > debtThreshold && customer.id && s.loader_vis}`}>
+                            <IconInfoErr />
+                            {debt > debtThreshold && <p>Превышен лимит по задолженности</p>}
+                        </div>
+
+                        <div className={`${s.loader} ${s.loader_warning} ${debt <= debtThreshold && debt !== 0 && customer.id && s.loader_vis}`}>
+                            <IconInfoWarning />
+                            {debt <= debtThreshold && debt !== 0 && <p>Задолженность {addSpaceNumber(debt)} ₽</p>}
+                        </div>
+
+                        <div className={`${s.loader} ${s.loader_history} ${loadBage && s.loader_vis}`}>
+                            {historyLoad && <div className={s.loader_anim}><IconLoader /></div>}
+                            {historyLoad && <p>Проверяем историю заказов</p>}
+                            {!historyLoad && historyList?.length == 0 && <IconInfo />}
+                            {!historyLoad && historyList?.length == 0 && <p>Заказы не найдены</p>}
+                        </div>
                     </div>
-                </div>
-                <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && customer.id && s.loader_vis}`}>
-                    <IconInfoErr />
-                    <p>Заказчик в черном списке</p>
+
+
                 </div>
 
-                <div className={`${s.loader} ${s.loader_error} ${debt > debtThreshold && customer.id && s.loader_vis}`}>
-                    <IconInfoErr />
-                    <p>Превышен лимит по задолженности</p>
-                </div>
-
-                <div className={`${s.loader} ${s.loader_warning} ${debt <= debtThreshold && debt !== 0 && customer.id && s.loader_vis}`}>
-                    <IconInfoWarning />
-                    <p>Задолженность {addSpaceNumber(debt)} ₽</p>
-                </div>
-
-                <div className={`${s.loader} ${loadBage && historyList?.length == 0 && s.loader_vis}`}>
-                    {historyLoad && <div className={s.loader_anim}><IconLoader /></div>}
-                    {historyLoad && <p>Проверяем историю заказов</p>}
-                    {!historyLoad && <IconInfo />}
-                    {!historyLoad && <p>Заказы не найдены</p>}
-                </div>
             </div>
 
             <OrdersHistory vis={historyList?.length > 0} client={historyName} historyList={historyList} />

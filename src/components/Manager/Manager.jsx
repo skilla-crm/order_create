@@ -29,7 +29,6 @@ const Manager = () => {
     const { managerId, partnershipId, emailPasport } = useSelector(selectorManagers);
     const { contacts } = useSelector(selectorCustomer);
     const dispatch = useDispatch();
-    console.log(managerId)
 
     useEffect(() => {
         activeSegment == 1 ? dispatch(setPartnershipId(null)) : dispatch(setManagerId(null))

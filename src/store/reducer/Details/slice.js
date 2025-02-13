@@ -20,6 +20,11 @@ const DetailsSlice = createSlice({
             state.service = action.payload
         },
 
+        setRequirements(state, action) {
+            state.tags = action.payload
+        },
+
+
         addRequirements(state, action) {
             state.tags = [...state.tags, action.payload]
         },
@@ -48,6 +53,7 @@ const DetailsSlice = createSlice({
 
 export const {
     setService,
+    setRequirements,
     addRequirements,
     deleteRequirements,
     setCommentSupervisor,

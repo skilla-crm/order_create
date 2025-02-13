@@ -40,7 +40,6 @@ const Details = () => {
     const { address, metro, defaultCordinate, noAddress } = useSelector(selectorAddress);
     const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
     const dispatch = useDispatch();
-    console.log(address)
 
     const handleNoAdress = () => {
         if (noAddress) {

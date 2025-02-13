@@ -1,5 +1,6 @@
 import s from './OrdersHistory.module.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import InputMask from 'comigo-tech-react-input-mask/lib/react-input-mask.development';
 import { ReactComponent as IconRepeat } from '../../images/icons/iconRepeat.svg';
 import { ReactComponent as IconBuilder } from '../../images/icons/IconBuilder.svg';
@@ -9,6 +10,12 @@ import { ReactComponent as IconClose } from '../../images/icons/bage/iconClose.s
 import dayjs from 'dayjs';
 //Api
 import { orderRetry } from '../../Api/Api';
+//selector
+import { selectorCustomer } from '../../store/reducer/Customer/selector';
+//slice
+import { setPayType, setName, setPhone, setNoContactPerson } from '../../store/reducer/Customer/slice';
+import { setPerformersNum } from '../../store/reducer/Performers/slice';
+import { setService, setRequirements, setMinDurqtion, setDuration, setCommentSupervisor, setNotes } from '../../store/reducer/Details/slice';
 //components
 import Header from '../General/Header/Header';
 import InputSelect from '../General/Input/InputSelect';
@@ -48,10 +55,39 @@ const Bage = ({ status }) => {
     )
 }
 const Item = ({ el }) => {
+    const { companies } = useSelector(selectorCustomer);
+    const dispatch = useDispatch();
+
+    const handleRetry = () => {
+        orderRetry(el.id)
+            .then(res => {
+                const data = res.data.data;
+                console.log(data)
+                data.beznal == 1 && dispatch(setPayType(1))
+                data.beznal == 0 && data.to_card == 1 && dispatch(setPayType(2))
+                data.beznal == 0 && data.to_card == 0 && dispatch(setPayType(3))
+                dispatch(setName(data.name))
+                dispatch(setPhone(data.phone))
+                data.name == '' && data.phone == ''
+                    ?
+                    dispatch(setNoContactPerson(true))
+                    :
+                    dispatch(setNoContactPerson(false))
+                    dispatch(setPerformersNum(data.worker_count))
+                    dispatch(setDuration(data.order_duration))
+                    dispatch(setService(data.order_type))
+                    dispatch(setMinDurqtion(data.min_time))
+                    dispatch(setNotes(data.supervisor_comment))
+                    dispatch(setCommentSupervisor(data.notes))
+                    /* dispatch(setRequirements()) */
+
+            })
+            .catch(err => console.log(err))
+    }
 
     return (
         <div className={s.item}>
-            <button className={s.repeat}>
+            <button onClick={handleRetry} className={s.repeat}>
                 <IconRepeat />
             </button>
 
@@ -66,7 +102,7 @@ const Item = ({ el }) => {
             <div className={`${s.block} ${s.block_address}`}>
                 <p>{el?.load_address} {el?.k} {el?.house}</p>
                 <span>
-                {el?.notes.length > 105 ? `${el?.notes.slice(0, 105)}...` : el?.notes}
+                    {el?.notes.length > 105 ? `${el?.notes.slice(0, 105)}...` : el?.notes}
                 </span>
             </div>
 
@@ -100,7 +136,7 @@ const Item = ({ el }) => {
 
 const OrdersHistory = ({ vis, client, historyList }) => {
     const [historyLength, setHistoryLength] = useState(5);
-    console.log(historyList.slice(0, historyLength))
+
     return (
         <div className={`${s.window} ${vis && s.window_vis}`}>
             <div className={s.container}>

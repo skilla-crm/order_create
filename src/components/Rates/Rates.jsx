@@ -70,7 +70,6 @@ const Rates = () => {
     const { payType, customer } = useSelector(selectorCustomer)
     const listRef = useRef();
     const buttonRef = useRef();
-    console.log(parseFloat(rate))
 
     useEffect(() => {
         if (payType == 1) {
@@ -111,7 +110,6 @@ const Rates = () => {
         activeRatio == id ? setActiveRatio(0) : setActiveRatio(id)
         const result = ((parseFloat(rate) * 100) / (100 + id))
         const result2 = parseFloat(rate) + (parseFloat(rate) * id / 100)
-        console.log(result2)
         const result3 = ((rate * 100) / (100 + activeRatio)) * (1 + id / 100)
         activeRatio == id && dispatch(setRate(result.toFixed(2)))
         activeRatio == 0 && dispatch(setRate(result2?.toFixed(2)))
@@ -205,6 +203,7 @@ const Rates = () => {
                 {(payType !== 1 || customer?.works?.length == 0 || !customer?.works) && <ul className={`${s.block_list} ${s.block_list_2}`}>
                     {rateList?.map((el, i) => {
                         return <Rate
+                            key={el.id}
                             customerBit={el.client_bit}
                             workerBit={el.worker_bit}
                             name={`Тариф ${i + 1}`}

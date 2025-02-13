@@ -48,11 +48,11 @@
 }
 
 .loader {
-    margin-top: -20px;
+    margin-top: 0;
     overflow: hidden;
     height: 0;
     opacity: 0;
-    transition: all 0.15s;
+   
     display: flex;
     align-items: center;
     gap: 6px;
@@ -63,7 +63,7 @@
 
     &_vis {
         height: 18px;
-        margin-top: 0;
+        margin-top: 12px;
         opacity: 1;
     }
 
@@ -83,6 +83,10 @@
         p {
             color: #F89500;
         }
+    }
+
+    &_history {
+        transition: all 0.2s ease-in-out;
     }
 }
 

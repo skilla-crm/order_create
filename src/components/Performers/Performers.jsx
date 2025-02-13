@@ -36,8 +36,6 @@ const Performers = () => {
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { additionalDates, disabledDates } = useSelector(selectorAdditionalDates);
 
-    console.log(additionalDates, performersNum, date, time)
-
     useEffect(() => {
         additionalDates.length > 0 ? setHiddenAddDates(false) : setHiddenAddDates(true)
         additionalDates.length > 15 ? setScrollState(true) : setScrollState(false)

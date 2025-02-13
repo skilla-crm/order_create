@@ -5,9 +5,9 @@ import { ReactComponent as IconAdd } from '../../../images/icons/iconAdd.svg';
 const CompanyList = ({ list, openList, setOpenList, value, setValue, listScroll, setValueText, notFound, valueText, setAddCustomer }) => {
     const activeRef = useRef();
 
-    useEffect(() => {
+    /* useEffect(() => {
         value !== '' && handleScroll()
-    }, [openList])
+    }, [openList]) */
 
     const handleChose = (data) => {
         setValueText(data.name)
@@ -20,9 +20,9 @@ const CompanyList = ({ list, openList, setOpenList, value, setValue, listScroll,
         setOpenList(false)
     }
 
-    const handleScroll = () => {
+    /* const handleScroll = () => {
         activeRef.current?.scrollIntoView({ block: 'center', inline: 'nearest'});
-    }
+    } */
 
     return (
         <ul className={`${s.list} ${openList && s.list_open} ${listScroll && s.list_scroll}`}>

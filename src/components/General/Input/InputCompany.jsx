@@ -31,7 +31,6 @@ const InputCompany = ({ sub, list, value, setValue, setAddCustomer, payType }) =
 
     useEffect(() => {
         const search = handleSearchCompany(valueText, list);
-        console.log(search)
         valueText !== '' && setSearchResult(search)
         valueText == '' && setSearchResult(list);
         valueText == '' && fieldFocus && setOpenList(true);

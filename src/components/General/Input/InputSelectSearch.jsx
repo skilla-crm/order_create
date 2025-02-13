@@ -11,7 +11,6 @@ const InputSelectSearch = ({ sub, value, setValue, list }) => {
     const [searchResult, setSearchResult] = useState([]);
     const [listScroll, setListScroll] = useState(false);
     const listRef = useRef();
-    console.log(valueText, openList)
 
     useEffect(() => {
         const result = list?.find(el => el.id == value)
@@ -20,7 +19,6 @@ const InputSelectSearch = ({ sub, value, setValue, list }) => {
 
     useEffect(() => {
         const search = SearchOrderType(valueText, list);
-        console.log(search)
         valueText !== '' && setSearchResult(search)
         valueText == '' && setSearchResult(list);
         valueText == '' && fieldFocus && setOpenList(true);

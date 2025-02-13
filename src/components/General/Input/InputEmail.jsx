@@ -7,7 +7,6 @@ const InputEmail = ({ sub, disabled, value, setValue, error, errorEmpity, errorT
     const [errorStateEmpity, setErrorStateEmpity] = useState(false);
     const [openContacts, setOpenContacts] = useState(false);
     const listRef = useRef();
-    console.log(contacts)
     useEffect(() => {
         errorEmpity && value == '' ? setErrorStateEmpity(true) : setErrorStateEmpity(false)
     }, [errorEmpity, value])

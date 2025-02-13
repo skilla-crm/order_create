@@ -9,7 +9,6 @@ const InputSelect = ({ sub, list, value, setValue, type, position,defaultRow }) 
     const [name, setName] = useState('');
     const [avatar, setAvatar] = useState('')
     const listRef = useRef();
-    console.log(list)
 
     useEffect(() => {
         if (((value == 0 || value == null) && defaultRow)) {
@@ -59,7 +58,6 @@ const InputSelect = ({ sub, list, value, setValue, type, position,defaultRow }) 
         return () => document.removeEventListener('mousedown', closeModal);
     }, []);
 
-    console.log(value)
 
     return (
         <div className={`${s.container} ${s.container_select} ${type == 2 && s.container_select2}`}>

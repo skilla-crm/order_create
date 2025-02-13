@@ -71,7 +71,6 @@ const App = () => {
         getParametrs()
             .then(res => {
                 const data = res.data.data;
-                console.log(data)
                 const companies = data.companies;
                 setParametrs(data)
                 dispatch(setCompaniesList(companies))
@@ -152,11 +151,8 @@ const App = () => {
             .then(res => {
                 setLoadCreate(false)
                 setLoadSave(false)
-                console.log(res)
             })
             .catch(err => console.log(err))
-
-        console.log(data)
     }
 
 
