@@ -126,10 +126,15 @@
 
 .rate {
     display: flex;
-    height: 40px;
+    padding: 12px 0;
+    flex-shrink: 0;
     align-items: center;
     cursor: pointer;
     transition: all 0.15s;
+
+    p {
+        line-height: 18px;
+    }
 
     &:hover {
         background-color: #D4DFF32B;

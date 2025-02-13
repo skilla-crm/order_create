@@ -3,6 +3,18 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    background-color: var(--color-bg);
+    min-width: 1340px;
+    height: calc(100vh - 64px);
+    overflow: overlay;
+    overflow-y: auto;
+    overflow-x: hidden;
+    opacity: 0;
+    transition: opacity 0.15s;
+
+    &_anim {
+        opacity: 1;
+    }
 
     a {
         color: inherit;
@@ -60,6 +72,6 @@
     flex-direction: column;
     gap: 16px;
     position: sticky;
-    top: 16px;
-    height: calc(100vh - 182px);
+    top: -14px;
+    height: calc(100vh - 200px);
 }

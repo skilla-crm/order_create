@@ -92,7 +92,7 @@ const Preview = () => {
                         <p>{`${address.city} ${address.street} ${address.house}`}</p>
                     </div>
                     <div className={s.map}>
-                        <MapAddress lat={address.lat} lng={address.lng} defaultCordinate={defaultCordinate} width={'100%'} height={180} />
+                        <MapAddress lat={address.lat} lng={address.lng} defaultCordinate={defaultCordinate} width={'100%'} height={160}/>
                     </div>
 
                 </div>

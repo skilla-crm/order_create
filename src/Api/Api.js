@@ -54,3 +54,7 @@ export const checkCompany = (id) => {
 export const contactCompany = (id) => {
   return instanceWithToken.get(`${baseURL}api/orders/company_contacts/${id}`)
 }
+
+export const orderRetry = (id) => {
+  return instanceWithToken.get(`${baseURL}api/orders/retry/${id}`)
+}

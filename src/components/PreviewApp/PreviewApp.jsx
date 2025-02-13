@@ -2,7 +2,7 @@ import s from './PreviewApp.module.scss';
 import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ParametrsContext } from '../../contexts/UserContext';
-import avatar from '../../images/avatarApp.jpg';
+import avatar from '../../images/avatarApp.png';
 import dayjs from 'dayjs';
 //selectors
 import { selectorDetails } from '../../store/reducer/Details/selector';

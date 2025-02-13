@@ -9,8 +9,11 @@ body {
   font-style: normal;
   color: var(--color-text-primary);
   background-color: #F1F4F9;
+}
 
-
+svg {
+  flex-shrink: 0;
+  box-sizing: content-box;
 }
 
 #root_stock {
@@ -95,6 +98,11 @@ input {
   &::placeholder {
     color: var(--color-text-secondary);
   }
+}
+
+ul {
+  margin: 0;
+  padding: 0;
 }
 
 input::-webkit-outer-spin-button,

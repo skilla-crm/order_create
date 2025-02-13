@@ -115,7 +115,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                     const data = res.data.data;
                     setTimeout(() => {
                         setHistoryLoad(false)
-                    }, 100)
+                    }, 200)
                     setHistoryList(data);
                 })
             return
@@ -213,17 +213,17 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
 
                     </div>
                 </div>
-                <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && s.loader_vis}`}>
+                <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && customer.id && s.loader_vis}`}>
                     <IconInfoErr />
                     <p>Заказчик в черном списке</p>
                 </div>
 
-                <div className={`${s.loader} ${s.loader_error} ${debt > debtThreshold && s.loader_vis}`}>
+                <div className={`${s.loader} ${s.loader_error} ${debt > debtThreshold && customer.id && s.loader_vis}`}>
                     <IconInfoErr />
                     <p>Превышен лимит по задолженности</p>
                 </div>
 
-                <div className={`${s.loader} ${s.loader_warning} ${debt <= debtThreshold && debt !== 0 && s.loader_vis}`}>
+                <div className={`${s.loader} ${s.loader_warning} ${debt <= debtThreshold && debt !== 0 && customer.id && s.loader_vis}`}>
                     <IconInfoWarning />
                     <p>Задолженность {addSpaceNumber(debt)} ₽</p>
                 </div>

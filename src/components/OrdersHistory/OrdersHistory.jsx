@@ -7,6 +7,8 @@ import { ReactComponent as IconDone } from '../../images/icons/bage/iconDone.svg
 import { ReactComponent as IconDoneYellow } from '../../images/icons/bage/iconDoneYellow.svg';
 import { ReactComponent as IconClose } from '../../images/icons/bage/iconClose.svg';
 import dayjs from 'dayjs';
+//Api
+import { orderRetry } from '../../Api/Api';
 //components
 import Header from '../General/Header/Header';
 import InputSelect from '../General/Input/InputSelect';
@@ -46,6 +48,7 @@ const Bage = ({ status }) => {
     )
 }
 const Item = ({ el }) => {
+
     return (
         <div className={s.item}>
             <button className={s.repeat}>
@@ -63,7 +66,7 @@ const Item = ({ el }) => {
             <div className={`${s.block} ${s.block_address}`}>
                 <p>{el?.load_address} {el?.k} {el?.house}</p>
                 <span>
-                    {el?.notes}
+                {el?.notes.length > 105 ? `${el?.notes.slice(0, 105)}...` : el?.notes}
                 </span>
             </div>
 

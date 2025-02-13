@@ -34,6 +34,7 @@ const role = document.getElementById(`root_order-create`).getAttribute('role');
 
 const App = () => {
     const [theme, setTheme] = useState('light');
+    const [anim, setAnim] = useState(false);
     const [addCustomer, setAddCustomer] = useState(false);
     const [parametrs, setParametrs] = useState({});
     const [loadCreate, setLoadCreate] = useState(false);
@@ -57,7 +58,13 @@ const App = () => {
     }, [theme]);
 
     useEffect(() => {
-          addCustomer && window.scroll({ top: 320 })
+        setTimeout(() => {
+            setAnim(true)
+        })
+    }, [])
+
+    useEffect(() => {
+        addCustomer && window.scroll({ top: 320 })
     }, [addCustomer])
 
     useEffect(() => {
@@ -157,7 +164,7 @@ const App = () => {
     return (
         <UserContext.Provider value={{ pro, role }}>
             <ParametrsContext.Provider value={parametrs}>
-                <div className={s.app}>
+                <div className={`${s.app} ${anim && s.app_anim}`}>
                     <div className={s.header}>
                         <h2 className={s.title}>Создание заказа</h2>
                         <div className={s.buttons}>

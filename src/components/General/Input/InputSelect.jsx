@@ -68,7 +68,7 @@ const InputSelect = ({ sub, list, value, setValue, type, position,defaultRow }) 
                 {type !== 3 && <p>{name}</p>}
                 {type == 3 && <div className={s.item}>
                     {value !== null && <div className={s.avatar}>
-                        <img scr={avatar == "" ? avatardef : avatar}></img>
+                        <img src={avatar == "" ? avatardef : `https://lk.skilla.ru/images/persons/chat/${avatar}`}></img>
                     </div>
                     }
                     <p>{name}</p>
@@ -84,7 +84,7 @@ const InputSelect = ({ sub, list, value, setValue, type, position,defaultRow }) 
                     {list?.map(el => {
                         return <li onClick={handleValue} key={el.id} id={el.id} className={`${s.item} ${el.id == value && s.item_active}`}>
                             {type == 3 && <div className={s.avatar}>
-                                <img scr={el.avatar_mini == "" ? avatardef : el.avatar_mini}></img>
+                                <img src={el.avatar_mini == "" ? avatardef : `https://lk.skilla.ru/images/persons/chat/${el.avatar_mini}`}></img>
                             </div>}
                             <p>{el.name} {el.position == 'director' && <span>Руководитель</span>}</p>
                         </li>
