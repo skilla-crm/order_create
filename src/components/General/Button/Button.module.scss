@@ -11,6 +11,11 @@
     cursor: pointer;
     transition: all 0.2s;
 
+    &:disabled {
+        opacity: 0;
+        pointer-events: none;
+    }
+
     svg {
       /*   margin-left: 8px; */
     }

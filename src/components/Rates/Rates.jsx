@@ -13,20 +13,22 @@ import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 //slice
 import { setRate, setRateWorker } from '../../store/reducer/Rates/slice';
+import { setMinDurqtion } from '../../store/reducer/Details/slice';
 //utils
-import { addSpaceNumber } from '../../utils/addSpaceNumber';
+import { addSpaceNumber2 } from '../../utils/addSpaceNumber';
 
 //components
 import Header from '../General/Header/Header';
 import InputNum from '../General/Input/InputNum';
 
-const Rate = ({ name, customerBit, workerBit, handleResetRatio }) => {
+const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio }) => {
     const dispatch = useDispatch();
     const [anim, setAnim] = useState(false);
 
     const handleChoseRate = () => {
         dispatch(setRate(customerBit))
         dispatch(setRateWorker(workerBit))
+        minTime && Number(minTime) > 0 && dispatch(setMinDurqtion(Number(minTime)))
         handleResetRatio()
     }
 
@@ -45,11 +47,11 @@ const Rate = ({ name, customerBit, workerBit, handleResetRatio }) => {
             </div>
 
             <div className={s.bit}>
-                <p>{customerBit}</p>
+                <p>{addSpaceNumber2(customerBit)}</p>
             </div>
 
             <div className={s.bit}>
-                <p>{workerBit}</p>
+                <p>{addSpaceNumber2(workerBit)}</p>
             </div>
 
         </div>
@@ -65,10 +67,10 @@ const Rates = () => {
     const [warning, setWarning] = useState(false);
     const dispatch = useDispatch();
     const { rate, rateWorker } = useSelector(selectorRates)
-    const { payType } = useSelector(selectorCustomer)
+    const { payType, customer } = useSelector(selectorCustomer)
     const listRef = useRef();
     const buttonRef = useRef();
-    console.log(activeRatio)
+    console.log(parseFloat(rate))
 
     useEffect(() => {
         if (payType == 1) {
@@ -84,15 +86,15 @@ const Rates = () => {
         }
     }, [rates, payType])
 
-    useEffect(() => {
-        if (rate !== '') {
-            dispatch(setRate(rate * ratio))
-        }
-    }, [ratio, rate])
+    /*   useEffect(() => {
+          if (rate !== '') {
+              dispatch(setRate(rate * ratio))
+          }
+      }, [ratio, rate]) */
 
     useEffect(() => {
-      const result = rateList.find(el => el.client_bit == rate && el.worker_bit == rateWorker);
-      (result || rate == '' || rateWorker == '') ? setWarning(false) : setWarning(true)
+        const result = rateList.find(el => el.client_bit == parseFloat(rate) && el.worker_bit == rateWorker);
+        (result || rate == '' || rateWorker == '') ? setWarning(false) : setWarning(true)
     }, [rate, rateWorker])
 
     const handleOpenRatioList = () => {
@@ -107,11 +109,12 @@ const Rates = () => {
     const handleChoseRatio = (e) => {
         const id = Number(e.currentTarget.id);
         activeRatio == id ? setActiveRatio(0) : setActiveRatio(id)
-        const result = ((rate * 100) / (100 + id))
-        const result2 = rate + (rate * id / 100)
+        const result = ((parseFloat(rate) * 100) / (100 + id))
+        const result2 = parseFloat(rate) + (parseFloat(rate) * id / 100)
+        console.log(result2)
         const result3 = ((rate * 100) / (100 + activeRatio)) * (1 + id / 100)
         activeRatio == id && dispatch(setRate(result.toFixed(2)))
-        activeRatio == 0 && dispatch(setRate(result2.toFixed(2)))
+        activeRatio == 0 && dispatch(setRate(result2?.toFixed(2)))
         activeRatio !== 0 && activeRatio !== id && dispatch(setRate(result3.toFixed(2)))
         setRatioList(false)
     }
@@ -199,15 +202,28 @@ const Rates = () => {
                 <span className={s.sub}>
                     {SUB_PRICE}
                 </span>
-                <ul className={`${s.block_list} ${payType !== 1 && s.block_list_2}`}>
+                {(payType !== 1 || customer?.works?.length == 0 || !customer?.works) && <ul className={`${s.block_list} ${s.block_list_2}`}>
                     {rateList?.map((el, i) => {
                         return <Rate
                             customerBit={el.client_bit}
                             workerBit={el.worker_bit}
-                            name={payType == 1 ? el.description : `Тариф ${i + 1}`}
+                            name={`Тариф ${i + 1}`}
                             handleResetRatio={handleResetRatio} />
                     })}
                 </ul>
+                }
+
+                {(payType == 1 && customer?.works?.length > 0) && < ul className={`${s.block_list}`}>
+                    {customer?.works?.map((el, i) => {
+                        return <Rate
+                            customerBit={el.price}
+                            workerBit={el.bit}
+                            name={el.work}
+                            minTime={el?.min_time}
+                            handleResetRatio={handleResetRatio} />
+                    })}
+                </ul>
+                }
             </div>
 
 

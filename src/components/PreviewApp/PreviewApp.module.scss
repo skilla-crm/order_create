@@ -3,6 +3,7 @@
 .app {
     @include block;
     max-height: 38%;
+    min-height: 240px;
     height: fit-content;
 }
 
@@ -38,6 +39,7 @@
     overflow: hidden;
     border-radius: 8px;
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
 
@@ -63,7 +65,8 @@
     flex-shrink: 0;
 
     &_time {
-        min-width: 50px;
+        min-width: 40px;
+        width: fit-content;
         max-width: 70px;
         overflow: hidden;
         height: 24px;

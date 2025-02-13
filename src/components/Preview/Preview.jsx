@@ -15,12 +15,12 @@ import Overlay from './Overlay';
 import MapAddress from '../General/MapAddress/MapAddress';
 //utils
 import { handleTextNumEnding } from '../../utils/HandleTextNumEndind';
-import { addSpaceNumber } from '../../utils/addSpaceNumber';
+import { addSpaceNumber2, addSpaceNumber } from '../../utils/addSpaceNumber';
 
 const Preview = () => {
     const { requirements } = useContext(ParametrsContext)
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
-    const { customer, payType, name, phone } = useSelector(selectorCustomer);
+    const { customer, payType, name, phone, noContactPerson } = useSelector(selectorCustomer);
     const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
     const { address, metro, defaultCordinate, noAddress } = useSelector(selectorAddress);
     const { rate, rateWorker } = useSelector(selectorRates);
@@ -31,6 +31,7 @@ const Preview = () => {
         setTotal(rate * duration)
         setTotalMin(rate * minDuration)
     }, [rate, minDuration, duration])
+
 
     return (
         <div className={s.preview}>
@@ -46,18 +47,27 @@ const Preview = () => {
             <div className={s.container}>
                 <div className={s.block}>
                     <span>Заказчик</span>
-                    <div className={s.item}>
-                        <Overlay active={phone?.length !== 11} />
-                        <InputMask
-                            value={phone}
-                            disabled={true}
-                            mask="+7 (999) 999-99-99"
-                            placeholder='+7 (___) ___-__-__'
-                        />
+                    <div className={`${s.block} ${(payType !== 1 || !noContactPerson) && s.block_hidden2}`}>
+                        {<div className={`${s.item} ${s.item_company}`}>
+                            <Overlay active={!customer.id} />
+                            <p>{customer.name}</p>
+                        </div>
+                        }
                     </div>
-                    <div className={`${s.item} ${s.item_name}`}>
-                        <Overlay active={name?.length == 0} />
-                        <p>{name}</p>
+                    <div className={`${s.block} ${payType == 1 && noContactPerson && s.block_hidden}`}>
+                        <div className={s.item}>
+                            <Overlay active={phone?.length !== 11} />
+                            <InputMask
+                                value={phone}
+                                disabled={true}
+                                mask="+7 (999) 999-99-99"
+                                placeholder='+7 (___) ___-__-__'
+                            />
+                        </div>
+                        <div className={`${s.item} ${s.item_name}`}>
+                            <Overlay active={name?.length == 0} />
+                            <p>{name}</p>
+                        </div>
                     </div>
                 </div>
 
@@ -91,7 +101,7 @@ const Preview = () => {
                     <span>Ставка заказчику и исполнителю</span>
                     <div className={`${s.item} ${s.item_name}`}>
                         <Overlay active={(rate == '' || rateWorker == '')} />
-                        <p>{rate}/{rateWorker}</p>
+                        {rateWorker !== '' && rate !== '' && <p>{addSpaceNumber(rate)} / {addSpaceNumber(rateWorker)}</p>}
                     </div>
                 </div>
 

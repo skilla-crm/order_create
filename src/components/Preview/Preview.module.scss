@@ -7,6 +7,7 @@
     padding-bottom: 20px;
     max-height: 80%;
     height: fit-content;
+
 }
 
 .title {
@@ -35,6 +36,7 @@
     flex-direction: column;
     gap: 20px;
     height: 100%;
+    min-height: 240px;
     padding: 0 24px;
 }
 
@@ -73,6 +75,12 @@
         opacity: 0;
         margin-top: -20px;
     }
+
+    &_hidden2 {
+        overflow: hidden;
+        height: 0;
+        opacity: 0;
+    }
 }
 
 .item {
@@ -81,6 +89,12 @@
     position: relative;
     flex-shrink: 0;
 
+
+    &_company {
+        width: 340px;
+        height: 24px;
+        margin-bottom: 20px;
+    }
 
     &_name {
         width: 260px;

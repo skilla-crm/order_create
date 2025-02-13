@@ -29,7 +29,7 @@ import PreviewApp from '../PreviewApp/PreviewApp';
 import AddCustomer from '../AddCustomer/AddCustomer';
 import Rates from '../Rates/Rates';
 import Manager from '../Manager/Manager';
-const pro = document.getElementById(`root_order-create`).getAttribute('pro') == 1 ? true : false;
+const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
 const role = document.getElementById(`root_order-create`).getAttribute('role');
 
 const App = () => {
@@ -57,7 +57,7 @@ const App = () => {
     }, [theme]);
 
     useEffect(() => {
-        addCustomer && window.scroll({top: 320})
+          addCustomer && window.scroll({ top: 320 })
     }, [addCustomer])
 
     useEffect(() => {
@@ -162,15 +162,15 @@ const App = () => {
                         <h2 className={s.title}>Создание заказа</h2>
                         <div className={s.buttons}>
                             {/*  <Button Icon={IconPoints} type={'points'} /> */}
-                            <Button id={'save'} handleClick={handleCreate} text={'Сохранить черновик'} type={'second'} />
-                            <Button id={'create'} handleClick={handleCreate} text={'Создать заказ'} Icon={IconDone} load={loadCreate} />
+                            <Button disabled={loadSave} id={'save'} handleClick={handleCreate} text={'Сохранить черновик'} type={'second'} />
+                            <Button disabled={loadCreate} id={'create'} handleClick={handleCreate} text={'Создать заказ'} Icon={IconDone} load={loadCreate} />
                         </div>
                     </div>
 
 
                     <div className={s.container}>
                         <div className={s.left}>
-                            <Customer setAddCustomer={setAddCustomer} addCustomer={addCustomer}/>
+                            <Customer setAddCustomer={setAddCustomer} addCustomer={addCustomer} />
                             {addCustomer && <AddCustomer setAddCustomer={setAddCustomer} />}
                             <Performers />
                             <Details />
@@ -180,7 +180,7 @@ const App = () => {
                         <div className={s.right}>
                             <div className={s.sticky}>
                                 <Preview />
-                                <PreviewApp/>
+                                <PreviewApp />
                             </div>
                         </div>
                     </div>

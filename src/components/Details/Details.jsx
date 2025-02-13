@@ -66,7 +66,7 @@ const Details = () => {
             <InputSelect 
              sub={SUB_TYPE}
              value={service}
-             setValue={(data) => dispatch(setService(data))}
+             setValue={(data) => dispatch(setService(Number(data)))}
              list={types}
             />
 

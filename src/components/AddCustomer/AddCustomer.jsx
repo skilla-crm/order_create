@@ -188,7 +188,7 @@ const AddCustomer = ({ setAddCustomer }) => {
     }
 
     return (
-        <div className={`${s.add} ${existCompany && s.add_2} ${anim && s.add_open}`}>
+        <div id='add-customer' className={`${s.add} ${existCompany && s.add_2} ${anim && s.add_open}`}>
             <div className={s.container}>
                 <Header
                     title={TITLE}

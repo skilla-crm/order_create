@@ -54,7 +54,7 @@
         flex-direction: column;
 
         &_2 {
-            width: 332px;
+            width: 348px;
         }
     }
 }
@@ -138,6 +138,7 @@
 
 .bit {
     width: 90px;
+    flex-shrink: 0;
 }
 
 .name {
@@ -148,6 +149,7 @@
     width: 40px;
     height: 100%;
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
     transition: all 0.15s;

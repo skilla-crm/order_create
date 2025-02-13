@@ -1,12 +1,15 @@
 import s from './Input.module.scss';
 import { ReactComponent as IconChewron } from '../../../images/icons/iconChewron.svg';
 import { ReactComponent as IconChewron2 } from '../../../images/icons/iconChewron2.svg';
+import avatardef from '../../../images/avatarDef.png';
 import { useRef, useState, useEffect } from 'react';
 
-const InputSelect = ({ sub, list, value, setValue, type, defaultRow }) => {
+const InputSelect = ({ sub, list, value, setValue, type, position,defaultRow }) => {
     const [openList, setOpenList] = useState(false);
-    const [name, setName] = useState('')
+    const [name, setName] = useState('');
+    const [avatar, setAvatar] = useState('')
     const listRef = useRef();
+    console.log(list)
 
     useEffect(() => {
         if (((value == 0 || value == null) && defaultRow)) {
@@ -17,6 +20,7 @@ const InputSelect = ({ sub, list, value, setValue, type, defaultRow }) => {
         if (value !== '') {
             const result = list?.find(el => el.id == value)
             setName(result?.name)
+            setAvatar(result?.avatar_mini)
             return
         }
         if (value == '') {
@@ -55,20 +59,33 @@ const InputSelect = ({ sub, list, value, setValue, type, defaultRow }) => {
         return () => document.removeEventListener('mousedown', closeModal);
     }, []);
 
+    console.log(value)
+
     return (
         <div className={`${s.container} ${s.container_select} ${type == 2 && s.container_select2}`}>
             {sub && <span className={s.sub}>{sub}</span>}
             <div onClick={handleOpenList} ref={listRef} className={`${s.field} ${s.field_select}`}>
-                <p>{name}</p>
+                {type !== 3 && <p>{name}</p>}
+                {type == 3 && <div className={s.item}>
+                    {value !== null && <div className={s.avatar}>
+                        <img scr={avatar == "" ? avatardef : avatar}></img>
+                    </div>
+                    }
+                    <p>{name}</p>
+                </div>}
                 <div className={`${s.chewron} ${openList && s.chewron_open}`}>
                     {type !== 2 && <IconChewron />}
                     {type == 2 && <IconChewron2 />}
                 </div>
 
-                <ul className={`${s.list} ${openList && s.list_open}`}>
+                <ul className={`${s.list} ${s.list_scroll} ${position == 'top' && s.list_top} ${openList && s.list_open}`}>
                     {defaultRow && <li onClick={handleValue} id={defaultRow.id} className={`${s.item} ${(value == 0 || value == null) && s.item_active}`}>{defaultRow.name}</li>}
+
                     {list?.map(el => {
                         return <li onClick={handleValue} key={el.id} id={el.id} className={`${s.item} ${el.id == value && s.item_active}`}>
+                            {type == 3 && <div className={s.avatar}>
+                                <img scr={el.avatar_mini == "" ? avatardef : el.avatar_mini}></img>
+                            </div>}
                             <p>{el.name} {el.position == 'director' && <span>Руководитель</span>}</p>
                         </li>
                     })}

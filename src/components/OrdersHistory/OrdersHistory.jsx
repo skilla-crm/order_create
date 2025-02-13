@@ -10,9 +10,13 @@ import dayjs from 'dayjs';
 //components
 import Header from '../General/Header/Header';
 import InputSelect from '../General/Input/InputSelect';
+//utils
+import { addSpaceNumber2 } from '../../utils/addSpaceNumber';
 //constants
 import { PromptCustomer } from '../../constants/prompts';
 const list = [{ id: 5, name: 'Последние 5 заказов' }, { id: 10, name: 'Последние 10 заказов' }, { id: 20, name: 'Последние 20 заказов' }, { id: 0, name: 'Все' }]
+
+
 
 const Bage = ({ status }) => {
     return (
@@ -75,7 +79,7 @@ const Item = ({ el }) => {
             </div>
 
             <div className={`${s.block} ${s.block_bit}`}>
-                <p>{el?.client_bit} / {el.worker_bit}</p>
+                <p>{addSpaceNumber2(el?.client_bit)} / {addSpaceNumber2(el.worker_bit)}</p>
                 <span>
                     {el.beznal == 1 && 'на р/с'}
                     {el.beznal == 0 && el.to_card == 1 && 'на карту'}

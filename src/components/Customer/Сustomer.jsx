@@ -1,12 +1,13 @@
 import s from './Customer.module.scss';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { ReactComponent as IconLoader } from '../../images/icons/IconLoader.svg'; 
+import { ReactComponent as IconLoader } from '../../images/icons/IconLoader.svg';
 import { ReactComponent as IconInfo } from '../../images/icons/header/iconInfo.svg';
 import { ReactComponent as IconInfoErr } from '../../images/icons/iconInfoErr.svg';
 import { ReactComponent as IconInfoWarning } from '../../images/icons/iconWarning.svg';
+
 //Api
-import { getHistoryOrders, checkCompany } from '../../Api/Api';
+import { getHistoryOrders, checkCompany, contactCompany } from '../../Api/Api';
 //selector
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 //slice
@@ -15,9 +16,11 @@ import {
     setPayType,
     setName,
     setPhone,
+    setNoContactPerson,
     setIsBlack,
     setDebt,
-    setDebtThreshold
+    setDebtThreshold,
+    setContacts
 } from '../../store/reducer/Customer/slice';
 //constants
 import { PromptCustomer } from '../../constants/prompts';
@@ -39,20 +42,26 @@ import OrdersHistory from '../OrdersHistory/OrdersHistory';
 
 
 const Customer = ({ setAddCustomer, addCustomer }) => {
-    const [noContactPerson, setNoContactPerson] = useState(false);
     const [historyLoad, setHistoryLoad] = useState(false);
     const [historyList, setHistoryList] = useState([]);
     const [historyName, setHistoryName] = useState('');
     const [phoneWithMask, setPhoneWithMask] = useState('');
     const [beznal, setBeznal] = useState(true);
     const [loadBage, setLoadBage] = useState(false);
-    const { companies, customer, payType, name, phone, isBlack, debt, debtThreshold } = useSelector(selectorCustomer);
+    const { companies, customer, payType, name, phone, isBlack, debt, debtThreshold, contacts, noContactPerson } = useSelector(selectorCustomer);
     const dispatch = useDispatch();
     console.log(payType, customer)
 
     useEffect(() => {
         payType == 1 ? setBeznal(true) : setBeznal(false)
+        payType !== 1 && dispatch(setNoContactPerson(false))
     }, [payType])
+
+    useEffect(() => {
+        dispatch(setPhone(''))
+        dispatch(setName(''))
+        !customer.id && dispatch(setContacts([]))
+    }, [customer])
 
     useEffect(() => {
         customer.id && checkCompany(customer.id)
@@ -61,6 +70,13 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                 dispatch(setIsBlack(data.is_black))
                 dispatch(setDebt(data.debt))
                 dispatch(setDebtThreshold(data.debt_threshold))
+            })
+            .catch(err => console.log(err))
+
+        customer.id && contactCompany(customer.id)
+            .then(res => {
+                const data = res.data.data;
+                dispatch(setContacts(data))
             })
             .catch(err => console.log(err))
     }, [customer])
@@ -131,9 +147,9 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
 
     const handleContactPersonState = () => {
         if (noContactPerson) {
-            setNoContactPerson(false)
+            dispatch(setNoContactPerson(false))
         } else {
-            setNoContactPerson(true)
+            dispatch(setNoContactPerson(true))
             dispatch(setName(''))
             dispatch(setPhone(''))
         }
@@ -174,9 +190,11 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                                 <InputPhone
                                     sub={SUB_PHONE}
                                     disabled={noContactPerson}
+                                    contacts={contacts.filter((el) => el.phone !== '')}
                                     value={phone}
                                     setPhoneWithMask={setPhoneWithMask}
                                     setValue={(data) => dispatch(setPhone(data))}
+                                    setValueName={(data) => dispatch(setName(data))}
                                     error={(phone?.length < 11) && !noContactPerson}
                                     errorText={ERROR_PHONE}
                                 />

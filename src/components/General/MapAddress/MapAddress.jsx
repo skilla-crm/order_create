@@ -26,18 +26,21 @@ const MapAddress = ({ lat, lng, defaultCordinate, width, height }) => {
                 defaultState={{
                     center: defaultCordinate, zoom: 10,
                     controls: [],
-                    suppressMapOpenBlock: true
                 }}
                 state={{
-                    center: lat ? [lat, lng] : defaultCordinate, zoom: lat ? 16 : 10,
-                    controls: [],
+                    center: lat ? [lat, lng] : defaultCordinate,
+                    zoom: lat ? 16 : 10,
+                    controls: []
+                }}
+
+                options={{
                     suppressMapOpenBlock: true
                 }}
-                suppressMapOpenBlock={true}
+
 
             >
                 {lat && <Placemark geometry={[lat, lng]}
-            
+
                 /* iconContent={<Icon />} options={{
 
                         iconCaption: 'хуй',
