@@ -4,8 +4,8 @@ const initialState = {
     address: {},
     metro: [],
     defaultCordinate: [59.9342802, 30.3350986],
-    noAddress: false
-
+    noAddress: false,
+    addressForReturn: ''
 };
 
 const AddressSlice = createSlice({
@@ -37,6 +37,10 @@ const AddressSlice = createSlice({
         setNoAddress(state, action) {
             state.noAddress = action.payload
         },
+
+        setAddressForReturn(state, action) {
+            state.addressForReturn = action.payload
+        }
 
 
 
@@ -71,8 +75,9 @@ export const {
     setAddress,
     deleteMetro,
     setMetro,
-    setDefaultCordinate, 
-    setNoAddress
+    setDefaultCordinate,
+    setNoAddress,
+    setAddressForReturn
 } = AddressSlice.actions;
 
 export default AddressSlice.reducer;

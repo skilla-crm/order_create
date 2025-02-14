@@ -4,7 +4,10 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     managerId: null,
     partnershipId: null,
-    emailPasport: ''
+    emailPasport: '',
+    partnerRates: [],
+    partnerRate: 0,
+    emailState: false,
 };
 
 const ManagersSlice = createSlice({
@@ -22,6 +25,18 @@ const ManagersSlice = createSlice({
 
         setEmailPasport(state, action) {
             state.emailPasport = action.payload;
+        },
+
+        setPartnerRates(state, action) {
+            state.partnerRates = action.payload;
+        },
+
+        setPartnerRate(state, action) {
+            state.partnerRate = action.payload;
+        },
+
+        setEmailState(state, action) {
+            state.emailState = action.payload;
         }
     },
 });
@@ -29,7 +44,10 @@ const ManagersSlice = createSlice({
 export const {
     setManagerId,
     setPartnershipId,
-    setEmailPasport
+    setEmailPasport,
+    setPartnerRates,
+    setPartnerRate,
+    setEmailState
 } = ManagersSlice.actions;
 
 export default ManagersSlice.reducer;

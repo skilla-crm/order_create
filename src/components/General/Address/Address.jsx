@@ -11,14 +11,26 @@ import Metro from '../Metro/Metro';
 //utils
 import { adressStringUtility, addressUtility } from '../../../utils/AdressUtility';
 
-const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordinate, first, handleNoAdress, noAddress }) => {
+const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordinate, first, handleNoAdress, noAddress, addressForReturn, errorText, error }) => {
     const [query, setQuery] = useState(adressStringUtility(address) || '');
     const [suggestions, setSuggestions] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
     const [openMap, setOpenMap] = useState(false);
 
     useEffect(() => {
+        address.city == '' && setOpenMap(false)
+    }, [address])
+
+    useEffect(() => {
+        setQuery(addressForReturn)
+    }, [addressForReturn])
+
+    useEffect(() => {
         noAddress && setQuery('')
+        if (noAddress) {
+            setQuery('')
+            setOpenMap(false)
+        }
     }, [noAddress])
 
     const handleAdress = (e) => {
@@ -94,7 +106,7 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
             <div className={s.block}>
                 <div className={`${s.field} ${noAddress && s.field_disabled} ${onFocus && s.field_focus}`}>
                     <input disabled={noAddress} onFocus={handleFocus} onBlur={handleBlur} value={query || ''} onChange={handleAdress}></input>
-                    <button onClick={handleMap} className={`${s.button} ${(onFocus || (!address.lat && !openMap)) && s.button_hidden}`}>
+                    <button onClick={handleMap} className={`${s.button} ${(onFocus || ((!address.lat || address.city == '') && !openMap)) && s.button_hidden}`}>
                         <IconLocation />
                         {!openMap && <p>На карте</p>}
                         {openMap && <p>Скрыть</p>}
@@ -118,6 +130,12 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
             </div>
             <div className={`${s.metro} ${metro.length >= 2 && s.metro_open}`}>
                 <Metro station={metro} />
+            </div>
+
+            <div className={`${s.error} ${error && s.error_vis}`}>
+                <p>
+                    {errorText}
+                </p>
             </div>
             <div className={`${s.map} ${!openMap && s.map_hidden}`}>
                 <MapAddress openMap={openMap} lat={address?.lat} lng={address?.lng} defaultCordinate={defaultCordinate} width={690} height={292} />

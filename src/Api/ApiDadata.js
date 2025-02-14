@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseURL = "http://suggestions.dadata.ru/";
+const baseURL = "https://suggestions.dadata.ru/";
 
 const instanceWithToken = axios.create({
     withCredentials: false,

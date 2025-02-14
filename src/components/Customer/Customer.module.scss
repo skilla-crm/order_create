@@ -17,15 +17,17 @@
 }
 
 .company {
-
+    position: relative;
     box-sizing: border-box;
     max-height: 0;
+    width: 500px;
     visibility: hidden;
     opacity: 0;
     margin-bottom: 0;
     padding: 1px;
     transition: all 0.2s;
     overflow: hidden;
+    display: flex;
 
     &_vis {
         visibility: visible;
@@ -52,7 +54,7 @@
     overflow: hidden;
     height: 0;
     opacity: 0;
-   
+    transition: all 0.2s ease-in-out;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -85,13 +87,19 @@
         }
     }
 
-    &_history {
-        transition: all 0.2s ease-in-out;
-    }
+    &_history {}
 }
 
 @keyframes load {
     from {
         transform: rotate(360deg);
     }
+}
+
+
+.warnings {
+    position: absolute;
+    right: -322px;
+    top: 20px;
+    width: 310px;
 }

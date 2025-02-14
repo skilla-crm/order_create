@@ -3,7 +3,7 @@ import s from './SegmentControl.module.scss';
 const SegmentControl = ({ segments, active, setActive }) => {
 
     const handleSelect = (e) => {
-        const id = e.currentTarget.id;
+        const id = Number(e.currentTarget.id);
         setActive(id)
     }
     return (

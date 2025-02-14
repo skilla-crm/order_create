@@ -20,3 +20,31 @@
       visibility: visible;
    }
 }
+
+
+
+.partnerRates {
+   max-height: 0;
+   height: fit-content;
+   display: flex;
+   flex-direction: column;
+   gap: 6px;
+   transition: all 0.15s;
+
+   span {
+      color: var(--color-text-secondary);
+      opacity: 0;
+      visibility: hidden;
+   }
+
+   &_vis {
+      max-height: 70px;
+      margin-top: 12px;
+
+      span {
+         transition: all 0.15s;
+         opacity: 1;
+         visibility: visible;
+      }
+   }
+}

@@ -12,12 +12,15 @@ import { emailValidate } from '../../utils/EmailValidate';
 //selector
 import { selectorManagers } from '../../store/reducer/Managers/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
+import { selectorValidation } from '../../store/reducer/Validation/selector';
 //slice
-import { setManagerId, setPartnershipId, setEmailPasport } from '../../store/reducer/Managers/slice';
+import { setManagerId, setPartnershipId, setEmailPasport, setPartnerRates, setPartnerRate, setEmailState } from '../../store/reducer/Managers/slice';
+import { setEmailError, setEmailErrorFormat } from '../../store/reducer/Validation/slice';
 //components 
 import Header from '../General/Header/Header';
 import SegmentControl from '../General/SegmentControl/SegmentControl';
 import InputSelect from '../General/Input/InputSelect';
+import InputSelectPartner from '../General/Input/InputSelectPartner';
 import Switch from '../General/Switch/Switch';
 import InputEmail from '../General/Input/InputEmail';
 
@@ -25,22 +28,59 @@ import InputEmail from '../General/Input/InputEmail';
 const Manager = () => {
     const { supervisors, skilla_partnerships } = useContext(ParametrsContext)
     const [activeSegment, setActiveSegment] = useState(1);
-    const [emailState, setEmailState] = useState(false)
-    const { managerId, partnershipId, emailPasport } = useSelector(selectorManagers);
-    const { contacts } = useSelector(selectorCustomer);
+    const [activeRate, setActiveRate] = useState(1);
+    const { managerId, partnershipId, emailPasport, partnerRates, partnerRate, emailState } = useSelector(selectorManagers);
+    const { contacts, payType } = useSelector(selectorCustomer);
+    const { emailError } = useSelector(selectorValidation)
     const dispatch = useDispatch();
 
     useEffect(() => {
-        activeSegment == 1 ? dispatch(setPartnershipId(null)) : dispatch(setManagerId(null))
-    }, [activeSegment])
+        if (activeSegment == 1) {
+            dispatch(setPartnerRates([]))
+            partnershipId !== null && dispatch(setPartnershipId(0))
+        } else {
+            managerId !== null && dispatch(setManagerId(0))
+        }
+    }, [activeSegment, partnershipId, managerId])
+
+
+    useEffect(() => {
+        managerId == 0 && partnershipId !== 0 && partnershipId !== null ? setActiveSegment(2) : setActiveSegment(1)
+    }, [managerId, partnershipId])
+
+    useEffect(() => {
+        if (partnerRates.length > 0) {
+            const result = partnerRates.find(el => el.id == activeRate);
+            result && dispatch(setPartnerRate(result?.text))
+            !result && dispatch(setPartnerRate(partnerRates?.[0]?.text))
+        }
+    }, [partnerRates, activeRate])
+
+    useEffect(() => {
+        if (partnerRates.length > 0 && partnerRate !== 0) {
+            const result = partnerRates.find(el => el.text == partnerRate);
+            setActiveRate(result?.id)
+        }
+
+    }, [partnerRates, partnerRate])
 
     const handleSwitch = () => {
         if (emailState) {
-            setEmailState(false)
+            dispatch(setEmailState(false))
+            handleResetErrorEmail()
             dispatch(setEmailPasport(''))
         } else {
-            setEmailState(true)
+            dispatch(setEmailState(true))
         }
+    }
+
+    useEffect(() => {
+        emailPasport !== '' && dispatch(setEmailState(true))
+    }, [emailPasport])
+
+    const handleResetErrorEmail = () => {
+        dispatch(setEmailError(false))
+        dispatch(setEmailErrorFormat(false))
     }
 
     return (
@@ -59,18 +99,35 @@ const Manager = () => {
             {activeSegment == 1 && <InputSelect
                 list={supervisors}
                 value={managerId}
-                setValue={(data) => dispatch(setManagerId(data == 0 ? null : Number(data)))}
+                setValue={(data) => dispatch(setManagerId(Number(data)))}
                 defaultRow={defaultRow}
                 type={3}
                 position={supervisors?.length > 2 ? 'top' : ''}
             />}
 
-            {activeSegment == 2 && skilla_partnerships.length > 0 && <InputSelect
-                list={skilla_partnerships}
-                value={partnershipId}
-                setValue={(data) => dispatch(setPartnershipId(Number(data)))}
-                position={skilla_partnerships?.length > 3 ? 'top' : ''}
-            />}
+            {activeSegment == 2 && skilla_partnerships?.length > 0 &&
+                <div>
+                    <InputSelectPartner
+                        list={skilla_partnerships}
+                        value={partnershipId}
+                        setValue={(data) => dispatch(setPartnershipId(Number(data)))}
+                        setPartnerRates={(data) => dispatch(setPartnerRates(data))}
+                        payType={payType}
+                        position={skilla_partnerships?.length > 3 ? 'top' : ''}
+                    />
+                    <div className={`${s.partnerRates} ${partnerRates.length > 0 && s.partnerRates_vis}`}>
+                        <span>Ставка партнера</span>
+                        {<SegmentControl
+                            segments={partnerRates}
+                            setActive={setActiveRate}
+                            active={activeRate}
+                        />
+                        }
+                    </div>
+                </div>
+            }
+
+
 
             <Switch
                 text={SUB_SWITCH}
@@ -83,10 +140,13 @@ const Manager = () => {
                     sub={SUB_EMAIL}
                     value={emailPasport}
                     setValue={(data) => dispatch(setEmailPasport(data))}
-                    error={!emailValidate(emailPasport)}
-                    /*       errorEmpity={!formValidate} */
+                    error={!emailValidate(emailPasport) && emailPasport.length > 0}
+                    errorEmpity={emailError}
                     errorText={ERR_EMAIL}
-                    contacts={contacts.filter((el) => el.phone !== '')}
+                    errorTextEmpity={'заполните поле'}
+                    contacts={contacts.filter((el) => el.email !== '')}
+                    type={2}
+                    handleResetErrorEmail={handleResetErrorEmail}
                 />
 
             </div>

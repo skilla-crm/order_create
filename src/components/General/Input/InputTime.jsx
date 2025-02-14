@@ -6,7 +6,7 @@ import InputMask from 'comigo-tech-react-input-mask/lib/react-input-mask.develop
 //components
 import DigitalTimer from '../../../utils/DigitalTimer/DigitalTimer';
 
-const InputTime = ({ sub, disabled, nosub, time, setTime }) => {
+const InputTime = ({ sub, disabled, nosub, time, setTime, error, errorText }) => {
     const [fieldFocus, setFieldFocus] = useState(false);
     const [openTimer, setOpenTimer] = useState(false);
     const [timeVis, setTimeVis] = useState('');
@@ -65,7 +65,13 @@ const InputTime = ({ sub, disabled, nosub, time, setTime }) => {
                 <IconTime />
             </div>
 
-            {openTimer && <DigitalTimer value={time} setValue={setTime} setOpen={setOpenTimer} nosub={nosub}/>}
+            <div className={`${s.error} ${s.error_3} ${error && s.error_vis}`}>
+                <p>
+                    {errorText}
+                </p>
+            </div>
+
+            {openTimer && <DigitalTimer value={time} setValue={setTime} setOpen={setOpenTimer} nosub={nosub} />}
 
         </div>
     )

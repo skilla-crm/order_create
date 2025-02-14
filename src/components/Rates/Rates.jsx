@@ -11,9 +11,11 @@ import { ReactComponent as IconRate } from '../../images/icons/iconBackForward.s
 //selectors
 import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
+import { selectorValidation } from '../../store/reducer/Validation/selector';
 //slice
 import { setRate, setRateWorker } from '../../store/reducer/Rates/slice';
 import { setMinDurqtion } from '../../store/reducer/Details/slice';
+import { setRateError, setRateWorkerError } from '../../store/reducer/Validation/slice';
 //utils
 import { addSpaceNumber2 } from '../../utils/addSpaceNumber';
 
@@ -43,7 +45,7 @@ const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio }) => {
             </div>
 
             <div className={s.name}>
-                <p>{name}</p>
+                <p>{name.length > 115 ? `${name.slice(0, 115)}...` : name}</p>
             </div>
 
             <div className={s.bit}>
@@ -60,7 +62,6 @@ const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio }) => {
 
 const Rates = () => {
     const { rates } = useContext(ParametrsContext)
-    const [rateList, setRateList] = useState([]);
     const [ratioList, setRatioList] = useState(false);
     const [activeRatio, setActiveRatio] = useState(0)
     const [ratio, setRatio] = useState(1);
@@ -68,33 +69,39 @@ const Rates = () => {
     const dispatch = useDispatch();
     const { rate, rateWorker } = useSelector(selectorRates)
     const { payType, customer } = useSelector(selectorCustomer)
+    const { rateError, rateWorkerError } = useSelector(selectorValidation)
     const listRef = useRef();
     const buttonRef = useRef();
 
     useEffect(() => {
-        if (payType == 1) {
-            const result = rates?.filter(el => el.cash == 0);
-            result?.length == 0 ? setRateList(rates) : setRateList(result);
-            return
-        }
-
-        if (payType !== 1) {
-            const result = rates?.filter(el => el.cash == 1);
-            setRateList(result)
-            return
-        }
-    }, [rates, payType])
-
-    /*   useEffect(() => {
-          if (rate !== '') {
-              dispatch(setRate(rate * ratio))
-          }
-      }, [ratio, rate]) */
+        dispatch(setRateError(false))
+    }, [rate])
 
     useEffect(() => {
-        const result = rateList.find(el => el.client_bit == parseFloat(rate) && el.worker_bit == rateWorker);
-        (result || rate == '' || rateWorker == '') ? setWarning(false) : setWarning(true)
-    }, [rate, rateWorker])
+        dispatch(setRateWorkerError(false))
+    }, [rateWorker])
+
+    useEffect(() => {
+        if (rate == '' || rateWorker == '' || rate == 0 || rateWorker == 0) {
+            setWarning(false)
+            return
+        }
+
+        if (customer?.works == '' || !customer?.works) {
+            const result = rates?.find(el => parseFloat(el.client_bit) == parseFloat(rate) && parseFloat(el.worker_bit) == parseFloat(rateWorker))
+            result ? setWarning(false) : setWarning(true)
+            return
+        }
+
+        if (customer?.works !== '') {
+            const result = customer?.works?.find(el => parseFloat(el.price) == parseFloat(rate) && parseFloat(el.bit) == parseFloat(rateWorker))
+            result ? setWarning(false) : setWarning(true)
+            return
+        }
+
+
+
+    }, [rate, rateWorker, customer])
 
     const handleOpenRatioList = () => {
         ratioList ? setRatioList(false) : setRatioList(true)
@@ -151,9 +158,9 @@ const Rates = () => {
                                 handleResetRatio()
                             }}
                             error={false}
-                            errorEmpity={false}
+                            errorEmpity={rateError}
                             maxValue={10}
-                            errorText={'dgdf'}
+                            errorText={'Укажите ставку'}
                         />
                         <button disabled={(rate == '' || payType !== 1)} ref={buttonRef} onClick={handleOpenRatioList} className={s.point}>
                             <IconPoints />
@@ -181,9 +188,9 @@ const Rates = () => {
                         value={rateWorker}
                         setValue={(data) => dispatch(setRateWorker(data))}
                         error={false}
-                        errorEmpity={false}
+                        errorEmpity={rateWorkerError}
                         maxValue={10}
-                        errorText={'dgdf'}
+                        errorText={'Укажите ставку'}
                     />
                 </div>
 
@@ -201,7 +208,7 @@ const Rates = () => {
                     {SUB_PRICE}
                 </span>
                 {(payType !== 1 || customer?.works?.length == 0 || !customer?.works) && <ul className={`${s.block_list} ${s.block_list_2}`}>
-                    {rateList?.map((el, i) => {
+                    {rates?.map((el, i) => {
                         return <Rate
                             key={el.id}
                             customerBit={el.client_bit}

@@ -1,10 +1,11 @@
 import s from './Details.module.scss';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { UserContext, ParametrsContext } from '../../contexts/UserContext';
 import { useSelector, useDispatch } from 'react-redux';
 //selectors
 import { selectorAddress } from '../../store/reducer/Address/selector';
 import { selectorDetails } from '../../store/reducer/Details/selector';
+import { selectorValidation } from '../../store/reducer/Validation/selector';
 //slice
 import { setAddress, setMetro, setNoAddress, deleteMetro } from '../../store/reducer/Address/slice';
 import {
@@ -16,6 +17,7 @@ import {
     setMinDurqtion,
     setDuration
 } from '../../store/reducer/Details/slice';
+import { setAdressError } from '../../store/reducer/Validation/slice';
 //constants
 import {
     TITLE, BUTTON_TEXT,
@@ -37,9 +39,14 @@ import Address from '../General/Address/Address';
 const Details = () => {
     const user = useContext(UserContext);
     const { types, requirements } = useContext(ParametrsContext)
-    const { address, metro, defaultCordinate, noAddress } = useSelector(selectorAddress);
+    const { address, metro, defaultCordinate, noAddress, addressForReturn } = useSelector(selectorAddress);
     const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
+    const { adressError } = useSelector(selectorValidation)
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        address.city && handleResetErrorAddress()
+    }, [address])
 
     const handleNoAdress = () => {
         if (noAddress) {
@@ -48,7 +55,12 @@ const Details = () => {
             dispatch(setNoAddress(true))
             dispatch(setAddress({}))
             dispatch(deleteMetro())
+            handleResetErrorAddress()
         }
+    }
+
+    const handleResetErrorAddress = () => {
+        dispatch(setAdressError(false))
     }
 
     return (
@@ -62,14 +74,14 @@ const Details = () => {
                 PromptText={PromptDetails}
             />
 
-            <InputSelect 
-             sub={SUB_TYPE}
-             value={service}
-             setValue={(data) => dispatch(setService(Number(data)))}
-             list={types}
+            <InputSelect
+                sub={SUB_TYPE}
+                value={service}
+                setValue={(data) => dispatch(setService(Number(data)))}
+                list={types}
             />
 
-           {/*  <InputSelectSearch
+            {/*  <InputSelectSearch
                 sub={SUB_TYPE}
                 value={service}
                 setValue={(data) => dispatch(setService(data))}
@@ -129,6 +141,9 @@ const Details = () => {
                 first={true}
                 handleNoAdress={handleNoAdress}
                 noAddress={noAddress}
+                addressForReturn={addressForReturn}
+                error={adressError}
+                errorText={'Укажите адрес'}
             />
 
         </div>

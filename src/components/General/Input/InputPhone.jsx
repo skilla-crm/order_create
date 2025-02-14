@@ -4,7 +4,7 @@ import { ReactComponent as IconPhone } from '../../../images/icons/iconPhone.svg
 
 import InputMask from 'comigo-tech-react-input-mask/lib/react-input-mask.development';
 
-const InputPhone = ({ sub, disabled, value, setValue, setValueName, contacts, errorText, error, setPhoneWithMask }) => {
+const InputPhone = ({ sub, disabled, value, setValue, setValueName, contacts, errorText, error, errorEmpyty, errorTextEmpyty, setPhoneWithMask, handleResetError }) => {
     const [errorState, setErrorState] = useState(false);
     const [openContacts, setOpenContacts] = useState(false);
     const listRef = useRef();
@@ -14,8 +14,11 @@ const InputPhone = ({ sub, disabled, value, setValue, setValueName, contacts, er
         const regex = /[0-9]/g;
         const cleanValue = value?.match(regex)?.join('');
         setPhoneWithMask(value)
-        setValue(cleanValue)
+        setValue(!cleanValue ? '' : cleanValue)
+        cleanValue?.length > 1 && handleResetError()
     }
+
+   
 
     useEffect(() => {
         !error && setErrorState(false)
@@ -28,11 +31,12 @@ const InputPhone = ({ sub, disabled, value, setValue, setValueName, contacts, er
     const handleFocus = () => {
         setErrorState(false)
         setOpenContacts(true)
+      
     }
 
     const handleChoseContact = (data) => {
         setValue(data.phone)
-        setValueName(data.name)
+     /*    setValueName(data.name) */
         setOpenContacts(false)
     }
 
@@ -49,6 +53,7 @@ const InputPhone = ({ sub, disabled, value, setValue, setValueName, contacts, er
         return () => document.removeEventListener('mousedown', closeModal);
     }, []);
 
+
     return (
         <div className={s.container}>
             <span className={`${s.sub} ${errorState && s.sub_err}`}>{sub}</span>
@@ -64,15 +69,15 @@ const InputPhone = ({ sub, disabled, value, setValue, setValueName, contacts, er
                         placeholder='+7 (___) ___-__-__'
                     />
                 </div>
-                <div className={`${s.error} ${errorState && s.error_vis}`}>
+                <div className={`${s.error} ${(errorState || errorEmpyty) && s.error_vis}`}>
                     <p>
-                        {errorText}
+                        {errorEmpyty ? errorTextEmpyty : errorText}
                     </p>
                 </div>
 
                 <div className={`${s.contacts} ${contacts.length > 0 && openContacts && s.contacts_vis}`}>
                     {contacts.map(el => {
-                        return <div onClick={() => handleChoseContact(el)} className={s.contact}>
+                        return <div key={el.id} onClick={() => handleChoseContact(el)} className={s.contact}>
                             <div className={s.icon}><IconPhone /></div>
                             <div className={s.contact_phone}>
                                 <InputMask

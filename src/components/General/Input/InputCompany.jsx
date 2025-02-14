@@ -8,7 +8,7 @@ import CompanyList from '../CompanyList/CompanyList';
 import { addSpaceNumber } from '../../../utils/addSpaceNumber';
 import { handleSearchCompany } from '../../../utils/SearchCompany';
 
-const InputCompany = ({ sub, list, value, setValue, setAddCustomer, payType }) => {
+const InputCompany = ({ sub, list, value, setValue, setAddCustomer, payType, error, errorText }) => {
     const [openList, setOpenList] = useState(false);
     const [fieldFocus, setFieldFocus] = useState(false);
     const [valueText, setValueText] = useState('');
@@ -21,7 +21,7 @@ const InputCompany = ({ sub, list, value, setValue, setAddCustomer, payType }) =
     useEffect(() => {
         const result = list.find(el => el.id == value)
         setCompanyInfo(result)
-        result && setValueText(result?.name) 
+        result && setValueText(result?.name)
     }, [value])
 
     useEffect(() => {
@@ -71,7 +71,7 @@ const InputCompany = ({ sub, list, value, setValue, setAddCustomer, payType }) =
 
     const handleBlur = () => {
         setFieldFocus(false)
-        
+
     }
 
     const handleClose = () => {
@@ -112,6 +112,12 @@ const InputCompany = ({ sub, list, value, setValue, setAddCustomer, payType }) =
                     valueText={valueText}
                     setAddCustomer={setAddCustomer}
                 />
+            </div>
+
+            <div className={`${s.error} ${error && s.error_vis}`}>
+                <p>
+                    {errorText}
+                </p>
             </div>
 
             <div className={`${s.bill} ${(companyInfo?.billState || companyInfo?.contractState) && s.bill_vis}`}>

@@ -45,7 +45,7 @@ export const addressUtility = (data) => {
         city,
         street,
         house,
-        apartment: isApartment,
+        apartment: isApartment ? isApartment : '',
     }
 }
 

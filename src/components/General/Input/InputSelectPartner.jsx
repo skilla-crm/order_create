@@ -4,27 +4,25 @@ import { ReactComponent as IconChewron2 } from '../../../images/icons/iconChewro
 import avatardef from '../../../images/avatarDef.png';
 import { useRef, useState, useEffect } from 'react';
 
-const InputSelect = ({ sub, list, value, setValue, type, position, defaultRow }) => {
+const InputSelectPartner = ({ sub, list, value, setValue, type, position, defaultRow, setPartnerRates, payType }) => {
     const [openList, setOpenList] = useState(false);
     const [name, setName] = useState('');
-    const [avatar, setAvatar] = useState('')
     const listRef = useRef();
 
     useEffect(() => {
-        if (((value == 0 || value == null) && defaultRow)) {
-            setName(defaultRow.name)
-            return
-        }
 
-        if (value !== '') {
-            const result = list?.find(el => el.id == value)
+
+        if (value !== null && value !== 0) {
+            const result = list?.find(el => el.to_id == value)
             setName(result?.name)
-            setAvatar(result?.avatar_mini)
+            console.log(result)
+            const rateNal = [{ id: 1, text: result?.nal_price }, { id: 2, text: result?.nal_price2 }, { id: 3, text: result?.nal_price3 }].filter(el => el.text !== 0)
+            const rateBezal = [{ id: 1, text: result?.beznal_price }, { id: 2, text: result?.beznal_price2 }, { id: 3, text: result?.beznal_price3 }].filter(el => el.text !== 0)
+            payType == 1 ? setPartnerRates(rateBezal) : setPartnerRates(rateNal)
             return
         }
-        if (value == '') {
-            setName(list?.[0]?.name)
-            setValue(list?.[0]?.id)
+        if (value == null) {
+            setPartnerRates([])
             return
         }
 
@@ -63,28 +61,18 @@ const InputSelect = ({ sub, list, value, setValue, type, position, defaultRow })
         <div className={`${s.container} ${s.container_select} ${type == 2 && s.container_select2}`}>
             {sub && <span className={s.sub}>{sub}</span>}
             <div onClick={handleOpenList} ref={listRef} className={`${s.field} ${s.field_select}`}>
-                {type !== 3 && <p>{name}</p>}
-                {type == 3 && <div className={s.item}>
-                    {value !== null && value !== 0 && <div className={s.avatar}>
-                        <img src={avatar == "" ? avatardef : `https://lk.skilla.ru/images/persons/chat/${avatar}`}></img>
-                    </div>
-                    }
-                    <p>{name}</p>
-                </div>}
+                <p>{name}</p>
+
                 <div className={`${s.chewron} ${openList && s.chewron_open}`}>
-                    {type !== 2 && <IconChewron />}
-                    {type == 2 && <IconChewron2 />}
+                    <IconChewron />
                 </div>
 
                 <ul className={`${s.list} ${s.list_scroll} ${position == 'top' && s.list_top} ${openList && s.list_open}`}>
                     {defaultRow && <li onClick={handleValue} id={defaultRow.id} className={`${s.item} ${(value == 0 || value == null) && s.item_active}`}>{defaultRow.name}</li>}
 
                     {list?.map(el => {
-                        return <li onClick={handleValue} key={el.id} id={el.id} className={`${s.item} ${el.id == value && s.item_active}`}>
-                            {type == 3 && <div className={s.avatar}>
-                                <img src={el.avatar_mini == "" ? avatardef : `https://lk.skilla.ru/images/persons/chat/${el.avatar_mini}`}></img>
-                            </div>}
-                            <p>{el.name} {el.position == 'director' && <span>Руководитель</span>}</p>
+                        return <li onClick={handleValue} key={el.id} id={el.to_id} className={`${s.item} ${el.id == value && s.item_active}`}>
+                            <p>{el.name} {/* {el.position == 'director' && <span>Руководитель</span>} */}</p>
                         </li>
                     })}
                 </ul>
@@ -94,4 +82,4 @@ const InputSelect = ({ sub, list, value, setValue, type, position, defaultRow })
     )
 };
 
-export default InputSelect; 
+export default InputSelectPartner; 

@@ -1,6 +1,7 @@
 import s from './App.module.scss';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import { ReactComponent as IconDone } from '../../images/icons/iconDone16-16-white.svg';
 import { ReactComponent as IconPoints } from '../../images/icons/iconPoints16-16-blue.svg';
@@ -11,6 +12,10 @@ import { getAddressExact } from '../../Api/ApiYandex';
 //slice
 import { setCompaniesList } from '../../store/reducer/Customer/slice';
 import { setDefaultCordinate } from '../../store/reducer/Address/slice';
+import {
+    setСompanyError, setPhoneError, setPhoneErrorFormat, setNameError, setTimeError, setAdressError,
+    setRateError, setRateWorkerError, setEmailError, setEmailErrorFormat, setIsBlackError, setIsDebtError
+} from '../../store/reducer/Validation/slice';
 //selector
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorPerformers } from '../../store/reducer/Performers/selector';
@@ -19,6 +24,9 @@ import { selectorDetails } from '../../store/reducer/Details/selector';
 import { selectorAddress } from '../../store/reducer/Address/selector';
 import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
+//utils
+import { emailValidate } from '../../utils/EmailValidate';
+
 //components
 import Button from '../General/Button/Button';
 import Customer from '../Customer/Сustomer';
@@ -39,15 +47,16 @@ const App = () => {
     const [parametrs, setParametrs] = useState({});
     const [loadCreate, setLoadCreate] = useState(false);
     const [loadSave, setLoadSave] = useState(false);
-    const { customer, payType, name, phone } = useSelector(selectorCustomer);
-    const { performersNum, date, time } = useSelector(selectorPerformers);
+    const { customer, payType, name, phone, isSms, noContactPerson, isBlack, debt, debtThreshold } = useSelector(selectorCustomer);
+    const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { additionalDates } = useSelector(selectorAdditionalDates);
     const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
-    const { address, metro } = useSelector(selectorAddress);
+    const { address, metro, noAddress } = useSelector(selectorAddress);
     const { rate, rateWorker } = useSelector(selectorRates);
-    const { managerId, partnershipId, emailPasport } = useSelector(selectorManagers);
-
+    const { managerId, partnershipId, emailPasport, emailState, partnerRate } = useSelector(selectorManagers);
+    const navigate = useNavigate()
     const dispatch = useDispatch();
+
     //установка системной темы
     useEffect(() => {
         if (theme == '') {
@@ -87,8 +96,61 @@ const App = () => {
                 dispatch(setDefaultCordinate([cordinate[1], cordinate[0]]))
             })
     }, [parametrs.city])
+    console.log(phone)
+
+    const handleValidation = () => {
+        const companyError = payType == 1 && !customer?.id ? true : false;
+        const phoneError = !noContactPerson && phone == '' ? true : false;
+        const phoneErrorFormat = phone?.length > 0 && phone?.length < 11 ? true : false;
+        const nameError = !noContactPerson && name == '' ? true : false;
+        const timeError = time == null && !timerDisabled ? true : false;
+        const adressError = !address.city && !noAddress ? true : false;
+        const rateError = rate == '' ? true : false;
+        const rateWorkerError = rateWorker == '' ? true : false;
+        const emailError = emailState && emailPasport == '' ? true : false;
+        const emailErrorFormat = emailState && emailPasport !== '' && emailValidate(emailPasport) ? true : false;
+        const isBlackError = payType == 1 && isBlack == 1 ? true : false;
+        const isDebtError = payType == 1 && debt > 0 && debt > debtThreshold ? true : false;
+
+        dispatch(setСompanyError(companyError))
+        dispatch(setPhoneError(phoneError))
+        dispatch(setPhoneErrorFormat(phoneErrorFormat))
+        dispatch(setNameError(nameError))
+        dispatch(setTimeError(timeError))
+        dispatch(setAdressError(adressError))
+        dispatch(setRateError(rateError))
+        dispatch(setRateWorkerError(rateWorkerError))
+        dispatch(setEmailError(emailError))
+        dispatch(setEmailErrorFormat(emailErrorFormat))
+        dispatch(setIsBlackError(isBlackError))
+        dispatch(setIsDebtError(isDebtError))
+
+        if (!companyError &&
+            !phoneError &&
+            !phoneErrorFormat &&
+            !nameError &&
+            !timeError &&
+            !adressError &&
+            !rateError &&
+            !rateWorkerError &&
+            !emailError &&
+            !emailErrorFormat &&
+            !isBlackError &&
+            !isDebtError) {
+            return true
+        } else {
+            return false
+        }
+
+    }
 
     const handleCreate = (e) => {
+        const valid = handleValidation();
+        console.log(valid)
+        if (!valid) {
+            return
+        }
+
 
         const id = e.currentTarget.id;
         id == 'create' ? setLoadCreate(true) : setLoadSave(true)
@@ -136,18 +198,18 @@ const App = () => {
             metro3_color: metro[2]?.color,
             client_bit: rate,
             worker_bit: rateWorker,
-            supervisor_id: managerId,
-            to_partnership_id: partnershipId,
+            supervisor_id: managerId == 0 ? null : managerId,
+            to_partnership_id: partnershipId == 0 ? null : partnershipId,
             email_passport: emailPasport,
-            partner_client_bit: null,
-            partner_worker_bit: null,
+            partner_client_bit: partnerRate,
             bill_email: payType == 1 ? customer.email : null,
             send_bill: (payType == 1 && customer?.billState) ? customer?.billState : false,
             bill_sum: payType == 1 ? customer.billSum : 0,
-            send_contract: (payType == 1 && customer?.contractState) ? customer?.contractState : false
+            send_contract: (payType == 1 && customer?.contractState) ? customer?.contractState : false,
+            send_sms: isSms
         }
 
-        createOrder(data)
+        valid && createOrder(data)
             .then(res => {
                 setLoadCreate(false)
                 setLoadSave(false)

@@ -10,6 +10,7 @@ import { ReactComponent as IconInfoWarning } from '../../images/icons/iconWarnin
 import { getHistoryOrders, checkCompany, contactCompany } from '../../Api/Api';
 //selector
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
+import { selectorValidation } from '../../store/reducer/Validation/selector';
 //slice
 import {
     setCustomer,
@@ -20,8 +21,10 @@ import {
     setIsBlack,
     setDebt,
     setDebtThreshold,
-    setContacts
+    setContacts,
+    setIsSms
 } from '../../store/reducer/Customer/slice';
+import { setСompanyError, setPhoneError, setPhoneErrorFormat, setNameError, setIsBlackError, setIsDebtError } from '../../store/reducer/Validation/slice';
 //constants
 import { PromptCustomer } from '../../constants/prompts';
 import {
@@ -48,27 +51,42 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
     const [phoneWithMask, setPhoneWithMask] = useState('');
     const [beznal, setBeznal] = useState(true);
     const [loadBage, setLoadBage] = useState(false);
+    const [loadWarning, setLoadWarning] = useState(false);
     const { companies, customer, payType, name, phone, isBlack, debt, debtThreshold, contacts, noContactPerson } = useSelector(selectorCustomer);
+    const { companyError, phoneError, nameError } = useSelector(selectorValidation)
     const dispatch = useDispatch();
 
     useEffect(() => {
         payType == 1 ? setBeznal(true) : setBeznal(false)
         payType !== 1 && dispatch(setNoContactPerson(false))
+        handleResetErrorCompany()
     }, [payType])
 
     useEffect(() => {
-        dispatch(setPhone(''))
-        dispatch(setName(''))
+        phone?.length == 11 && historyList?.length == 0 ? dispatch(setIsSms(true)) : dispatch(setIsSms(false))
+    }, [historyList, phone])
+
+    useEffect(() => {
         !customer.id && dispatch(setContacts([]))
+        dispatch(setIsBlack(0))
+        dispatch(setDebt(0))
+        dispatch(setDebtThreshold(0))
+        dispatch(setIsBlackError(false))
+        dispatch(setIsDebtError(false))
     }, [customer])
 
     useEffect(() => {
+        customer.id && setLoadWarning(true)
+        customer.id && handleResetErrorCompany()
         customer.id && checkCompany(customer.id)
             .then(res => {
                 const data = res.data.data;
                 dispatch(setIsBlack(data.is_black))
                 dispatch(setDebt(data.debt))
                 dispatch(setDebtThreshold(data.debt_threshold))
+                setTimeout(() => {
+                    setLoadWarning(false)
+                }, 150)
             })
             .catch(err => console.log(err))
 
@@ -164,9 +182,24 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
             dispatch(setNoContactPerson(false))
         } else {
             dispatch(setNoContactPerson(true))
+            handleResetErrorPhone()
+            handleResetErrorName()
             dispatch(setName(''))
             dispatch(setPhone(''))
         }
+    }
+    //Функции сбрасывания ошибок
+    const handleResetErrorCompany = () => {
+        dispatch(setСompanyError(false))
+    }
+
+    const handleResetErrorPhone = () => {
+        dispatch(setPhoneError(false))
+        dispatch(setPhoneErrorFormat(false))
+    }
+
+    const handleResetErrorName = () => {
+        dispatch(setNameError(false))
     }
 
     return (
@@ -197,7 +230,28 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                                 setValue={(data) => dispatch(setCustomer(data))}
                                 setAddCustomer={setAddCustomer}
                                 payType={payType}
+                                error={companyError}
+                                errorText={'Выберите заказчика'}
                             />
+
+                            <div className={s.warnings}>
+                                <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && !loadWarning && customer.id && s.loader_vis}`}>
+                                    <IconInfoErr />
+                                    <p>Заказчик в черном списке</p>
+                                </div>
+
+                                <div className={`${s.loader} ${s.loader_error} ${debt > debtThreshold && !loadWarning && customer.id && s.loader_vis}`}>
+                                    <IconInfoErr />
+                                    {debt > debtThreshold && <p>Превышен лимит по задолженности</p>}
+                                </div>
+
+                                <div className={`${s.loader} ${s.loader_warning} ${debt <= debtThreshold && debt !== 0 && !loadWarning && customer.id && s.loader_vis}`}>
+                                    <IconInfoWarning />
+                                    {debt <= debtThreshold && debt !== 0 && <p>Задолженность {addSpaceNumber(debt)} ₽</p>}
+                                </div>
+                            </div>
+
+
                         </div>
                         <div className={s.container}>
                             <div className={s.contact}>
@@ -210,9 +264,21 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                                     setValue={(data) => dispatch(setPhone(data))}
                                     setValueName={(data) => dispatch(setName(data))}
                                     error={(phone?.length < 11) && !noContactPerson}
+                                    errorEmpyty={phoneError}
+                                    errorTextEmpyty={'Введите номер'}
+                                    handleResetError={handleResetErrorPhone}
                                     errorText={ERROR_PHONE}
                                 />
-                                <InputText sub={SUB_NAME} disabled={noContactPerson} value={name} setValue={(data) => dispatch(setName(data))} />
+                                <InputText
+                                    sub={SUB_NAME}
+                                    disabled={noContactPerson}
+                                    value={name}
+                                    setValue={(data) => dispatch(setName(data))}
+                                    error={nameError}
+                                    errorText={'Введите имя'}
+                                    handleResetError={handleResetErrorName}
+                                    type={2}
+                                />
                             </div>
                             <div className={s.switch}>
                                 <Switch
@@ -224,20 +290,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                             </div>
 
                         </div>
-                        <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && customer.id && s.loader_vis}`}>
-                            <IconInfoErr />
-                            <p>Заказчик в черном списке</p>
-                        </div>
 
-                        <div className={`${s.loader} ${s.loader_error} ${debt > debtThreshold && customer.id && s.loader_vis}`}>
-                            <IconInfoErr />
-                            {debt > debtThreshold && <p>Превышен лимит по задолженности</p>}
-                        </div>
-
-                        <div className={`${s.loader} ${s.loader_warning} ${debt <= debtThreshold && debt !== 0 && customer.id && s.loader_vis}`}>
-                            <IconInfoWarning />
-                            {debt <= debtThreshold && debt !== 0 && <p>Задолженность {addSpaceNumber(debt)} ₽</p>}
-                        </div>
 
                         <div className={`${s.loader} ${s.loader_history} ${loadBage && s.loader_vis}`}>
                             {historyLoad && <div className={s.loader_anim}><IconLoader /></div>}

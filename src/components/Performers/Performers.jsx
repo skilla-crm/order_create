@@ -19,9 +19,11 @@ import ProCalendar from './ProCalendar/ProCalendar';
 //slice
 import { setPerformersNum, setDate, setTime, setTimerDisabled } from '../../store/reducer/Performers/slice';
 import { setAdditionalDates } from '../../store/reducer/AdditionalDates/slice';
+import { setTimeError } from '../../store/reducer/Validation/slice';
 //selector
 import { selectorPerformers } from '../../store/reducer/Performers/selector';
 import { selectorAdditionalDates } from '../../store/reducer/AdditionalDates/selector';
+import { selectorValidation } from '../../store/reducer/Validation/selector';
 
 
 const Performers = () => {
@@ -35,18 +37,28 @@ const Performers = () => {
     const dispatch = useDispatch();
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { additionalDates, disabledDates } = useSelector(selectorAdditionalDates);
+    const { timeError } = useSelector(selectorValidation)
 
     useEffect(() => {
         additionalDates.length > 0 ? setHiddenAddDates(false) : setHiddenAddDates(true)
         additionalDates.length > 15 ? setScrollState(true) : setScrollState(false)
     }, [additionalDates])
 
+    useEffect(() => {
+        handleResetErrorTime()
+    }, [time])
+
     const handleTimerDisabled = () => {
         timerDisabled ? dispatch(setTimerDisabled(false)) : dispatch(setTimerDisabled(true))
+        !timerDisabled && handleResetErrorTime()
     }
 
     const handleAdd = () => {
         setProCalendar(true)
+    }
+
+    const handleResetErrorTime = () => {
+        dispatch(setTimeError(false))
     }
 
     return (
@@ -67,6 +79,8 @@ const Performers = () => {
                         disabled={timerDisabled}
                         time={time}
                         setTime={(data) => dispatch(setTime(data))}
+                        error={timeError}
+                        errorText={'Выберите время'}
                     />
                 </div>
                 <Switch

@@ -10,7 +10,8 @@ const initialState = {
     isBlack: 0,
     debt: 0,
     debtThreshold: 0,
-    contacts: []
+    contacts: [],
+    isSms: false
 };
 
 const CustomerSlice = createSlice({
@@ -57,9 +58,14 @@ const CustomerSlice = createSlice({
         setContacts(state, action) {
             state.contacts = action.payload;
         },
+
         setNoContactPerson(state, action) {
             state.noContactPerson = action.payload;
-        }
+        },
+
+        setIsSms(state, action) {
+            state.isSms = action.payload;
+        },
     },
 });
 
@@ -74,7 +80,8 @@ export const {
     setDebt,
     setDebtThreshold,
     setContacts,
-    setNoContactPerson
+    setNoContactPerson,
+    setIsSms
 } = CustomerSlice.actions;
 
 export default CustomerSlice.reducer;

@@ -14,13 +14,17 @@ import { orderRetry } from '../../Api/Api';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 //slice
 import { setPayType, setName, setPhone, setNoContactPerson } from '../../store/reducer/Customer/slice';
-import { setPerformersNum } from '../../store/reducer/Performers/slice';
+import { setPerformersNum, setTime } from '../../store/reducer/Performers/slice';
 import { setService, setRequirements, setMinDurqtion, setDuration, setCommentSupervisor, setNotes } from '../../store/reducer/Details/slice';
+import { setAddress, setMetro, deleteMetro, setNoAddress, setAddressForReturn } from '../../store/reducer/Address/slice';
+import { setRate, setRateWorker } from '../../store/reducer/Rates/slice';
+import { setManagerId, setPartnershipId, setEmailPasport, setPartnerRate } from '../../store/reducer/Managers/slice';
 //components
 import Header from '../General/Header/Header';
 import InputSelect from '../General/Input/InputSelect';
 //utils
 import { addSpaceNumber2 } from '../../utils/addSpaceNumber';
+import { adressStringUtility } from '../../utils/AdressUtility';
 //constants
 import { PromptCustomer } from '../../constants/prompts';
 const list = [{ id: 5, name: 'Последние 5 заказов' }, { id: 10, name: 'Последние 10 заказов' }, { id: 20, name: 'Последние 20 заказов' }, { id: 0, name: 'Все' }]
@@ -55,13 +59,21 @@ const Bage = ({ status }) => {
     )
 }
 const Item = ({ el }) => {
-    const { companies } = useSelector(selectorCustomer);
     const dispatch = useDispatch();
 
     const handleRetry = () => {
         orderRetry(el.id)
             .then(res => {
                 const data = res.data.data;
+                const address = {
+                    city: data.city,
+                    street: data.load_address,
+                    house: data.home,
+                    apartment: data.apartment,
+                    lat: data.lat,
+                    lng: data.lng
+                }
+
                 console.log(data)
                 data.beznal == 1 && dispatch(setPayType(1))
                 data.beznal == 0 && data.to_card == 1 && dispatch(setPayType(2))
@@ -73,14 +85,42 @@ const Item = ({ el }) => {
                     dispatch(setNoContactPerson(true))
                     :
                     dispatch(setNoContactPerson(false))
-                    dispatch(setPerformersNum(data.worker_count))
-                    dispatch(setDuration(data.order_duration))
-                    dispatch(setService(data.order_type))
-                    dispatch(setMinDurqtion(data.min_time))
-                    dispatch(setNotes(data.supervisor_comment))
-                    dispatch(setCommentSupervisor(data.notes))
-                    /* dispatch(setRequirements()) */
+                dispatch(setPerformersNum(data.worker_count))
+                dispatch(setDuration(data.order_duration))
+                dispatch(setService(data.order_type))
+                dispatch(setMinDurqtion(data.min_time))
+                dispatch(setNotes(data.notes))
+                dispatch(setCommentSupervisor(data.supervisor_comment))
+                data.passport_required == 1 && data.requirements?.length == 0 ? dispatch(setRequirements([1])) : dispatch(setRequirements([]))
+                data.requirements?.length > 0 && dispatch(setRequirements(data.requirements.map(el => { return el.id })))
+                dispatch(setAddress(address))
+                dispatch(setAddressForReturn(adressStringUtility(address)))
+                dispatch(setRate(data.client_bit))
+                dispatch(setRateWorker(data.worker_bit))
+                dispatch(deleteMetro())
+                data?.metro !== '' && dispatch(setMetro({
+                    name: data?.metro,
+                    distance: Number(data?.metro_km),
+                    color: data?.metro_color
+                }))
 
+                data?.metro2 !== '' && dispatch(setMetro({
+                    name: data?.metro2,
+                    distance: Number(data?.metro2_km),
+                    color: data?.metro2_color
+                }))
+
+                data?.metro3 !== '' && dispatch(setMetro({
+                    name: data?.metro3,
+                    distance: Number(data?.metro3_km),
+                    color: data?.metro3_color
+                }))
+
+                data.city == '' ? dispatch(setNoAddress(true)) : dispatch(setNoAddress(false))
+                dispatch(setManagerId(data.supervisor_id))
+                dispatch(setPartnershipId(data.to_partnership_id == 0 ? null : data.to_partnership_id))
+                dispatch(setEmailPasport(data.email_passport))
+                data.partner_client_bit && dispatch(setPartnerRate(data.partner_client_bit))
             })
             .catch(err => console.log(err))
     }
@@ -100,7 +140,7 @@ const Item = ({ el }) => {
             </div>
 
             <div className={`${s.block} ${s.block_address}`}>
-                <p>{el?.load_address} {el?.k} {el?.house}</p>
+                <p>{el?.load_address}{el.home !== '' && ','} {el?.home} {el?.k} </p>
                 <span>
                     {el?.notes.length > 105 ? `${el?.notes.slice(0, 105)}...` : el?.notes}
                 </span>

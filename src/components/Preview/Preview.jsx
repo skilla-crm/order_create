@@ -80,7 +80,7 @@ const Preview = () => {
                     {tags?.map(el => {
                         const result = requirements?.find(item => item.id == el)
                         return <div className={s.bage}>
-                            <p>{result.description}</p>
+                            <p>{result?.description}</p>
                         </div>
                     })}
                 </div>
