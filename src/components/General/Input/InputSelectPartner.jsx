@@ -10,8 +10,6 @@ const InputSelectPartner = ({ sub, list, value, setValue, type, position, defaul
     const listRef = useRef();
 
     useEffect(() => {
-
-
         if (value !== null && value !== 0) {
             const result = list?.find(el => el.to_id == value)
             setName(result?.name)

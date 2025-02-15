@@ -118,7 +118,7 @@ const Item = ({ el }) => {
 
                 data.city == '' ? dispatch(setNoAddress(true)) : dispatch(setNoAddress(false))
                 dispatch(setManagerId(data.supervisor_id))
-                dispatch(setPartnershipId(data.to_partnership_id == 0 ? null : data.to_partnership_id))
+                dispatch(setPartnershipId(data.to_partnership_id))
                 dispatch(setEmailPasport(data.email_passport))
                 data.partner_client_bit && dispatch(setPartnerRate(data.partner_client_bit))
             })

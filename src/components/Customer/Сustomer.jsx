@@ -56,6 +56,8 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
     const { companyError, phoneError, nameError } = useSelector(selectorValidation)
     const dispatch = useDispatch();
 
+    console.log(useSelector(selectorValidation))
+
     useEffect(() => {
         payType == 1 ? setBeznal(true) : setBeznal(false)
         payType !== 1 && dispatch(setNoContactPerson(false))

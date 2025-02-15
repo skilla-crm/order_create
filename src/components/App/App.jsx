@@ -37,6 +37,8 @@ import PreviewApp from '../PreviewApp/PreviewApp';
 import AddCustomer from '../AddCustomer/AddCustomer';
 import Rates from '../Rates/Rates';
 import Manager from '../Manager/Manager';
+import SuccessModal from '../SuccessModal/SuccessModal';
+import ErrorWindow from '../ErrorWindow/ErrorWindow';
 const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
 const role = document.getElementById(`root_order-create`).getAttribute('role');
 
@@ -47,6 +49,7 @@ const App = () => {
     const [parametrs, setParametrs] = useState({});
     const [loadCreate, setLoadCreate] = useState(false);
     const [loadSave, setLoadSave] = useState(false);
+    const [successWindow, setSuccessWindow] = useState(false);
     const { customer, payType, name, phone, isSms, noContactPerson, isBlack, debt, debtThreshold } = useSelector(selectorCustomer);
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { additionalDates } = useSelector(selectorAdditionalDates);
@@ -96,7 +99,7 @@ const App = () => {
                 dispatch(setDefaultCordinate([cordinate[1], cordinate[0]]))
             })
     }, [parametrs.city])
-    console.log(phone)
+    console.log(debt, debtThreshold)
 
     const handleValidation = () => {
         const companyError = payType == 1 && !customer?.id ? true : false;
@@ -108,9 +111,10 @@ const App = () => {
         const rateError = rate == '' ? true : false;
         const rateWorkerError = rateWorker == '' ? true : false;
         const emailError = emailState && emailPasport == '' ? true : false;
-        const emailErrorFormat = emailState && emailPasport !== '' && emailValidate(emailPasport) ? true : false;
+        const emailErrorFormat = emailState && emailPasport !== '' && !emailValidate(emailPasport) ? true : false;
         const isBlackError = payType == 1 && isBlack == 1 ? true : false;
         const isDebtError = payType == 1 && debt > 0 && debt > debtThreshold ? true : false;
+        console.log(emailState, emailErrorFormat, emailPasport, emailValidate(emailPasport))
 
         dispatch(setСompanyError(companyError))
         dispatch(setPhoneError(phoneError))
@@ -145,6 +149,7 @@ const App = () => {
     }
 
     const handleCreate = (e) => {
+
         const valid = handleValidation();
         console.log(valid)
         if (!valid) {
@@ -179,7 +184,7 @@ const App = () => {
             order_type: service,
             notes,
             supervisor_comment: commentSupervisor,
-            requirements: tags,
+            /* requirements: tags, */
             min_time: minDuration,
             order_duration: duration,
             load_address: address.street,
@@ -196,8 +201,8 @@ const App = () => {
             metro3: metro[2]?.name,
             metro3_km: metro[2]?.distance,
             metro3_color: metro[2]?.color,
-            client_bit: rate,
-            worker_bit: rateWorker,
+            client_bit: Math.round(rate),
+            worker_bit: Math.round(rateWorker),
             supervisor_id: managerId == 0 ? null : managerId,
             to_partnership_id: partnershipId == 0 ? null : partnershipId,
             email_passport: emailPasport,
@@ -206,13 +211,17 @@ const App = () => {
             send_bill: (payType == 1 && customer?.billState) ? customer?.billState : false,
             bill_sum: payType == 1 ? customer.billSum : 0,
             send_contract: (payType == 1 && customer?.contractState) ? customer?.contractState : false,
-            send_sms: isSms
+            /*  send_sms: isSms */
         }
 
         valid && createOrder(data)
             .then(res => {
+                setSuccessWindow(true)
                 setLoadCreate(false)
                 setLoadSave(false)
+                setTimeout(() => {
+                    window.location.href = 'https://lk.skilla.ru/orders/'
+                }, 200)
             })
             .catch(err => console.log(err))
     }
@@ -235,6 +244,9 @@ const App = () => {
 
                     <div className={s.container}>
                         <div className={s.left}>
+                            <div className={s.errors}>
+                                <ErrorWindow />
+                            </div>
                             <Customer setAddCustomer={setAddCustomer} addCustomer={addCustomer} />
                             {addCustomer && <AddCustomer setAddCustomer={setAddCustomer} />}
                             <Performers />
@@ -249,6 +261,7 @@ const App = () => {
                             </div>
                         </div>
                     </div>
+                    {successWindow && <SuccessModal />}
                 </div>
             </ParametrsContext.Provider>
         </UserContext.Provider>

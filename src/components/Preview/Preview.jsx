@@ -13,9 +13,11 @@ import { selectorRates } from '../../store/reducer/Rates/selector';
 //components
 import Overlay from './Overlay';
 import MapAddress from '../General/MapAddress/MapAddress';
+import ErrorWindow from '../ErrorWindow/ErrorWindow';
 //utils
 import { handleTextNumEnding } from '../../utils/HandleTextNumEndind';
 import { addSpaceNumber2, addSpaceNumber } from '../../utils/addSpaceNumber';
+const tags2 = [{id: 1, description: 'Паспорт'}]
 
 const Preview = () => {
     const { requirements } = useContext(ParametrsContext)
@@ -41,7 +43,10 @@ const Preview = () => {
                         {time && dayjs(time).format('H:mm')}
                     </span>
                 </h2>
+                <ErrorWindow/>
             </div>
+
+           
 
 
             <div className={s.container}>
@@ -78,7 +83,7 @@ const Preview = () => {
 
                 <div className={`${s.block} ${s.block_bages} ${tags?.length == 0 && s.block_hidden}`}>
                     {tags?.map(el => {
-                        const result = requirements?.find(item => item.id == el)
+                        const result = /* requirements */tags2?.find(item => item.id == el)
                         return <div className={s.bage}>
                             <p>{result?.description}</p>
                         </div>

@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, memo } from 'react';
 import s from './MapAddress.module.scss';
+import placeMarker from '../../../images/placeMarker.png';
 import { YMaps, Map, Placemark, YMapMarker } from '@pbe/react-yandex-maps';
 const API_KEY_MAP = process.env.REACT_APP_API_KEY_MAP;
 
@@ -40,11 +41,11 @@ const MapAddress = ({ lat, lng, defaultCordinate, width, height }) => {
 
             >
                 {lat && <Placemark geometry={[lat, lng]}
-
-                /* iconContent={<Icon />} options={{
-
-                        iconCaption: 'хуй',
-                    }} */
+                    options={{
+                        iconLayout: "default#image",
+                        iconImageSize: [42, 42],
+                        iconImageHref: placeMarker
+                    }}
                 />
                 }
             </Map>
@@ -52,4 +53,4 @@ const MapAddress = ({ lat, lng, defaultCordinate, width, height }) => {
         </YMaps>
     )
 };
-export default MapAddress;
+export default memo(MapAddress);

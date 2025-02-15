@@ -3,6 +3,8 @@ import { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ParametrsContext } from '../../contexts/UserContext';
 import avatar from '../../images/avatarApp.png';
+import { ReactComponent as MiniLogo } from '../../images/icons/miniLogo.svg';
+import { ReactComponent as IconTopRight } from '../../images/icons/IconTopRight.svg';
 import dayjs from 'dayjs';
 //selectors
 import { selectorDetails } from '../../store/reducer/Details/selector';
@@ -10,6 +12,7 @@ import { selectorPerformers } from '../../store/reducer/Performers/selector';
 import { selectorRates } from '../../store/reducer/Rates/selector';
 //components
 import Overlay from '../Preview/Overlay';
+import PreviewPhone from '../PreviewPhone/PreviewPhone';
 //utils
 import { addSpaceNumber } from '../../utils/addSpaceNumber';
 
@@ -18,17 +21,27 @@ const PreviewApp = () => {
     const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { rate, rateWorker } = useSelector(selectorRates);
-    const [activeType, setActiveType] = useState('')
+    const [activeType, setActiveType] = useState('');
+    const [phoneModal, setPhoneModal] = useState(false);
 
     useEffect(() => {
         const result = types?.find(el => el.id == service)
         setActiveType(result?.name ? result?.name : '')
     }, [service, types]);
 
+    const handleOpenPhone = () => {
+        setPhoneModal(true)
+    }
+
     return (
         <div className={s.app}>
             <div className={s.header}>
                 <h2 className={s.title}>В приложении</h2>
+                <button onClick={handleOpenPhone} className={s.button}>
+                    <MiniLogo />
+                    <p>Подробнее</p>
+                    <IconTopRight />
+                </button>
             </div>
 
             <div className={s.container}>
@@ -77,7 +90,7 @@ const PreviewApp = () => {
                 </div>
             </div>
 
-
+            {phoneModal && <PreviewPhone setPhoneModal={setPhoneModal}/>}
         </div>
     )
 }

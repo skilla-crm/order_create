@@ -33,20 +33,20 @@ const Manager = () => {
     const { contacts, payType } = useSelector(selectorCustomer);
     const { emailError } = useSelector(selectorValidation)
     const dispatch = useDispatch();
+   console.log(partnershipId)
+    
+
 
     useEffect(() => {
-        if (activeSegment == 1) {
-            dispatch(setPartnerRates([]))
-            partnershipId !== null && dispatch(setPartnershipId(0))
+        if(partnershipId !== 0 && partnershipId !== null) {
+            setActiveSegment(2) 
+            dispatch(setManagerId(0))
         } else {
-            managerId !== null && dispatch(setManagerId(0))
+            setActiveSegment(1) 
+            dispatch(setPartnershipId(null))
         }
-    }, [activeSegment, partnershipId, managerId])
-
-
-    useEffect(() => {
-        managerId == 0 && partnershipId !== 0 && partnershipId !== null ? setActiveSegment(2) : setActiveSegment(1)
-    }, [managerId, partnershipId])
+        
+    }, [partnershipId])
 
     useEffect(() => {
         if (partnerRates.length > 0) {
@@ -63,6 +63,21 @@ const Manager = () => {
         }
 
     }, [partnerRates, partnerRate])
+
+    const handleActive = (data) => {
+        if (data == 1) {
+            setActiveSegment(1) 
+            dispatch(setPartnerRates([]))
+           dispatch(setPartnershipId(0))
+            return
+        } 
+
+        if (data == 2) {
+            setActiveSegment(2) 
+            dispatch(setManagerId(0))
+            return
+        } 
+    }
 
     const handleSwitch = () => {
         if (emailState) {
@@ -92,7 +107,7 @@ const Manager = () => {
             />
             {skilla_partnerships?.length > 0 && <SegmentControl
                 segments={segments}
-                setActive={setActiveSegment}
+                setActive={(data) => handleActive(data)}
                 active={activeSegment}
             />
             }

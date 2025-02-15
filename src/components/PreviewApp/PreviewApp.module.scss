@@ -9,6 +9,7 @@
 
 .header {
     display: flex;
+    align-items: center;
     justify-content: space-between;
 
     &_app {
@@ -23,6 +24,9 @@
     padding: 0;
     font-weight: 500;
     text-wrap: nowrap;
+    width: 99%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .container {
@@ -52,9 +56,11 @@
 .block {
     display: flex;
     flex-direction: column;
+    width: 75%;
 
     p {
         line-height: 24px;
+
     }
 }
 
@@ -84,7 +90,7 @@
 
     &_service {
         height: 24px;
-        min-width: 240px;
+        width: 100%;
     }
 }
 
@@ -104,5 +110,24 @@
 
     p {
         color: #8037DC;
+    }
+}
+
+.button {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    
+    p {
+        color: #002CFB;
+        font-weight: 400;
+        line-height: 16px;
+    }
+
+    &:hover {
+        p {
+            color: #0028E5;
+        }
     }
 }
