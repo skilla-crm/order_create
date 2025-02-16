@@ -9,6 +9,7 @@ import { ERR_EMAIL } from '../../constants/addCustomer';
 import { PromptManager } from '../../constants/prompts';
 //utils
 import { emailValidate } from '../../utils/EmailValidate';
+import { sortManager } from '../../utils/sortManager';
 //selector
 import { selectorManagers } from '../../store/reducer/Managers/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
@@ -98,6 +99,7 @@ const Manager = () => {
         dispatch(setEmailErrorFormat(false))
     }
 
+
     return (
         <div className={s.manager}>
             <Header
@@ -112,7 +114,7 @@ const Manager = () => {
             />
             }
             {activeSegment == 1 && <InputSelect
-                list={supervisors}
+                list={sortManager(supervisors)}
                 value={managerId}
                 setValue={(data) => dispatch(setManagerId(Number(data)))}
                 defaultRow={defaultRow}

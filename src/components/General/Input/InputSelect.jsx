@@ -79,13 +79,16 @@ const InputSelect = ({ sub, list, value, setValue, type, position, defaultRow })
                 <ul className={`${s.list} ${s.list_scroll} ${position == 'top' && s.list_top} ${openList && s.list_open}`}>
                     {defaultRow && <li onClick={handleValue} id={defaultRow.id} className={`${s.item} ${(value == 0 || value == null) && s.item_active}`}>{defaultRow.name}</li>}
 
-                    {list?.map(el => {
-                        return <li onClick={handleValue} key={el.id} id={el.id} className={`${s.item} ${el.id == value && s.item_active}`}>
-                            {type == 3 && <div className={s.avatar}>
-                                <img src={el.avatar_mini == "" ? avatardef : `https://lk.skilla.ru/images/persons/chat/${el.avatar_mini}`}></img>
-                            </div>}
-                            <p>{el.name} {el.position == 'director' && <span>Руководитель</span>}</p>
-                        </li>
+                    {list?.map((el, i) => {
+                        return <>
+                            <li onClick={handleValue} key={el.id} id={el.id} className={`${s.item} ${el.id == value && s.item_active}`}>
+                                {type == 3 && <div className={s.avatar}>
+                                    <img src={el.avatar_mini == "" ? avatardef : `https://lk.skilla.ru/images/persons/chat/${el.avatar_mini}`}></img>
+                                </div>}
+                                <p>{el.name} {el.position == 'director' && <span>Руководитель</span>}</p>
+                            </li>
+                            {el.position == 'director' && list[i + 1].position !== 'director' && <li className={s.text_bold}>Менеджеры по персоналу</li>}
+                        </>
                     })}
                 </ul>
             </div>
