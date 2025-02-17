@@ -9,7 +9,7 @@ const CompanyListInn = ({list, openList, listScroll, noFind, handleChose, setOpe
                  <span>ИНН {el.data.inn} {el.data.kpp && 'КПП'} {el.data.kpp}</span>
              </li>
          })}
-          {noFind && <li>Ни чего не найденно</li>}
+          {noFind && <li>Не найденно в реестре компаний</li>}
         </ul>
     )
 }

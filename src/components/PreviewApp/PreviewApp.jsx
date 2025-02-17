@@ -33,6 +33,8 @@ const PreviewApp = () => {
         setPhoneModal(true)
     }
 
+    console.log(date)
+
     return (
         <div className={s.app}>
             <div className={s.header}>
@@ -58,7 +60,7 @@ const PreviewApp = () => {
 
                         <div className={s.date}>
                             <div className={`${s.item} ${s.item_date}`}>
-                                <p>{dayjs(date).format('D MMMM')}</p>
+                                {date !== null && <p>{dayjs(date).format('D MMMM')}</p>}
                             </div>
 
                             {!timerDisabled && <div className={`${s.item} ${s.item_time}`}>
@@ -68,7 +70,7 @@ const PreviewApp = () => {
 
                             {!timerDisabled && <div className={`${s.item} ${s.item_time}`}>
                                 <Overlay active={!time} />
-                                {time && <p>до {dayjs(time).hour(duration + 1).format('H:mm')}</p>}
+                                {time && <p>до {dayjs(time).add(duration, 'hour').format('H:mm')}</p>}
                             </div>}
                         </div>
 
@@ -90,7 +92,7 @@ const PreviewApp = () => {
                 </div>
             </div>
 
-            {phoneModal && <PreviewPhone setPhoneModal={setPhoneModal}/>}
+            {phoneModal && <PreviewPhone setPhoneModal={setPhoneModal} activeType={activeType}/>}
         </div>
     )
 }

@@ -48,3 +48,26 @@
       }
    }
 }
+
+
+.warning {
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   overflow: hidden;
+   opacity: 0;
+   height: 0;
+   transition: all 0.15s;
+
+   p {
+       font-size: 14px;
+       line-height: 14px;
+       color: #F89500;
+   }
+
+   &_vis {
+       margin-top: 6px;
+       height: 16px;
+       opacity: 1;
+   }
+}

@@ -237,6 +237,9 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                             />
 
                             <div className={s.warnings}>
+                                <div className={`${s.loader}  ${s.loader_error} ${loadWarning &&  s.loader_vis}`}>
+                                    {loadWarning && <div className={s.loader_anim}><IconLoader /></div>}
+                                </div>
                                 <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && !loadWarning && customer.id && s.loader_vis}`}>
                                     <IconInfoErr />
                                     <p>Заказчик в черном списке</p>

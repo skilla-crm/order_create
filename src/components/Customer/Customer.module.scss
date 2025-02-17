@@ -63,6 +63,8 @@
         color: var(--color-text-secondary);
     }
 
+
+
     &_vis {
         height: 18px;
         margin-top: 12px;
@@ -71,17 +73,19 @@
 
     &_anim {
         svg {
-            animation: load 10s linear infinite;
+            animation: load 4s linear infinite;
         }
     }
 
     &_error {
+        transition: opacity 0.15s ease-in-out;
         p {
             color: #E10D0D;
         }
     }
 
     &_warning {
+        transition: opacity 0.15s ease-in-out;
         p {
             color: #F89500;
         }

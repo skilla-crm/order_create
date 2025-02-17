@@ -17,7 +17,7 @@ import ErrorWindow from '../ErrorWindow/ErrorWindow';
 //utils
 import { handleTextNumEnding } from '../../utils/HandleTextNumEndind';
 import { addSpaceNumber2, addSpaceNumber } from '../../utils/addSpaceNumber';
-const tags2 = [{id: 1, description: 'Паспорт'}]
+const tags2 = [{ id: 1, description: 'Паспорт' }]
 
 const Preview = () => {
     const { requirements } = useContext(ParametrsContext)
@@ -39,14 +39,17 @@ const Preview = () => {
         <div className={s.preview}>
             <div className={s.header}>
                 <h2 className={s.title}>
-                    Заказ {dayjs(date).format('D MMMM')} <span className={`${s.time} ${time && s.time_vis}`}>
-                        {time && dayjs(time).format('H:mm')}
+                    Заказ <div className={`${s.item} ${s.item_date}`}>
+                        <Overlay active={date == null} />
+                        {date !== null && <p>{dayjs(date).format('D MMMM')}</p>}
+                    </div> <span className={`${s.time} ${time && s.time_vis}`}>
+                        {time && date !== null && dayjs(time).format('H:mm')}
                     </span>
                 </h2>
-                <ErrorWindow/>
+                <ErrorWindow />
             </div>
 
-           
+
 
 
             <div className={s.container}>
@@ -83,7 +86,7 @@ const Preview = () => {
 
                 <div className={`${s.block} ${s.block_bages} ${tags?.length == 0 && s.block_hidden}`}>
                     {tags?.map(el => {
-                        const result = /* requirements */tags2?.find(item => item.id == el)
+                        const result = requirements?.find(item => item.id == el)
                         return <div className={s.bage}>
                             <p>{result?.description}</p>
                         </div>
@@ -97,7 +100,7 @@ const Preview = () => {
                         <p>{`${address.city} ${address.street} ${address.house}`}</p>
                     </div>
                     <div className={s.map}>
-                        <MapAddress lat={address.lat} lng={address.lng} defaultCordinate={defaultCordinate} width={'100%'} height={160}/>
+                        <MapAddress lat={address.lat} lng={address.lng} defaultCordinate={defaultCordinate} width={'100%'} height={160} />
                     </div>
 
                 </div>
@@ -114,10 +117,10 @@ const Preview = () => {
                     <span>Исполнители</span>
                     <div className={`${s.item} ${s.item_name}`}>
                         <Overlay active={performersNum == 0} />
-                        {minDuration < duration && !timerDisabled && <p>{performersNum} чел на {minDuration} - {duration} {handleTextNumEnding(duration)}</p>}
-                        {minDuration == duration && !timerDisabled && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
-                        {minDuration > duration && !timerDisabled && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
-                        {timerDisabled && <p>{performersNum} человек</p>}
+                        {minDuration < duration && <p>{performersNum} чел на {minDuration} - {duration} {handleTextNumEnding(duration)}</p>}
+                        {minDuration == duration && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
+                        {minDuration > duration && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
+                 
                     </div>
                 </div>
             </div>

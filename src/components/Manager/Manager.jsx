@@ -2,7 +2,7 @@ import s from './Manager.module.scss';
 import { useState, useContext, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ParametrsContext } from '../../contexts/UserContext';
-
+import { ReactComponent as IconWarning } from '../../images/icons/iconWarning.svg';
 //constants
 import { TITLE, SUB_SWITCH, SUB_EMAIL, segments, defaultRow } from '../../constants/managers';
 import { ERR_EMAIL } from '../../constants/addCustomer';
@@ -34,19 +34,19 @@ const Manager = () => {
     const { contacts, payType } = useSelector(selectorCustomer);
     const { emailError } = useSelector(selectorValidation)
     const dispatch = useDispatch();
-   console.log(partnershipId)
-    
+    console.log(managerId)
+
 
 
     useEffect(() => {
-        if(partnershipId !== 0 && partnershipId !== null) {
-            setActiveSegment(2) 
+        if (partnershipId !== 0 && partnershipId !== null) {
+            setActiveSegment(2)
             dispatch(setManagerId(0))
         } else {
-            setActiveSegment(1) 
+            setActiveSegment(1)
             dispatch(setPartnershipId(null))
         }
-        
+
     }, [partnershipId])
 
     useEffect(() => {
@@ -67,17 +67,17 @@ const Manager = () => {
 
     const handleActive = (data) => {
         if (data == 1) {
-            setActiveSegment(1) 
+            setActiveSegment(1)
             dispatch(setPartnerRates([]))
-           dispatch(setPartnershipId(0))
+            dispatch(setPartnershipId(0))
             return
-        } 
+        }
 
         if (data == 2) {
-            setActiveSegment(2) 
+            setActiveSegment(2)
             dispatch(setManagerId(0))
             return
-        } 
+        }
     }
 
     const handleSwitch = () => {
@@ -113,14 +113,24 @@ const Manager = () => {
                 active={activeSegment}
             />
             }
-            {activeSegment == 1 && <InputSelect
-                list={sortManager(supervisors)}
-                value={managerId}
-                setValue={(data) => dispatch(setManagerId(Number(data)))}
-                defaultRow={defaultRow}
-                type={3}
-                position={supervisors?.length > 2 ? 'top' : ''}
-            />}
+            {activeSegment == 1 && <div>
+                <InputSelect
+                    list={sortManager(supervisors)}
+                    value={managerId}
+                    setValue={(data) => dispatch(setManagerId(Number(data)))}
+                    defaultRow={defaultRow}
+                    type={3}
+                    position={supervisors?.length > 2 ? 'top' : ''}
+                />
+                
+                <div className={`${s.warning} ${managerId == 0 && s.warning_vis}`}>
+                    <IconWarning />
+                    <p>
+                        Никто из менеджеров не увидит заказ
+                    </p>
+                </div>
+            </div>
+            }
 
             {activeSegment == 2 && skilla_partnerships?.length > 0 &&
                 <div>
@@ -143,6 +153,7 @@ const Manager = () => {
                     </div>
                 </div>
             }
+
 
 
 

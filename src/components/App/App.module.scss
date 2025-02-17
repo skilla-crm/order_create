@@ -72,6 +72,8 @@
     width: calc(28.5% - 8px);
     /*  min-width: 426px; */
     flex-shrink: 0;
+    position: relative;
+    z-index: 10;
 
     @media(max-width: 1500px) {
         display: none;

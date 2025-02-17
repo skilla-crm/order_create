@@ -105,6 +105,12 @@
             outline: 1px solid #adbfdf00;
          }
     }
+
+    &_disabled {
+        pointer-events: none;
+        opacity: 0.6;
+        cursor: default;
+    }
 }
 
 .pro {
@@ -212,4 +218,10 @@
 .number_active {
     color: var(--color-button-accent) !important;
     background-color: #D4DFF32B;
+}
+
+.number_disabled {
+    pointer-events: none;
+    opacity: 0.6;
+    cursor: default;
 }

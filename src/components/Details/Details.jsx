@@ -36,7 +36,6 @@ import TabsNumbers from '../General/Tabs/TabsNumbers';
 import Tags from '../General/Tags/Tags';
 import Address from '../General/Address/Address';
 
-const tags2 = [{id: 1, description: 'Паспорт'}]
 
 const Details = () => {
     const user = useContext(UserContext);
@@ -108,7 +107,7 @@ const Details = () => {
                 sub={SUB_REQUIREMENTS}
                 value={tags}
                 maxVis={3}
-                tagList={tags2/* requirements */}
+                tagList={requirements}
                 setValue={(data) => dispatch(addRequirements(data))}
                 deleteValue={(data) => dispatch(deleteRequirements(data))}
             />
@@ -123,10 +122,11 @@ const Details = () => {
             />
 
             <TabsNumbers
-                value={duration}
+                value={minDuration > duration ? minDuration : duration}
                 setValue={(data) => dispatch(setDuration(Number(data)))}
                 sub={SUB_DURATION}
                 max={24}
+                min={minDuration}
                 maxVis={8}
                 forPro={false}
             />

@@ -4,17 +4,17 @@ import s from './Tabs.module.scss';
 import { ReactComponent as IconChewron } from '../../../images/icons/iconChewron.svg';
 import { ReactComponent as BagePro } from '../../../images/icons/badgePro.svg';
 
-const Tab = ({ id, tab, value, handleTab }) => {
+const Tab = ({ id, tab, value, handleTab, min }) => {
 
 
     return (
-        <li id={id} onClick={handleTab} className={`${s.tab} ${value == tab && s.tab_active}`}>
+        <li id={id} onClick={handleTab} className={`${s.tab} ${value == tab && s.tab_active} ${tab < min && s.tab_disabled}`}>
             {tab}
         </li>
     )
 }
 
-const TabsNumbers = ({ sub, value, setValue, max, maxVis, forPro }) => {
+const TabsNumbers = ({ sub, value, setValue, max, min, maxVis, forPro }) => {
     const [activeOptional, setActiveOptional] = useState(false);
     const [optionalList, setOptionalList] = useState(false);
     const [inputNumberValue, setInputNumberValue] = useState('')
@@ -77,7 +77,7 @@ const TabsNumbers = ({ sub, value, setValue, max, maxVis, forPro }) => {
             <span className={s.sub}>{sub}</span>
             <ul className={s.list}>
                 {numbers.map(el => {
-                    return <Tab key={el} id={el} tab={el} value={value} handleTab={handleTab} />
+                    return <Tab key={el} id={el} tab={el} value={value} handleTab={handleTab} min={min}/>
                 })}
 
                 <li className={`${s.tab} ${s.tab_optional} ${forPro && s.tab_forpro} ${((value > maxVis) || activeOptional) && s.tab_active}`}>
@@ -112,8 +112,10 @@ const TabsNumbers = ({ sub, value, setValue, max, maxVis, forPro }) => {
                         </input>
 
                         <ul className={`${s.list} ${s.list_optional} ${optionalList && s.list_open}`}>
+                         
                             {optionalNumbers.map(el => {
-                                return <li key={el} ref={el == inputNumberValue ? activeRef : null} onMouseDown={handleTab} id={el} className={el == inputNumberValue && s.number_active}>{el}</li>
+                                   console.log(el, min)
+                                return <li key={el} ref={el == inputNumberValue ? activeRef : null} onMouseDown={handleTab} id={el} className={`${el == inputNumberValue && s.number_active} ${el < min && s.number_disabled}`}>{el}</li>
                             })}
                         </ul>
                     </div>
