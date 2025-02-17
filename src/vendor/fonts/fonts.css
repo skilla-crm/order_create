@@ -42,3 +42,21 @@
      src: url(inter/Inter-Black.woff2) format("woff2"),
           url(inter/Inter-Black.woff) format("woff");
    }
+
+   @font-face {
+     font-family: 'IBM Plex Sans';
+     font-style:  normal;
+     font-weight: 400;
+     font-display: swap;
+     src: url(IBM/sans.woff2) format("woff2"),
+          url(IBM/sans.woff) format("woff");
+   }
+   
+   @font-face {
+     font-family: 'IBM Plex Sans';
+     font-style:  normal;
+     font-weight: 600;
+     font-display: swap;
+     src: url(IBM/semibold.woff2) format("woff2"),
+          url(IBM/semibold.woff2) format("woff");
+   }

@@ -87,7 +87,7 @@ const InputSelect = ({ sub, list, value, setValue, type, position, defaultRow })
                                 </div>}
                                 <p>{el.name} {el.position == 'director' && <span>Руководитель</span>}</p>
                             </li>
-                            {el.position == 'director' && list[i + 1].position !== 'director' && <li className={s.text_bold}>Менеджеры по персоналу</li>}
+                            {el?.position == 'director' && list?.[i + 1]?.position !== 'director' && <li className={s.text_bold}>Менеджеры по персоналу</li>}
                         </>
                     })}
                 </ul>

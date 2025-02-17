@@ -211,7 +211,7 @@ const App = () => {
             send_bill: (payType == 1 && customer?.billState) ? customer?.billState : false,
             bill_sum: payType == 1 ? customer.billSum : 0,
             send_contract: (payType == 1 && customer?.contractState) ? customer?.contractState : false,
-            /*  send_sms: isSms */
+             send_sms: isSms
         }
 
         valid && createOrder(data)
