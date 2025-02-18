@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import s from './SuccessModal.module.scss';
 import { ReactComponent as IconSuccess } from '../../images/icons/iconSuccess.svg'
 
-const SuccessModal = () => {
+const SuccessModal = ({ type }) => {
     const [anim, setAnim] = useState(false);
     const modalRef = useRef();
 
@@ -29,7 +29,8 @@ const SuccessModal = () => {
             <div ref={modalRef} className={`${s.modal} ${anim && s.modal_anim}`}>
                 <div className={s.content}>
                     <IconSuccess />
-                    <h3 className={s.title}>Заказ успешно создан!</h3>
+                    {type == 1 && <h3 className={s.title}>Заказ успешно создан!</h3>}
+                    {type == 2 && <h3 className={s.title}>Черновик сохранен</h3>}
                 </div>
             </div>
         </div>

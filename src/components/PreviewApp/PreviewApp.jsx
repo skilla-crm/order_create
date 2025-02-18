@@ -1,6 +1,6 @@
 import s from './PreviewApp.module.scss';
 import { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { ParametrsContext } from '../../contexts/UserContext';
 import avatar from '../../images/avatarApp.png';
 import { ReactComponent as MiniLogo } from '../../images/icons/miniLogo.svg';
@@ -10,9 +10,10 @@ import dayjs from 'dayjs';
 import { selectorDetails } from '../../store/reducer/Details/selector';
 import { selectorPerformers } from '../../store/reducer/Performers/selector';
 import { selectorRates } from '../../store/reducer/Rates/selector';
+//slice
+import { setPhoneModal } from '../../store/reducer/Preview/slice';
 //components
 import Overlay from '../Preview/Overlay';
-import PreviewPhone from '../PreviewPhone/PreviewPhone';
 //utils
 import { addSpaceNumber } from '../../utils/addSpaceNumber';
 
@@ -22,7 +23,7 @@ const PreviewApp = () => {
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { rate, rateWorker } = useSelector(selectorRates);
     const [activeType, setActiveType] = useState('');
-    const [phoneModal, setPhoneModal] = useState(false);
+    const dispatch = useDispatch()
 
     useEffect(() => {
         const result = types?.find(el => el.id == service)
@@ -30,12 +31,11 @@ const PreviewApp = () => {
     }, [service, types]);
 
     const handleOpenPhone = () => {
-        setPhoneModal(true)
+        dispatch(setPhoneModal(true))
     }
 
-    console.log(date)
-
     return (
+        
         <div className={s.app}>
             <div className={s.header}>
                 <h2 className={s.title}>В приложении</h2>
@@ -92,8 +92,9 @@ const PreviewApp = () => {
                 </div>
             </div>
 
-            {phoneModal && <PreviewPhone setPhoneModal={setPhoneModal} activeType={activeType}/>}
+           
         </div>
+      
     )
 }
 

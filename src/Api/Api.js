@@ -58,3 +58,23 @@ export const contactCompany = (id) => {
 export const orderRetry = (id) => {
   return instanceWithToken.get(`${baseURL}api/orders/retry/${id}`)
 }
+
+export const getDetails = (id) => {
+  return instanceWithToken.get(`${baseURL}api/orders/detail/${id}`)
+}
+
+export const editOrder = (data, id) => {
+  return instanceWithToken({
+    method: 'post',
+    mode: "cors",
+    headers: {
+      "Content-type": "application/json",
+      "Accept": "application/json",
+    },
+    url: `${baseURL}api/orders/update/${id}`,
+    data: data
+  })
+}
+
+
+

@@ -68,9 +68,6 @@ const TabsNumbers = ({ sub, value, setValue, max, min, maxVis, forPro }) => {
         }, 100)
     }
 
-    const handleReset = () => {
-        setValue(0)
-    }
 
     return (
         <div className={s.container}>
@@ -114,7 +111,6 @@ const TabsNumbers = ({ sub, value, setValue, max, min, maxVis, forPro }) => {
                         <ul className={`${s.list} ${s.list_optional} ${optionalList && s.list_open}`}>
                          
                             {optionalNumbers.map(el => {
-                                   console.log(el, min)
                                 return <li key={el} ref={el == inputNumberValue ? activeRef : null} onMouseDown={handleTab} id={el} className={`${el == inputNumberValue && s.number_active} ${el < min && s.number_disabled}`}>{el}</li>
                             })}
                         </ul>
@@ -128,8 +124,6 @@ const TabsNumbers = ({ sub, value, setValue, max, min, maxVis, forPro }) => {
                     </span>
 
                 </li>
-
-           {/*      <button onClick={handleReset} className={`${s.reset} ${value == 0 && s.reset_hidden}`}>Сбросить</button> */}
             </ul>
 
         </div>

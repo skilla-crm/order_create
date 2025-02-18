@@ -376,6 +376,7 @@ const AddCustomer = ({ setAddCustomer }) => {
                         handleClick={handleSelectCompany}
                         text={BUTTON_TEXT_EXIST}
                         Icon={IconReturn}
+                        load={load}
                     />
                 </div>
                 }

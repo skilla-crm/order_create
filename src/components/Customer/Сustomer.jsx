@@ -69,7 +69,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
     }, [historyList, phone])
 
     useEffect(() => {
-        !customer.id && dispatch(setContacts([]))
+        !customer?.id && dispatch(setContacts([]))
         dispatch(setIsBlack(0))
         dispatch(setDebt(0))
         dispatch(setDebtThreshold(0))
@@ -78,9 +78,9 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
     }, [customer])
 
     useEffect(() => {
-        customer.id && setLoadWarning(true)
-        customer.id && handleResetErrorCompany()
-        customer.id && checkCompany(customer.id)
+        customer?.id && setLoadWarning(true)
+        customer?.id && handleResetErrorCompany()
+        customer?.id && checkCompany(customer.id)
             .then(res => {
                 const data = res.data.data;
                 dispatch(setIsBlack(data.is_black))
@@ -92,7 +92,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
             })
             .catch(err => console.log(err))
 
-        customer.id && contactCompany(customer.id)
+        customer?.id && contactCompany(customer.id)
             .then(res => {
                 const data = res.data.data;
                 dispatch(setContacts(data))
@@ -137,14 +137,13 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                 .then(res => {
                     const data = res.data.data;
 
-                    setTimeout(() => {
-                        data.length > 0 && setLoadBage(false)
-                    }, 100)
+                
 
                     setTimeout(() => {
+                        data.length > 0 && setLoadBage(false)
                         setHistoryList(data);
                         setHistoryLoad(false)
-                    }, 200)
+                    }, 300)
 
                 })
             return

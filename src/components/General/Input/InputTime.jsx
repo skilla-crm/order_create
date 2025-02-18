@@ -52,6 +52,7 @@ const InputTime = ({ sub, disabled, nosub, time, setTime, error, errorText }) =>
         value.length == 2 && timeVis.length < 2 && setTimeVis(prevState => prevState + ':')
         const isValid = dayjs(value, 'HH:mm', true).locale('ru').isValid();
         isValid && setTime(dayjs(value, 'HH:mm').locale('ru'))
+        console.log(value)
         value == '' && setTime(null)
     }
 

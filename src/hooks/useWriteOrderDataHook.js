@@ -1,0 +1,83 @@
+
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux"
+import { setPayType, setName, setPhone, setNoContactPerson } from '../store/reducer/Customer/slice';
+import { setPerformersNum, setTime } from '../store/reducer/Performers/slice';
+import { setService, setRequirements, setMinDurqtion, setDuration, setCommentSupervisor, setNotes } from '../store/reducer/Details/slice';
+import { setAddress, setMetro, deleteMetro, setNoAddress, setAddressForReturn } from '../store/reducer/Address/slice';
+import { setRate, setRateWorker } from '../store/reducer/Rates/slice';
+import { setManagerId, setPartnershipId, setEmailPasport, setPartnerRate } from '../store/reducer/Managers/slice';
+//utils
+import { adressStringUtility } from '../utils/AdressUtility';
+
+
+
+export const useWriteOrderDataHook = () => {
+    const [data, setData] = useState({})
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (data.id) {
+            const address = {
+                city: data.city,
+                street: data.load_address,
+                house: data.home,
+                apartment: data.apartment,
+                lat: data.lat,
+                lng: data.lng
+            }
+
+            data.beznal == 1 && dispatch(setPayType(1))
+            data.beznal == 0 && data.to_card == 1 && dispatch(setPayType(2))
+            data.beznal == 0 && data.to_card == 0 && dispatch(setPayType(3))
+            dispatch(setName(data.name))
+            dispatch(setPhone(data.phone))
+            data.name == '' && data.phone == ''
+                ?
+                dispatch(setNoContactPerson(true))
+                :
+                dispatch(setNoContactPerson(false))
+            dispatch(setPerformersNum(data.worker_count))
+            dispatch(setDuration(data.order_duration))
+            dispatch(setService(data.order_type))
+            dispatch(setMinDurqtion(data.min_time))
+            dispatch(setNotes(data.notes))
+            dispatch(setCommentSupervisor(data.supervisor_comment))
+            data.passport_required == 1 && data.requirements?.length == 0 ? dispatch(setRequirements([1])) : dispatch(setRequirements([]))
+            data.requirements?.length > 0 && dispatch(setRequirements(data.requirements.map(el => { return el.id })))
+            dispatch(setAddress(address))
+            dispatch(setAddressForReturn(adressStringUtility(address)))
+            dispatch(setRate(data.client_bit))
+            dispatch(setRateWorker(data.worker_bit))
+            dispatch(deleteMetro())
+            data?.metro !== '' && dispatch(setMetro({
+                name: data?.metro,
+                distance: Number(data?.metro_km),
+                color: data?.metro_color
+            }))
+
+            data?.metro2 !== '' && dispatch(setMetro({
+                name: data?.metro2,
+                distance: Number(data?.metro2_km),
+                color: data?.metro2_color
+            }))
+
+            data?.metro3 !== '' && dispatch(setMetro({
+                name: data?.metro3,
+                distance: Number(data?.metro3_km),
+                color: data?.metro3_color
+            }))
+
+            data.city == '' ? dispatch(setNoAddress(true)) : dispatch(setNoAddress(false))
+            dispatch(setManagerId(data.supervisor_id))
+            dispatch(setPartnershipId(data.to_partnership_id))
+            dispatch(setEmailPasport(data.email_passport))
+            data.partner_client_bit && dispatch(setPartnerRate(data.partner_client_bit))
+            return
+        }
+    }, [data])
+
+
+
+    return { setData }
+}

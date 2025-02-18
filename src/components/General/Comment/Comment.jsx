@@ -2,7 +2,7 @@ import { useState } from 'react';
 import s from './Comment.module.scss';
 
 const Comment = ({ sub, rows, maxLength, value, setValue }) => {
-    const [commentLength, setCommentLength] = useState(value.length || 0)
+    const [commentLength, setCommentLength] = useState(value?.length || 0)
     const handleValue = (e) => {
         const value = e.currentTarget.value;
         setCommentLength(value.length)

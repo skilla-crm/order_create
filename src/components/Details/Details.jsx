@@ -49,6 +49,10 @@ const Details = () => {
         address.city && handleResetErrorAddress()
     }, [address])
 
+    useEffect(() => {
+       minDuration > duration && dispatch(setDuration(Number(minDuration)))
+    }, [minDuration, duration])
+
     const handleNoAdress = () => {
         if (noAddress) {
             dispatch(setNoAddress(false))
@@ -122,7 +126,7 @@ const Details = () => {
             />
 
             <TabsNumbers
-                value={minDuration > duration ? minDuration : duration}
+                value={duration}
                 setValue={(data) => dispatch(setDuration(Number(data)))}
                 sub={SUB_DURATION}
                 max={24}

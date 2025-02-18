@@ -19,9 +19,7 @@ const ErrorWindow = () => {
             emailErrorFormat,
             isBlackError,
             isDebtError } = useSelector(selectorValidation)
-
-            console.log(isDebtError, isBlackError)
-
+            
             const empity = companyError || 
             phoneError ||  
             phoneErrorFormat ||  

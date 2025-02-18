@@ -1,16 +1,28 @@
 import s from './App.module.scss';
 import { useState, useEffect } from 'react';
+//hooks
+import { useWriteOrderDataHook } from '../../hooks/useWriteOrderDataHook';
+import { useOrderDataForSend } from '../../hooks/useOrderDataForSend';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
+import moment from 'moment/moment';
+
 import { ReactComponent as IconDone } from '../../images/icons/iconDone16-16-white.svg';
 import { ReactComponent as IconPoints } from '../../images/icons/iconPoints16-16-blue.svg';
 import { UserContext, ParametrsContext } from '../../contexts/UserContext';
 //Api
-import { getParametrs, createOrder } from '../../Api/Api';
+import { getParametrs, createOrder, getDetails, editOrder } from '../../Api/Api';
 import { getAddressExact } from '../../Api/ApiYandex';
 //slice
-import { setCompaniesList } from '../../store/reducer/Customer/slice';
+import {
+    setCompaniesList,
+    setPayType,
+    setCustomer,
+    setName,
+    setPhone
+} from '../../store/reducer/Customer/slice';
+import { setTime, setTimerDisabled } from '../../store/reducer/Performers/slice';
 import { setDefaultCordinate } from '../../store/reducer/Address/slice';
 import {
     setСompanyError, setPhoneError, setPhoneErrorFormat, setNameError, setTimeError, setAdressError,
@@ -24,6 +36,7 @@ import { selectorDetails } from '../../store/reducer/Details/selector';
 import { selectorAddress } from '../../store/reducer/Address/selector';
 import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
+import { selectorPreview } from '../../store/reducer/Preview/selector';
 //utils
 import { emailValidate } from '../../utils/EmailValidate';
 
@@ -39,6 +52,7 @@ import Rates from '../Rates/Rates';
 import Manager from '../Manager/Manager';
 import SuccessModal from '../SuccessModal/SuccessModal';
 import ErrorWindow from '../ErrorWindow/ErrorWindow';
+import PreviewPhone from '../PreviewPhone/PreviewPhone';
 const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
 const role = document.getElementById(`root_order-create`).getAttribute('role');
 
@@ -50,6 +64,13 @@ const App = () => {
     const [loadCreate, setLoadCreate] = useState(false);
     const [loadSave, setLoadSave] = useState(false);
     const [successWindow, setSuccessWindow] = useState(false);
+    const [successWindowType, setSuccessWindowType] = useState(1);
+    const [loadParametrs, setLoadParametrs] = useState(true);
+    const [loadDetail, setLoadDetail] = useState(false);
+    const [orderStatus, setOrderStatus] = useState(1);
+    const [existOrder, setExistOrder] = useState(false);
+    const [id, setId] = useState(0);
+    const [activeType, setActiveType] = useState('');
     const { customer, payType, name, phone, isSms, noContactPerson, isBlack, debt, debtThreshold } = useSelector(selectorCustomer);
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { additionalDates } = useSelector(selectorAdditionalDates);
@@ -57,8 +78,14 @@ const App = () => {
     const { address, metro, noAddress } = useSelector(selectorAddress);
     const { rate, rateWorker } = useSelector(selectorRates);
     const { managerId, partnershipId, emailPasport, emailState, partnerRate } = useSelector(selectorManagers);
-    const navigate = useNavigate()
+    const { phoneModal } = useSelector(selectorPreview);
+
+    const location = useLocation();
+    const path = location.pathname + location.search;
     const dispatch = useDispatch();
+    const { setData } = useWriteOrderDataHook();
+    const { orderData } = useOrderDataForSend()
+
 
     //установка системной темы
     useEffect(() => {
@@ -75,6 +102,7 @@ const App = () => {
         })
     }, [])
 
+
     useEffect(() => {
         addCustomer && window.scroll({ top: 320 })
     }, [addCustomer])
@@ -86,9 +114,41 @@ const App = () => {
                 const companies = data.companies;
                 setParametrs(data)
                 dispatch(setCompaniesList(companies))
+                setLoadParametrs(false)
             })
             .catch(err => console.log(err))
     }, [])
+
+    useEffect(() => {
+        const result = parametrs?.types?.find(el => el.id == service)
+        setActiveType(result?.name ? result?.name : '')
+    }, [service, parametrs]);
+
+    useEffect(() => {
+        if (path.includes('orders/edit/?order_id=')) {
+            setExistOrder(true)
+            setLoadDetail(true)
+            const idOrder = Number(path.split('order_id=').pop());
+            setId(idOrder)
+            !loadParametrs && getDetails(idOrder)
+                .then(res => {
+                    console.log(res)
+                    const data = res.data.data;
+                    console.log('времяяяяяяяяяя', data.time, data.date)
+                    const timeA = data.time == '' ? null : moment(`${data.time}`, 'HH:mm')
+                    console.log(timeA)
+                    dispatch(setTime(timeA == null ? null : dayjs(timeA).locale('ru')))
+                    timeA == null && dispatch(setTimerDisabled(true))
+                    setOrderStatus(Number(data.order_status))
+                    setData(data)
+                    const company = parametrs?.companies?.find(el => el.id == data.company_id)
+                    data.beznal == 1 && company && dispatch(setCustomer(company))
+                    setLoadDetail(false)
+                })
+                .catch(err => console.log(err))
+        }
+
+    }, [path, loadParametrs]);
 
 
     useEffect(() => {
@@ -148,80 +208,69 @@ const App = () => {
 
     }
 
-    const handleCreate = (e) => {
-
+    const handleCreate = () => {
         const valid = handleValidation();
-        console.log(valid)
         if (!valid) {
             return
         }
-
-
-        const id = e.currentTarget.id;
-        id == 'create' ? setLoadCreate(true) : setLoadSave(true)
-        const dopDates = additionalDates.length > 0 ?
-            additionalDates.map(el => {
-                return {
-                    date: dayjs(el.date).format('YYYY-MM-DD'),
-                    time: dayjs(el.time).format('HH:mm'),
-                    worker_count: el.performers
-                }
-            })
-            :
-            []
-
-        const data = {
-            preorder: id == 'save' ? 1 : 0,
-            beznal: payType == 1,
-            to_card: payType == 2,
-            company_id: payType == 1 && customer?.id ? customer?.id : null,
-            phone,
-            name,
-            date: dayjs(date).format('YYYY-MM-DD'),
-            time: time == null ? null : dayjs(time).format('HH:mm'),
-            worker_count: performersNum,
-            dop_dates: dopDates,
-            order_type: service,
-            notes,
-            supervisor_comment: commentSupervisor,
-            requirements: tags,
-            min_time: minDuration,
-            order_duration: duration,
-            load_address: address.street,
-            city: address.city,
-            home: address.house,
-            lat: address.lat,
-            lng: address.lng,
-            metro: metro[0]?.name,
-            metro_km: metro[0]?.distance,
-            metro_color: metro[0]?.color,
-            metro2: metro[1]?.name,
-            metro2_km: metro[1]?.distance,
-            metro2_color: metro[1]?.color,
-            metro3: metro[2]?.name,
-            metro3_km: metro[2]?.distance,
-            metro3_color: metro[2]?.color,
-            client_bit: Math.round(rate),
-            worker_bit: Math.round(rateWorker),
-            supervisor_id: managerId == 0 ? null : managerId,
-            to_partnership_id: partnershipId == 0 ? null : partnershipId,
-            email_passport: emailPasport,
-            partner_client_bit: partnerRate,
-            bill_email: payType == 1 ? customer.email : null,
-            send_bill: (payType == 1 && customer?.billState) ? customer?.billState : false,
-            bill_sum: payType == 1 ? customer.billSum : 0,
-            send_contract: (payType == 1 && customer?.contractState) ? customer?.contractState : false,
-            send_sms: isSms
-        }
-
+        setLoadCreate(true)
+        setSuccessWindowType(1)
+        const data = { preorder: 0, ...orderData }
         valid && createOrder(data)
             .then(res => {
                 setSuccessWindow(true)
                 setLoadCreate(false)
-                setLoadSave(false)
                 setTimeout(() => {
                     window.location.href = 'https://lk.skilla.ru/orders/'
+                }, 300)
+            })
+            .catch(err => console.log(err))
+    }
+
+    const handleSave = () => {
+        const valid = handleValidation();
+        if (!valid) {
+            return
+        }
+        setSuccessWindowType(2)
+        setLoadSave(true)
+        const data = { preorder: 1, ...orderData }
+        valid && createOrder(data)
+            .then(res => {
+                setSuccessWindow(true)
+                setLoadSave(false)
+                setTimeout(() => {
+                    window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
+                }, 300)
+            })
+            .catch(err => console.log(err))
+    }
+
+    const handleEditOrder = () => {
+        setLoadSave(true)
+        const data = { preorder: orderStatus == 0 ? 1 : 0, ...orderData }
+        editOrder(data, id)
+            .then(res => {
+                const data = res.data.data[0];
+                setTimeout(() => {
+                    setLoadSave(false)
                 }, 200)
+
+            })
+            .catch(err => console.log(err))
+    }
+
+    const handlePublishOrder = () => {
+        setLoadCreate(true)
+        const data = { preorder: 0, ...orderData }
+        editOrder(data, id)
+            .then(res => {
+                const data = res.data.data[0];
+                setOrderStatus(Number(data.order_status))
+                setLoadCreate(false)
+                setTimeout(() => {
+                    window.location.href = 'https://lk.skilla.ru/orders/'
+                }, 300)
             })
             .catch(err => console.log(err))
     }
@@ -234,11 +283,18 @@ const App = () => {
                 <div className={`${s.app} ${anim && s.app_anim}`}>
                     <div className={s.header}>
                         <h2 className={s.title}>Создание заказа</h2>
-                        <div className={s.buttons}>
+                        {<div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>
                             {/*  <Button Icon={IconPoints} type={'points'} /> */}
-                            <Button disabled={loadSave} id={'save'} handleClick={handleCreate} text={'Сохранить черновик'} type={'second'} />
+                            <Button disabled={loadSave} id={'save'} handleClick={handleSave} text={'Сохранить черновик'} type={'second'} load={loadSave} />
                             <Button disabled={loadCreate} id={'create'} handleClick={handleCreate} text={'Создать заказ'} Icon={IconDone} load={loadCreate} />
                         </div>
+                        }
+
+                        {<div className={`${s.buttons} ${s.buttons_2} ${existOrder && !loadDetail && orderStatus <= 1 && s.buttons_vis}`}>
+                            <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={'second'} load={loadSave} />
+                            {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
+                        </div>
+                        }
                     </div>
 
 
@@ -261,7 +317,8 @@ const App = () => {
                             </div>
                         </div>
                     </div>
-                    {successWindow && <SuccessModal />}
+                    {successWindow && <SuccessModal type={successWindowType} />}
+                    {phoneModal && <PreviewPhone activeType={activeType} />}
                 </div>
             </ParametrsContext.Provider>
         </UserContext.Provider>

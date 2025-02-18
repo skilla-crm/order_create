@@ -1,7 +1,7 @@
 import s from './PreviewPhone.module.scss';
 import { useEffect, useRef, useState, useContext } from 'react';
 import { ParametrsContext } from '../../contexts/UserContext';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import IphoneMokup from '../../images/IphoneMokup.png';
 import { ReactComponent as Left } from '../../images/icons/phone/left.svg';
 import { ReactComponent as Clock } from '../../images/icons/phone/clock.svg';
@@ -14,6 +14,8 @@ import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorAddress } from '../../store/reducer/Address/selector';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
+//slice
+import { setPhoneModal } from '../../store/reducer/Preview/slice';
 import dayjs from 'dayjs';
 //components
 import Overlay from '../Preview/Overlay';
@@ -21,16 +23,17 @@ import Overlay from '../Preview/Overlay';
 import { addSpaceNumber } from '../../utils/addSpaceNumber';
 import { adressStringUtility2 } from '../../utils/AdressUtility';
 
-const PreviewPhone = ({ setPhoneModal, activeType }) => {
+const PreviewPhone = ({ activeType }) => {
     const { partnerships, skilla_partnerships, requirements } = useContext(ParametrsContext);
-    const { companies, customer, payType, name, phone, isBlack, debt, debtThreshold, contacts, noContactPerson } = useSelector(selectorCustomer);
-    const { address, metro, noAddress } = useSelector(selectorAddress);
-    const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
+    const { customer, payType } = useSelector(selectorCustomer);
+    const { address, noAddress } = useSelector(selectorAddress);
+    const { tags, commentSupervisor, duration } = useSelector(selectorDetails);
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
-    const { rate, rateWorker } = useSelector(selectorRates);
-    const { managerId, partnershipId, emailPasport, emailState, partnerRate } = useSelector(selectorManagers);
+    const { rateWorker } = useSelector(selectorRates);
+    const { partnershipId } = useSelector(selectorManagers);
     const [anim, setAnim] = useState(false);
     const modalRef = useRef();
+    const dispatch = useDispatch()
 
     console.log(requirements)
 
@@ -46,7 +49,7 @@ const PreviewPhone = ({ setPhoneModal, activeType }) => {
         if (modalRef.current && !modalRef.current.contains(e.target)) {
             setAnim(false)
             setTimeout(() => {
-                setPhoneModal(false)
+                dispatch(setPhoneModal(false))
             }, 200)
             return
         }
