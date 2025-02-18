@@ -21,10 +21,10 @@ const tags2 = [{ id: 1, description: 'Паспорт' }]
 
 const Preview = () => {
     const { requirements } = useContext(ParametrsContext)
-    const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
+    const { performersNum, date, time } = useSelector(selectorPerformers);
     const { customer, payType, name, phone, noContactPerson } = useSelector(selectorCustomer);
-    const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
-    const { address, metro, defaultCordinate, noAddress } = useSelector(selectorAddress);
+    const { tags, notes, minDuration, duration } = useSelector(selectorDetails);
+    const { address, defaultCordinate, noAddress } = useSelector(selectorAddress);
     const { rate, rateWorker } = useSelector(selectorRates);
     const [total, setTotal] = useState(0);
     const [totalMin, setTotalMin] = useState(0);

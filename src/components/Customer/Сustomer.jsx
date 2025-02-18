@@ -137,13 +137,15 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                 .then(res => {
                     const data = res.data.data;
 
-                
 
                     setTimeout(() => {
                         data.length > 0 && setLoadBage(false)
+                    }, 200)
+
+                    setTimeout(() => {
                         setHistoryList(data);
                         setHistoryLoad(false)
-                    }, 300)
+                    }, 350)
 
                 })
             return
@@ -162,12 +164,12 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
 
                     setTimeout(() => {
                         data.length > 0 && setLoadBage(false)
-                    }, 150)
+                    }, 200)
 
                     setTimeout(() => {
                         setHistoryLoad(false)
                         setHistoryList(data);
-                    }, 300)
+                    }, 350)
                 })
             return
         }
@@ -236,7 +238,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                             />
 
                             <div className={s.warnings}>
-                                <div className={`${s.loader}  ${s.loader_error} ${loadWarning &&  s.loader_vis}`}>
+                                <div className={`${s.loader}  ${s.loader_error} ${loadWarning && s.loader_vis}`}>
                                     {loadWarning && <div className={s.loader_anim}><IconLoader /></div>}
                                 </div>
                                 <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && !loadWarning && customer.id && s.loader_vis}`}>

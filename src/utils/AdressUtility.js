@@ -31,6 +31,7 @@ export const addressUtility = (data) => {
     const isRoute = data?.find(el => el.kind[0] == "ROUTE")?.name;
     const isStation = data?.find(el => el.kind[0] == "STATION")?.name;
     const isRailway = data?.find(el => el.kind[0] == "RAILWAY_STATION")?.name;
+    const isMetro = data?.find(el => el.kind[0] == "METRO_STATION")?.name;
     const isAirport = data?.filter(el => el.kind[0] == "AIRPORT")?.map((el, i) => { return i == 0 ? el.name : ` ${el.name}` });
     const isOther = data?.find(el => el.kind[0] == "OTHER")?.name;
 
@@ -44,7 +45,7 @@ export const addressUtility = (data) => {
     const city = isCity ? isCity : `${isProvince ? isProvince : ''}${isArea && isProvince ? ' ' + isArea : isArea && !isProvince ? isArea : ''}`;
     const street = isStreet ?
         isStreet :
-        `${isDistrict ? isDistrict : ''}${isRoute ? isRoute : ''}${isStation && isRoute ? ' ' + isStation : isStation && !isRoute ? isStation : ''}${isRailway && isRoute ? ' ' + isRailway : isRailway && !isRoute ? isRailway : ''}${isAirport ? isAirport : ''}${isVegetation ? isVegetation : ''}${isHydro ? isHydro : ''}${isOther ? isOther : ''}`
+        `${isDistrict ? isDistrict : ''}${isRoute ? isRoute : ''}${isStation && isRoute ? ' ' + isStation : isStation && !isRoute ? isStation : ''}${isMetro && isRoute ? ' ' + isMetro : isMetro && !isRoute ? isMetro : ''}${isRailway && isRoute ? ' ' + isRailway : isRailway && !isRoute ? isRailway : ''}${isAirport ? isAirport : ''}${isVegetation ? isVegetation : ''}${isHydro ? isHydro : ''}${isOther ? isOther : ''}`
     const house = `${isHouse ? isHouse : ''}`
     return {
         city,

@@ -6,7 +6,8 @@
     overflow: hidden;
     margin-bottom: -16px;
     max-width: 100%;
-    opacity: 0;
+    opacity: 0.4;
+    transition: opacity 0.25s;
   
 
     &_vis {

@@ -38,7 +38,7 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
         value == '' && setMetro(null)
         setAddress({})
         setQuery(value)
-        getAddressSuggest(value)
+        getAddressSuggest(value, defaultCordinate)
             .then(res => {
                 const results = res.data.results
                 setSuggestions(results)
@@ -49,10 +49,13 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
     const handleSelectAddress = (el) => {
         const data = el.address;
         const { city, street, house, apartment } = addressUtility(data.component);
+        console.log(city, street, house)
         getAddressExact(`${city} ${street} ${house}`)
             .then(res => {
                 const data = res.data.response?.GeoObjectCollection?.featureMember?.[0].GeoObject?.Point;
+                console.log(res.data.response)
                 const cordinate = data.pos.split(' ')
+                console.log(cordinate)
                 setAddress({
                     city,
                     street,

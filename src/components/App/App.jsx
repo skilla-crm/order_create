@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useWriteOrderDataHook } from '../../hooks/useWriteOrderDataHook';
 import { useOrderDataForSend } from '../../hooks/useOrderDataForSend';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import dayjs from 'dayjs';
 import moment from 'moment/moment';
 
@@ -53,6 +53,7 @@ import Manager from '../Manager/Manager';
 import SuccessModal from '../SuccessModal/SuccessModal';
 import ErrorWindow from '../ErrorWindow/ErrorWindow';
 import PreviewPhone from '../PreviewPhone/PreviewPhone';
+import Loader from '../Loader/Loader';
 const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
 const role = document.getElementById(`root_order-create`).getAttribute('role');
 
@@ -71,13 +72,12 @@ const App = () => {
     const [existOrder, setExistOrder] = useState(false);
     const [id, setId] = useState(0);
     const [activeType, setActiveType] = useState('');
-    const { customer, payType, name, phone, isSms, noContactPerson, isBlack, debt, debtThreshold } = useSelector(selectorCustomer);
-    const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
-    const { additionalDates } = useSelector(selectorAdditionalDates);
-    const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
-    const { address, metro, noAddress } = useSelector(selectorAddress);
+    const { customer, payType, name, phone, noContactPerson, isBlack, debt, debtThreshold } = useSelector(selectorCustomer);
+    const { time, timerDisabled } = useSelector(selectorPerformers);
+    const { service } = useSelector(selectorDetails);
+    const { address, noAddress } = useSelector(selectorAddress);
     const { rate, rateWorker } = useSelector(selectorRates);
-    const { managerId, partnershipId, emailPasport, emailState, partnerRate } = useSelector(selectorManagers);
+    const { emailPasport, emailState } = useSelector(selectorManagers);
     const { phoneModal } = useSelector(selectorPreview);
 
     const location = useLocation();
@@ -126,6 +126,7 @@ const App = () => {
 
     useEffect(() => {
         if (path.includes('orders/edit/?order_id=')) {
+            document.title = 'Редактировать заказ'
             setExistOrder(true)
             setLoadDetail(true)
             const idOrder = Number(path.split('order_id=').pop());
@@ -143,7 +144,11 @@ const App = () => {
                     setData(data)
                     const company = parametrs?.companies?.find(el => el.id == data.company_id)
                     data.beznal == 1 && company && dispatch(setCustomer(company))
-                    setLoadDetail(false)
+
+                    setTimeout(() => {
+                        setLoadDetail(false)
+                    }, 100)
+                   
                 })
                 .catch(err => console.log(err))
         }
@@ -280,7 +285,7 @@ const App = () => {
     return (
         <UserContext.Provider value={{ pro, role }}>
             <ParametrsContext.Provider value={parametrs}>
-                <div className={`${s.app} ${anim && s.app_anim}`}>
+                <div className={`${s.app} ${anim && !loadDetail && s.app_anim}`}>
                     <div className={s.header}>
                         <h2 className={s.title}>Создание заказа</h2>
                         {<div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>
@@ -319,6 +324,7 @@ const App = () => {
                     </div>
                     {successWindow && <SuccessModal type={successWindowType} />}
                     {phoneModal && <PreviewPhone activeType={activeType} />}
+                 {/*    {<Loader load={loadDetail}/>} */}
                 </div>
             </ParametrsContext.Provider>
         </UserContext.Provider>
