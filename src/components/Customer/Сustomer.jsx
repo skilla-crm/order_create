@@ -206,7 +206,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
     }
 
     return (
-        <>
+        <div className={`${s.window} ${addCustomer && s.window_hidden}`}>
             <div className={s.customer}>
                 <Header
                     title={TITLE}
@@ -234,7 +234,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                                 setAddCustomer={setAddCustomer}
                                 payType={payType}
                                 error={companyError}
-                                errorText={'Выберите заказчика'}
+                                errorText={'Выбери заказчика'}
                             />
 
                             <div className={s.warnings}>
@@ -271,7 +271,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                                     setValueName={(data) => dispatch(setName(data))}
                                     error={(phone?.length < 11) && !noContactPerson}
                                     errorEmpyty={phoneError}
-                                    errorTextEmpyty={'Введите номер'}
+                                    errorTextEmpyty={'Введи номер'}
                                     handleResetError={handleResetErrorPhone}
                                     errorText={ERROR_PHONE}
                                 />
@@ -281,7 +281,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                                     value={name}
                                     setValue={(data) => dispatch(setName(data))}
                                     error={nameError}
-                                    errorText={'Введите имя'}
+                                    errorText={'Введи имя'}
                                     handleResetError={handleResetErrorName}
                                     type={2}
                                 />
@@ -312,7 +312,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
             </div>
 
             <OrdersHistory vis={historyList?.length > 0} client={historyName} historyList={historyList} />
-        </>
+        </div>
 
     )
 };

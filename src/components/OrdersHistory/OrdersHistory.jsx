@@ -1,5 +1,6 @@
 import s from './OrdersHistory.module.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { ParametrsContext } from '../../contexts/UserContext';
 //hooks
 import { useWriteOrderDataHook } from '../../hooks/useWriteOrderDataHook';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,22 +13,14 @@ import { ReactComponent as IconClose } from '../../images/icons/bage/iconClose.s
 import dayjs from 'dayjs';
 //Api
 import { orderRetry } from '../../Api/Api';
-//selector
-import { selectorCustomer } from '../../store/reducer/Customer/selector';
 //slice
-import { setPayType, setName, setPhone, setNoContactPerson } from '../../store/reducer/Customer/slice';
-import { setPerformersNum, setTime } from '../../store/reducer/Performers/slice';
-import { setService, setRequirements, setMinDurqtion, setDuration, setCommentSupervisor, setNotes } from '../../store/reducer/Details/slice';
-import { setAddress, setMetro, deleteMetro, setNoAddress, setAddressForReturn } from '../../store/reducer/Address/slice';
-import { setRate, setRateWorker } from '../../store/reducer/Rates/slice';
-import { setManagerId, setPartnershipId, setEmailPasport, setPartnerRate } from '../../store/reducer/Managers/slice';
+import { setCustomer } from '../../store/reducer/Customer/slice';
 //components
 import Header from '../General/Header/Header';
 import InputSelect from '../General/Input/InputSelect';
 
 //utils
 import { addSpaceNumber2 } from '../../utils/addSpaceNumber';
-import { adressStringUtility } from '../../utils/AdressUtility';
 
 //constants
 import { PromptCustomer } from '../../constants/prompts';
@@ -63,11 +56,17 @@ const Bage = ({ status }) => {
     )
 }
 const Item = ({ el }) => {
+    const companies = useContext(ParametrsContext).companies;
     const { setData } = useWriteOrderDataHook();
+    const dispatch = useDispatch();
+
+
     const handleRetry = () => {
         orderRetry(el.id)
             .then(res => {
                 const data = res.data.data;
+                const company = companies?.find(el => el.id == data.company_id)
+                data.beznal == 1 && company && dispatch(setCustomer(company))
                 setData(data)
             })
             .catch(err => console.log(err))

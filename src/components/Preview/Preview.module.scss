@@ -98,7 +98,16 @@
     &_company {
         min-width: 340px;
         height: 24px;
-        margin-bottom: 20px;
+       /*  margin-bottom: 20px; */
+        width: 100%;
+
+  
+    p {
+        max-width: 100%;
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
+        overflow: hidden;
+    }
     }
 
     &_date {
@@ -182,4 +191,5 @@
 
 .comment {
     word-break: break-all;
+    white-space: pre-wrap;
 }

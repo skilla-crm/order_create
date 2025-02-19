@@ -14,9 +14,9 @@ export const useOrderDataForSend = () => {
     const { customer, payType, name, phone, isSms, noContactPerson, isBlack, debt, debtThreshold } = useSelector(selectorCustomer);
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { additionalDates } = useSelector(selectorAdditionalDates);
-    const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
+    const { service, tags, commentSupervisor, notes, payNotes, minDuration, duration } = useSelector(selectorDetails);
     const { address, metro, noAddress } = useSelector(selectorAddress);
-    const { rate, rateWorker } = useSelector(selectorRates);
+    const { rate, rateWorker, orderSum } = useSelector(selectorRates);
     const { managerId, partnershipId, emailPasport, emailState, partnerRate } = useSelector(selectorManagers);
 
     const dopDates = additionalDates.length > 0 ?
@@ -31,7 +31,7 @@ export const useOrderDataForSend = () => {
         []
 
     const orderData = {
- /*        preorder: type, */
+        /*        preorder: type, */
         beznal: payType == 1,
         to_card: payType == 2,
         company_id: payType == 1 && customer?.id ? customer?.id : null,
@@ -43,6 +43,7 @@ export const useOrderDataForSend = () => {
         dop_dates: dopDates,
         order_type: service,
         notes,
+        pay_notes: payNotes,
         supervisor_comment: commentSupervisor,
         requirements: tags,
         min_time: minDuration,
@@ -61,8 +62,9 @@ export const useOrderDataForSend = () => {
         metro3: metro[2]?.name,
         metro3_km: metro[2]?.distance,
         metro3_color: metro[2]?.color,
-        client_bit: /* Math.round( */rate,
-        worker_bit: Math.round(rateWorker),
+        client_bit: service !== 8 ? Number(rate) : null,
+        worker_bit: service !== 8 ? Number(rateWorker) : null,
+        pay_summ: service == 8 ? orderSum : null,
         supervisor_id: managerId == 0 ? null : managerId,
         to_partnership_id: partnershipId == 0 ? null : partnershipId,
         email_passport: emailPasport,

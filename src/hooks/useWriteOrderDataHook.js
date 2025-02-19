@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux"
 import { setPayType, setName, setPhone, setNoContactPerson } from '../store/reducer/Customer/slice';
 import { setPerformersNum, setTime } from '../store/reducer/Performers/slice';
-import { setService, setRequirements, setMinDurqtion, setDuration, setCommentSupervisor, setNotes } from '../store/reducer/Details/slice';
+import { setService, setRequirements, setMinDurqtion, setDuration, setCommentSupervisor, setNotes, setPayNotes } from '../store/reducer/Details/slice';
 import { setAddress, setMetro, deleteMetro, setNoAddress, setAddressForReturn } from '../store/reducer/Address/slice';
-import { setRate, setRateWorker } from '../store/reducer/Rates/slice';
+import { setRate, setRateWorker, setOrderSum } from '../store/reducer/Rates/slice';
 import { setManagerId, setPartnershipId, setEmailPasport, setPartnerRate } from '../store/reducer/Managers/slice';
 //utils
 import { adressStringUtility } from '../utils/AdressUtility';
@@ -18,6 +18,7 @@ export const useWriteOrderDataHook = () => {
 
     useEffect(() => {
         if (data.id) {
+
             const address = {
                 city: data.city,
                 street: data.load_address,
@@ -42,6 +43,7 @@ export const useWriteOrderDataHook = () => {
             dispatch(setService(data.order_type))
             dispatch(setMinDurqtion(data.min_time))
             dispatch(setNotes(data.notes))
+            dispatch(setPayNotes(data.pay_notes))
             dispatch(setCommentSupervisor(data.supervisor_comment))
             data.passport_required == 1 && data.requirements?.length == 0 ? dispatch(setRequirements([1])) : dispatch(setRequirements([]))
             data.requirements?.length > 0 && dispatch(setRequirements(data.requirements.map(el => { return el.id })))
@@ -49,6 +51,7 @@ export const useWriteOrderDataHook = () => {
             dispatch(setAddressForReturn(adressStringUtility(address)))
             dispatch(setRate(data.client_bit))
             dispatch(setRateWorker(data.worker_bit))
+            data.order_type == 8 && dispatch(setOrderSum(data.pay_summ))
             dispatch(deleteMetro())
             data?.metro !== '' && dispatch(setMetro({
                 name: data?.metro,

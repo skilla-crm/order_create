@@ -30,13 +30,17 @@ const Manager = () => {
     const { supervisors, skilla_partnerships } = useContext(ParametrsContext)
     const [activeSegment, setActiveSegment] = useState(1);
     const [activeRate, setActiveRate] = useState(1);
+    const [defaultManagerId, setDefaultManagerId] = useState(null)
     const { managerId, partnershipId, emailPasport, partnerRates, partnerRate, emailState } = useSelector(selectorManagers);
     const { contacts, payType } = useSelector(selectorCustomer);
     const { emailError } = useSelector(selectorValidation)
     const dispatch = useDispatch();
-    console.log(managerId)
+    console.log(supervisors)
 
-
+    useEffect(() => {
+        const result = supervisors?.find(el => el.default == 1)
+        result && dispatch(setManagerId(result.id))
+    }, [supervisors])
 
     useEffect(() => {
         if (partnershipId !== 0 && partnershipId !== null) {
@@ -122,7 +126,7 @@ const Manager = () => {
                     type={3}
                     position={supervisors?.length > 2 ? 'top' : ''}
                 />
-                
+
                 <div className={`${s.warning} ${managerId == 0 && s.warning_vis}`}>
                     <IconWarning />
                     <p>
@@ -171,7 +175,7 @@ const Manager = () => {
                     error={!emailValidate(emailPasport) && emailPasport.length > 0}
                     errorEmpity={emailError}
                     errorText={ERR_EMAIL}
-                    errorTextEmpity={'заполните поле'}
+                    errorTextEmpity={'заполни поле'}
                     contacts={contacts.filter((el) => el.email !== '')}
                     type={2}
                     handleResetErrorEmail={handleResetErrorEmail}

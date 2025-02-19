@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { selectorAddress } from '../../store/reducer/Address/selector';
 import { selectorDetails } from '../../store/reducer/Details/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
+import { selectorCustomer } from '../../store/reducer/Customer/selector';
 //slice
 import { setAddress, setMetro, setNoAddress, deleteMetro } from '../../store/reducer/Address/slice';
 import {
@@ -14,6 +15,7 @@ import {
     deleteRequirements,
     setCommentSupervisor,
     setNotes,
+    setPayNotes,
     setMinDurqtion,
     setDuration
 } from '../../store/reducer/Details/slice';
@@ -24,7 +26,7 @@ import {
     SUB_TYPE, SUB_COMMENT,
     SUB_DESCRIPTION, SUB_MINDURATION,
     SUB_DURATION, SUB_REQUIREMENTS,
-    SUB_ADDRESS
+    SUB_ADDRESS, SUB_PAYNOTES
 } from '../../constants/details';
 import { PromptDetails } from '../../constants/prompts';
 //components
@@ -39,10 +41,12 @@ import Address from '../General/Address/Address';
 
 const Details = () => {
     const user = useContext(UserContext);
-    const { types, requirements } = useContext(ParametrsContext)
+    const { types, requirements, partnerships } = useContext(ParametrsContext)
+    const { customer, payType } = useSelector(selectorCustomer);
     const { address, metro, defaultCordinate, noAddress, addressForReturn } = useSelector(selectorAddress);
-    const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
+    const { service, tags, commentSupervisor, notes, payNotes, minDuration, duration } = useSelector(selectorDetails);
     const { adressError } = useSelector(selectorValidation)
+    const [minDurationThreshold, setminDurationThreshold] = useState(24)
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -50,7 +54,26 @@ const Details = () => {
     }, [address])
 
     useEffect(() => {
-       minDuration > duration && dispatch(setDuration(Number(minDuration)))
+        console.log(partnerships)
+        if (partnerships && partnerships.length > 0) {
+            const result = partnerships?.find(el => el.id == customer?.partnership_id)
+            console.log(result, payType)
+            const result2 = partnerships?.find(el => el.connect_to == 0)
+            if (result && payType == 1) {
+                dispatch(setMinDurqtion(result.min_time))
+                setminDurationThreshold(result.min_time)
+                return
+            }
+            if (result2 && !customer?.partnership_id) {
+                dispatch(setMinDurqtion(Number(result2.min_time)))
+                setminDurationThreshold(result2.min_time)
+                return
+            }
+        }
+    }, [customer, partnerships, payType])
+
+    useEffect(() => {
+        minDuration > duration && dispatch(setDuration(Number(minDuration)))
     }, [minDuration, duration])
 
     const handleNoAdress = () => {
@@ -99,6 +122,16 @@ const Details = () => {
                 value={notes}
                 setValue={(data) => dispatch(setNotes(data))}
             />
+
+
+            <Comment
+                sub={SUB_PAYNOTES}
+                maxLength={200}
+                rows={2}
+                value={payNotes}
+                setValue={(data) => dispatch(setPayNotes(data))}
+            />
+
             <Comment
                 sub={SUB_DESCRIPTION}
                 maxLength={200}
@@ -121,6 +154,7 @@ const Details = () => {
                 setValue={(data) => dispatch(setMinDurqtion(Number(data)))}
                 sub={SUB_MINDURATION}
                 max={23}
+                min={minDurationThreshold}
                 maxVis={6}
                 forPro={false}
             />
@@ -149,7 +183,7 @@ const Details = () => {
                 noAddress={noAddress}
                 addressForReturn={addressForReturn}
                 error={adressError}
-                errorText={'Укажите адрес'}
+                errorText={'Укажи адрес'}
             />
 
         </div>

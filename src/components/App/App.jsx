@@ -26,7 +26,8 @@ import { setTime, setTimerDisabled } from '../../store/reducer/Performers/slice'
 import { setDefaultCordinate } from '../../store/reducer/Address/slice';
 import {
     setСompanyError, setPhoneError, setPhoneErrorFormat, setNameError, setTimeError, setAdressError,
-    setRateError, setRateWorkerError, setEmailError, setEmailErrorFormat, setIsBlackError, setIsDebtError
+    setRateError, setRateWorkerError, setEmailError, setEmailErrorFormat, setIsBlackError, setIsDebtError,
+    setPaySummError
 } from '../../store/reducer/Validation/slice';
 //selector
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
@@ -53,7 +54,7 @@ import Manager from '../Manager/Manager';
 import SuccessModal from '../SuccessModal/SuccessModal';
 import ErrorWindow from '../ErrorWindow/ErrorWindow';
 import PreviewPhone from '../PreviewPhone/PreviewPhone';
-import Loader from '../Loader/Loader';
+import OrderSum from '../OrderSum/OrderSum';
 const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
 const role = document.getElementById(`root_order-create`).getAttribute('role');
 
@@ -76,9 +77,10 @@ const App = () => {
     const { time, timerDisabled } = useSelector(selectorPerformers);
     const { service } = useSelector(selectorDetails);
     const { address, noAddress } = useSelector(selectorAddress);
-    const { rate, rateWorker } = useSelector(selectorRates);
+    const { rate, rateWorker, orderSum } = useSelector(selectorRates);
     const { emailPasport, emailState } = useSelector(selectorManagers);
     const { phoneModal } = useSelector(selectorPreview);
+    console.log(service)
 
     const location = useLocation();
     const path = location.pathname + location.search;
@@ -135,9 +137,7 @@ const App = () => {
                 .then(res => {
                     console.log(res)
                     const data = res.data.data;
-                    console.log('времяяяяяяяяяя', data.time, data.date)
                     const timeA = data.time == '' ? null : moment(`${data.time}`, 'HH:mm')
-                    console.log(timeA)
                     dispatch(setTime(timeA == null ? null : dayjs(timeA).locale('ru')))
                     timeA == null && dispatch(setTimerDisabled(true))
                     setOrderStatus(Number(data.order_status))
@@ -148,7 +148,7 @@ const App = () => {
                     setTimeout(() => {
                         setLoadDetail(false)
                     }, 100)
-                   
+
                 })
                 .catch(err => console.log(err))
         }
@@ -173,8 +173,9 @@ const App = () => {
         const nameError = !noContactPerson && name == '' ? true : false;
         const timeError = time == null && !timerDisabled ? true : false;
         const adressError = !address.city && !noAddress ? true : false;
-        const rateError = rate == '' ? true : false;
-        const rateWorkerError = rateWorker == '' ? true : false;
+        const rateError = service !== 8 && rate == '' ? true : false;
+        const rateWorkerError = service !== 8 && rateWorker == '' ? true : false;
+        const paySummError = service == 8 && orderSum == '' ? true : false;
         const emailError = emailState && emailPasport == '' ? true : false;
         const emailErrorFormat = emailState && emailPasport !== '' && !emailValidate(emailPasport) ? true : false;
         const isBlackError = payType == 1 && isBlack == 1 ? true : false;
@@ -189,10 +190,12 @@ const App = () => {
         dispatch(setAdressError(adressError))
         dispatch(setRateError(rateError))
         dispatch(setRateWorkerError(rateWorkerError))
+        dispatch(setPaySummError(paySummError))
         dispatch(setEmailError(emailError))
         dispatch(setEmailErrorFormat(emailErrorFormat))
         dispatch(setIsBlackError(isBlackError))
         dispatch(setIsDebtError(isDebtError))
+        console.log(rateError, rateWorkerError, paySummError)
 
         if (!companyError &&
             !phoneError &&
@@ -202,6 +205,7 @@ const App = () => {
             !adressError &&
             !rateError &&
             !rateWorkerError &&
+            !paySummError &&
             !emailError &&
             !emailErrorFormat &&
             !isBlackError &&
@@ -215,6 +219,7 @@ const App = () => {
 
     const handleCreate = () => {
         const valid = handleValidation();
+        console.log('Валидация', valid)
         if (!valid) {
             return
         }
@@ -246,7 +251,7 @@ const App = () => {
                 setLoadSave(false)
                 setTimeout(() => {
                     window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
-                }, 300)
+                }, 100)
             })
             .catch(err => console.log(err))
     }
@@ -260,6 +265,14 @@ const App = () => {
                 setTimeout(() => {
                     setLoadSave(false)
                 }, 200)
+
+               /*  setTimeout(() => {
+                    if (orderStatus == 0) {
+                        window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
+                    } else {
+                        window.location.href = 'https://lk.skilla.ru/orders/'
+                    }
+                }, 100) */
 
             })
             .catch(err => console.log(err))
@@ -275,7 +288,7 @@ const App = () => {
                 setLoadCreate(false)
                 setTimeout(() => {
                     window.location.href = 'https://lk.skilla.ru/orders/'
-                }, 300)
+                }, 100)
             })
             .catch(err => console.log(err))
     }
@@ -308,11 +321,13 @@ const App = () => {
                             <div className={s.errors}>
                                 <ErrorWindow />
                             </div>
-                            <Customer setAddCustomer={setAddCustomer} addCustomer={addCustomer} />
                             {addCustomer && <AddCustomer setAddCustomer={setAddCustomer} />}
+                            {<Customer setAddCustomer={setAddCustomer} addCustomer={addCustomer} />}
+
                             <Performers />
                             <Details />
-                            <Rates />
+                            {service == 8 && <OrderSum />}
+                            {service !== 8 && <Rates />}
                             <Manager />
                         </div>
                         <div className={s.right}>
@@ -322,9 +337,9 @@ const App = () => {
                             </div>
                         </div>
                     </div>
-                    {successWindow && <SuccessModal type={successWindowType} />}
+                    {/*  {successWindow && <SuccessModal type={successWindowType} />} */}
                     {phoneModal && <PreviewPhone activeType={activeType} />}
-                 {/*    {<Loader load={loadDetail}/>} */}
+                    {/*    {<Loader load={loadDetail}/>} */}
                 </div>
             </ParametrsContext.Provider>
         </UserContext.Provider>

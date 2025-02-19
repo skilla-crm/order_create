@@ -55,7 +55,7 @@ const Preview = () => {
             <div className={s.container}>
                 <div className={s.block}>
                     <span>Заказчик</span>
-                    <div className={`${s.block} ${(payType !== 1 || !noContactPerson) && s.block_hidden2}`}>
+                    <div className={`${s.block} ${payType !== 1 && s.block_hidden2}`}>
                         {<div className={`${s.item} ${s.item_company}`}>
                             <Overlay active={!customer?.id} />
                             <p>{customer?.name}</p>

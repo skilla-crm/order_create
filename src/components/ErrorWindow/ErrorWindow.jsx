@@ -14,7 +14,7 @@ const ErrorWindow = () => {
             adressError,
             rateError,
             rateWorkerError,
-            partnerError,
+            paySummError,
             emailError,
             emailErrorFormat,
             isBlackError,
@@ -28,6 +28,7 @@ const ErrorWindow = () => {
             adressError ||
             rateError ||
             rateWorkerError ||
+            paySummError ||
             emailError ||
             emailErrorFormat
     return (
@@ -39,7 +40,7 @@ const ErrorWindow = () => {
                 </div>
 
                 <ul className={s.list}>
-                    <li className={`${s.item} ${empity && s.item_vis}`}><div></div>Заполните все поля</li>
+                    <li className={`${s.item} ${empity && s.item_vis}`}><div></div>Заполни все поля</li>
                     <li className={`${s.item} ${isDebtError && s.item_vis}`}><div></div>Превышен лимит по задолженности</li>
                     <li className={`${s.item} ${isBlackError && s.item_vis}`}><div></div>Заказчик в черном списке</li>
                 </ul>

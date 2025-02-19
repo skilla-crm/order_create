@@ -17,6 +17,6 @@ export const SUB_SWITCH_CONTRACT = 'Отправить договор';
 export const SUB_SUM = 'Сумма';
 export const SUB_PARTY = 'С кем договор';
 export const ERR_KPP = 'Должен состоять из 9 цифр';
-export const ERR_ОГРN = 'Должен состоять из 13-15 цифр';
+export const ERR_ОГРN = 'Должен состоять из 13/15 цифр';
 export const ERR_EMAIL = 'Неверно указан эл. адрес';
 export const ERR_FILLIN = 'Заполни поле';

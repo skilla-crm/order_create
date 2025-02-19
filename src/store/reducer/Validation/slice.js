@@ -10,6 +10,7 @@ const initialState = {
     adressError: false,
     rateError: false,
     rateWorkerError: false,
+    paySummError: false,
     partnerError: false,
     emailError: false,
     emailErrorFormat: false,
@@ -54,6 +55,10 @@ const ValidtionSlice = createSlice({
             state.rateWorkerError = action.payload;
         },
 
+        setPaySummError(state, action) {
+            state.paySummError = action.payload;
+        },
+
         setPartnerError(state, action) {
             state.partnerError = action.payload;
         },
@@ -89,7 +94,8 @@ export const {
     setEmailError,
     setEmailErrorFormat,
     setIsBlackError,
-    setIsDebtError
+    setIsDebtError,
+    setPaySummError
 } = ValidtionSlice.actions;
 
 export default ValidtionSlice.reducer;

@@ -155,7 +155,7 @@ const AddCustomer = ({ setAddCustomer }) => {
             dispatch(setBillSum(''))
             dispatch(setPartyContract(''))
             handleReset()
-        }, 300)
+        }, 450)
     }
 
     const handleChose = (data) => {

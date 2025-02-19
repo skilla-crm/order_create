@@ -5,9 +5,9 @@
     max-height: 0;
     height: fit-content;
     overflow: hidden;
+    opacity: 0.4;
     margin-bottom: -16px;
-    opacity: 0.6;
-    transition: max-height 0.3s ease-in-out, margin-bottom 0.3s ease-in-out, opacity 0.25s;
+    transition: all 0.4s;
 
     &_2 {
         transition: max-height 0.2s, margin-bottom 0.2s, opacity 0.15s;

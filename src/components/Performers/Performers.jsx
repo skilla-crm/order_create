@@ -80,7 +80,7 @@ const Performers = () => {
                         time={time}
                         setTime={(data) => dispatch(setTime(data))}
                         error={timeError}
-                        errorText={'Выберите время'}
+                        errorText={'Выбери время'}
                     />
                 </div>
                 <Switch

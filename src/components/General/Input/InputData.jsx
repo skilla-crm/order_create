@@ -20,10 +20,37 @@ const InputData = ({ sub, nosub, setDate, date, disabledDates }) => {
 
     const handleDateText = () => {
         const currentYear = dayjs(date).format('YYYY') == dayjs().format('YYYY')
+        const today = dayjs(date).format('D MM YYYY') == dayjs().format('D MM YYYY')
+        const tomorrow = dayjs(date).format('MM YYYY') == dayjs().format('MM YYYY') && dayjs(date).format('D') - dayjs().format('D') == 1;
+        const dayAfterTomorrow = dayjs(date).format('MM YYYY') == dayjs().format('MM YYYY') && dayjs(date).format('D') - dayjs().format('D') == 2;
+        console.log(dayjs(date).format('D MM YYYY'), dayjs().format('D MM YYYY'))
+
+        if (date && currentYear && today) {
+            const dateFormat = dayjs(date).format(', D MMMM');
+            setDateVis('Сегодня' + dateFormat)
+            setBackspaceState(false)
+            return
+        }
+
+        if (date && currentYear && tomorrow) {
+            const dateFormat = dayjs(date).format(', D MMMM');
+            setDateVis('Завтра' + dateFormat)
+            setBackspaceState(false)
+            return
+        }
+
+        if (date && currentYear && dayAfterTomorrow) {
+            const dateFormat = dayjs(date).format(', D MMMM');
+            setDateVis('Послезавтра' + dateFormat)
+            setBackspaceState(false)
+            return
+        }
+
         if (date && currentYear) {
             const dateFormat = dayjs(date).format('dddd, D MMMM');
             setDateVis(dateFormat)
             setBackspaceState(false)
+            return
         }
 
         if (date && !currentYear) {

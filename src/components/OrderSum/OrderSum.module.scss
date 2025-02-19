@@ -1,0 +1,10 @@
+@import '../../vendor/mixins.scss';
+
+.container {
+    @include block;
+    position: relative;
+}
+
+.block {
+    width: 250px;
+}

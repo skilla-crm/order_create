@@ -73,6 +73,18 @@ export const PromptRates = () => {
     )
 }
 
+export const PromptSum = () => {
+    return (
+        <>
+            <div>
+                <h3>Сдельная оплата</h3>
+                <p>Тип услуги "Сдельная оплата" предполагает что стоимость заказа формируется по договоренности, без использования ставок за час</p>
+            </div>
+        </>
+
+    )
+}
+
 export const PromptManager  = () => {
     return (
         <>

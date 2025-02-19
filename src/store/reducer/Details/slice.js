@@ -5,6 +5,7 @@ const initialState = {
     tags: [],
     commentSupervisor: '',
     notes: '',
+    payNotes: '',
     minDuration: 1,
     duration: 1,
     service: 15,
@@ -48,6 +49,10 @@ const DetailsSlice = createSlice({
         setNotes(state, action) {
             state.notes = action.payload
         },
+
+        setPayNotes(state, action) {
+            state.payNotes = action.payload
+        },
     },
 });
 
@@ -58,6 +63,7 @@ export const {
     deleteRequirements,
     setCommentSupervisor,
     setNotes,
+    setPayNotes,
     setMinDurqtion,
     setDuration
 } = DetailsSlice.actions;

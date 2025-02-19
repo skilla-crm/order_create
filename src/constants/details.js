@@ -7,3 +7,4 @@ export const SUB_MINDURATION  = 'Минимальный заказ, ч';
 export const SUB_DURATION  = 'Предполагаемая длительность, ч';
 export const SUB_REQUIREMENTS  = 'Требования';
 export const SUB_ADDRESS  = 'Адрес';
+export const SUB_PAYNOTES = 'Комментарий к оплате'

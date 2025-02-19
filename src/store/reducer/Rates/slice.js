@@ -3,7 +3,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     rate: '',
-    rateWorker: ''
+    rateWorker: '',
+    orderSum: ''
 };
 
 const RatesSlice = createSlice({
@@ -17,13 +18,18 @@ const RatesSlice = createSlice({
 
         setRateWorker(state, action) {
             state.rateWorker = action.payload;
+        },
+
+        setOrderSum(state, action) {
+            state.orderSum = action.payload;
         }
     },
 });
 
 export const {
     setRate,
-    setRateWorker
+    setRateWorker,
+    setOrderSum
 } = RatesSlice.actions;
 
 export default RatesSlice.reducer;

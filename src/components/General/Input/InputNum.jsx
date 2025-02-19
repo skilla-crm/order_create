@@ -7,18 +7,25 @@ import { useEffect } from 'react';
 const InputNum = ({ sub, disabled, value, setValue, error, errorEmpity, maxValue, errorText }) => {
     const [errorState, setErrorState] = useState(false);
     const [errorStateEmpity, setErrorStateEmpity] = useState(false);
+    const [textValue, setTextValue] = useState(value || '')
     useEffect(() => {
         disabled && setValue('')
     }, [disabled])
+    console.log(value, textValue)
 
     useEffect(() => {
+        console.log(value)
         errorEmpity && value == '' ? setErrorStateEmpity(true) : setErrorStateEmpity(false)
+        const lastSymbol = value.toString().slice(-1);
+        (lastSymbol && lastSymbol == '.' || value == 0) ? setTextValue(value.toString()) : setTextValue(Number(parseFloat(value).toFixed(5)))
     }, [errorEmpity, value])
 
     const handleValue = (e) => {
         setErrorState(false)
         const value = handleNumbers(e.currentTarget.value)
         value.length <= maxValue && setValue(value)
+        value.length <= maxValue && setTextValue(value)
+
     }
 
     const handleError = () => {
@@ -36,7 +43,7 @@ const InputNum = ({ sub, disabled, value, setValue, error, errorEmpity, maxValue
                 onBlur={handleError}
                 onFocus={handleResetError}
                 onChange={handleValue}
-                value={value || ''}
+                value={textValue || ''}
                 disabled={disabled}
                 className={`${s.input} ${errorState && s.input_err}`}
                 type='text'

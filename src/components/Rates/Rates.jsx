@@ -28,6 +28,7 @@ const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio }) => {
     const [anim, setAnim] = useState(false);
 
     const handleChoseRate = () => {
+        console.log(Number(customerBit))
         dispatch(setRate(customerBit))
         dispatch(setRateWorker(workerBit))
         minTime && Number(minTime) > 0 && dispatch(setMinDurqtion(Number(minTime)))
@@ -45,7 +46,7 @@ const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio }) => {
             </div>
 
             <div className={s.name}>
-                <p>{name.length > 115 ? `${name.slice(0, 115)}...` : name}</p>
+                <p>{name}</p>
             </div>
 
             <div className={s.bit}>
@@ -115,12 +116,32 @@ const Rates = () => {
     const handleChoseRatio = (e) => {
         const id = Number(e.currentTarget.id);
         activeRatio == id ? setActiveRatio(0) : setActiveRatio(id)
-        const result = ((parseFloat(rate) * 100) / (100 + id))
-        const result2 = parseFloat(rate) + (parseFloat(rate) * id / 100)
-        const result3 = ((rate * 100) / (100 + activeRatio)) * (1 + id / 100)
-        activeRatio == id && dispatch(setRate(result.toFixed(2)))
-        activeRatio == 0 && dispatch(setRate(result2?.toFixed(2)))
-        activeRatio !== 0 && activeRatio !== id && dispatch(setRate(result3.toFixed(2)))
+
+        if (id > 0) {
+            const result = (Number(rate) * 100) / (100 + id)
+            const result2 = Number(rate) + (Number(rate) * id / 100)
+            const result3 = ((Number(rate) * 100) / (100 + activeRatio)) * (1 + id / 100)
+            const result4 = (Number(rate) * (100 - activeRatio)) / 100 + (((Number(rate) * (100 - activeRatio)) / 100) * id / 100)
+            activeRatio == id && dispatch(setRate(Number(result)))
+            activeRatio == 0 && dispatch(setRate(Number(result2)))
+            activeRatio !== 0 && activeRatio !== id && activeRatio > 0 && dispatch(setRate(Number(result3)))
+            activeRatio !== 0 && activeRatio !== id && activeRatio < 0 && dispatch(setRate(Number(result4)))
+            return
+        }
+
+        if (id < 0) {
+            console.log(100 + activeRatio, 100 + id)
+            const result = (Number(rate) * (100 - activeRatio)) / 100
+            const result2 = (Number(rate) * 100) / (100 - id)
+            const result3 = (result * 100) / (100 - id)
+            const result4 = ((Number(rate) * 100) / (100 + activeRatio)) * 100 / (100 - id)
+            activeRatio == id && dispatch(setRate(Number(result)))
+            activeRatio == 0 && dispatch(setRate(Number(result2)))
+            activeRatio !== 0 && activeRatio !== id && activeRatio < 0 && dispatch(setRate(Number(result3)))
+            activeRatio !== 0 && activeRatio !== id && activeRatio > 0 && dispatch(setRate(Number(result4)))
+            return
+        }
+
         setRatioList(false)
     }
 
@@ -159,8 +180,8 @@ const Rates = () => {
                             }}
                             error={false}
                             errorEmpity={rateError}
-                            maxValue={10}
-                            errorText={'Укажите ставку'}
+                            maxValue={14}
+                            errorText={'Укажи ставку'}
                         />
                         <button disabled={(rate == '' || payType !== 1)} ref={buttonRef} onClick={handleOpenRatioList} className={s.point}>
                             <IconPoints />
@@ -190,7 +211,7 @@ const Rates = () => {
                         error={false}
                         errorEmpity={rateWorkerError}
                         maxValue={10}
-                        errorText={'Укажите ставку'}
+                        errorText={'Укажи ставку'}
                     />
                 </div>
 

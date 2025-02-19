@@ -1,5 +1,23 @@
 @import '../../vendor/mixins.scss';
 
+
+.window {
+    opacity: 1;
+    max-height: 800px;
+    height: fit-content;
+   /*  overflow: hidden; */
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: all 0.7s; 
+   /*  margin-bottom: 16px */
+
+    &_hidden {
+        max-height: 0;
+        margin-bottom: -16px
+    }
+}
+
 .customer {
     @include block;
 }
@@ -79,6 +97,7 @@
 
     &_error {
         transition: opacity 0.15s ease-in-out;
+
         p {
             color: #E10D0D;
         }
@@ -86,6 +105,7 @@
 
     &_warning {
         transition: opacity 0.15s ease-in-out;
+
         p {
             color: #F89500;
         }
