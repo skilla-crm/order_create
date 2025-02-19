@@ -74,15 +74,17 @@
     left: 0;
     top: 47px;
     padding: 0;
-    max-height: 320px;
-    overflow: auto;
+    max-height: 0;
+    overflow: hidden;
+    height: fit-content;
     border-radius: 4px;
     background: var(--color-bg-card);
     box-shadow: 0px 0px 10px 0px rgba(0, 32, 51, 0.10);
-    /*  transition: all 0.2s; */
+     transition: all 0.2s;
 
-    &_scroll {
-        overflow: auto;
+
+    &_open {
+       max-height: 320px;
     }
 
 

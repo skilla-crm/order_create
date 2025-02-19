@@ -17,6 +17,7 @@ import ErrorWindow from '../ErrorWindow/ErrorWindow';
 //utils
 import { handleTextNumEnding } from '../../utils/HandleTextNumEndind';
 import { addSpaceNumber2, addSpaceNumber } from '../../utils/addSpaceNumber';
+import { adressStringUtility } from '../../utils/AdressUtility';
 const tags2 = [{ id: 1, description: 'Паспорт' }]
 
 const Preview = () => {
@@ -30,9 +31,9 @@ const Preview = () => {
     const [totalMin, setTotalMin] = useState(0);
 
     useEffect(() => {
-        setTotal(rate * duration)
-        setTotalMin(rate * minDuration)
-    }, [rate, minDuration, duration])
+        setTotal(rate * duration * performersNum)
+        setTotalMin(rate * minDuration * performersNum)
+    }, [rate, minDuration, duration, performersNum])
 
 
     return (
@@ -55,7 +56,7 @@ const Preview = () => {
             <div className={s.container}>
                 <div className={s.block}>
                     <span>Заказчик</span>
-                    <div className={`${s.block} ${payType !== 1 && s.block_hidden2}`}>
+                    <div style={{marginBottom: noContactPerson ? '20px' : ''}} className={`${s.block} ${payType !== 1 && s.block_hidden2}`}>
                         {<div className={`${s.item} ${s.item_company}`}>
                             <Overlay active={!customer?.id} />
                             <p>{customer?.name}</p>
@@ -97,7 +98,7 @@ const Preview = () => {
                     <span>Адрес</span>
                     <div className={`${s.item} ${s.item_address}`}>
                         <Overlay active={!address.city} />
-                        <p>{`${address.city} ${address.street} ${address.house}`}</p>
+                        <p>{adressStringUtility(address)}</p>
                     </div>
                     <div className={s.map}>
                         <MapAddress lat={address.lat} lng={address.lng} defaultCordinate={defaultCordinate} width={'100%'} height={160} />
@@ -117,7 +118,7 @@ const Preview = () => {
                     <span>Исполнители</span>
                     <div className={`${s.item} ${s.item_name}`}>
                         <Overlay active={performersNum == 0} />
-                        {minDuration < duration && <p>{performersNum} чел на {minDuration} - {duration} {handleTextNumEnding(duration)}</p>}
+                        {minDuration < duration && <p>{performersNum} чел на {minDuration}-{duration} {handleTextNumEnding(duration)}</p>}
                         {minDuration == duration && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
                         {minDuration > duration && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
                  

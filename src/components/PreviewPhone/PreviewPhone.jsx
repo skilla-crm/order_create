@@ -21,10 +21,10 @@ import dayjs from 'dayjs';
 import Overlay from '../Preview/Overlay';
 //utils
 import { addSpaceNumber } from '../../utils/addSpaceNumber';
-import { adressStringUtility2 } from '../../utils/AdressUtility';
+import { adressStringUtility2, adressStringUtility } from '../../utils/AdressUtility';
 
 const PreviewPhone = ({ activeType }) => {
-    const { partnerships, skilla_partnerships, requirements } = useContext(ParametrsContext);
+    const { partnerships, skilla_partnerships, requirements, city } = useContext(ParametrsContext);
     const { customer, payType } = useSelector(selectorCustomer);
     const { address, noAddress } = useSelector(selectorAddress);
     const { tags, commentSupervisor, duration } = useSelector(selectorDetails);
@@ -34,9 +34,7 @@ const PreviewPhone = ({ activeType }) => {
     const [anim, setAnim] = useState(false);
     const modalRef = useRef();
     const dispatch = useDispatch()
-
-    console.log(requirements)
-
+    console.log(city, address.city)
 
     useEffect(() => {
         setTimeout(() => {
@@ -127,7 +125,7 @@ const PreviewPhone = ({ activeType }) => {
 
                             <div className={`${s.block_small} ${commentSupervisor.length == 0 && s.block_hidden}`}>
                                 <p className={s.bold}>Описание</p>
-                                <p className={s.text}>{commentSupervisor.length > 80 ? `${commentSupervisor.slice(0, 80)}...` : commentSupervisor}</p>
+                                <p className={`${s.text} ${s.text_wrap}`}>{commentSupervisor.length > 80 ? `${commentSupervisor.slice(0, 80)}...` : commentSupervisor}</p>
 
                             </div>
                         </div>
@@ -135,7 +133,8 @@ const PreviewPhone = ({ activeType }) => {
                         <div className={`${s.block} ${noAddress && s.block_hidden}`}>
                             <div className={`${s.item} ${s.item_address}`}>
                                 <Overlay active={!address.city} />
-                                <p className={s.bold}>{adressStringUtility2(address)}</p>
+                                {city !== address.city && <p className={s.bold}>{adressStringUtility(address)}</p>}
+                                {city == address.city && <p className={s.bold}>{adressStringUtility2(address)}</p>}
                             </div>
 
                         </div>

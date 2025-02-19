@@ -8,10 +8,11 @@ const months = ["Январь", "Февраль", "Март", "Апрель", "�
 const MultiDatePicker = ({ type, dates, setDates, setAllDatesRange }) => {
 
     const handleChangeDates = (value) => {
-        setDates(value)
+        console.log(value)
+        setDates(value.slice(0, 20))
         let arr = []
         type == 2 && value.forEach(el => arr.push(...getAllDatesInRange(el)))
-        type == 2 && setAllDatesRange(arr)
+        type == 2 && setAllDatesRange(arr.slice(0, 20))
     }
 
     return (

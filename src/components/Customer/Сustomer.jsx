@@ -52,6 +52,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
     const [beznal, setBeznal] = useState(true);
     const [loadBage, setLoadBage] = useState(false);
     const [loadWarning, setLoadWarning] = useState(false);
+    const [hiddenCustomer, setHiddenCustomer] = useState(false);
     const { companies, customer, payType, name, phone, isBlack, debt, debtThreshold, contacts, noContactPerson } = useSelector(selectorCustomer);
     const { companyError, phoneError, nameError } = useSelector(selectorValidation)
     const dispatch = useDispatch();
@@ -176,8 +177,17 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
 
     }, [phone, beznal])
 
+    useEffect(() => {
+        !addCustomer && setHiddenCustomer(false)
+    }, [addCustomer])
+
     const handleAdd = () => {
-        setAddCustomer(true)
+        setHiddenCustomer(true)
+
+        setTimeout(() => {
+            setAddCustomer(true)
+        }, 500)
+       
     }
 
     const handleContactPersonState = () => {
@@ -206,7 +216,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
     }
 
     return (
-        <div className={`${s.window} ${addCustomer && s.window_hidden}`}>
+        <div className={`${s.window} ${hiddenCustomer && s.window_hidden}`}>
             <div className={s.customer}>
                 <Header
                     title={TITLE}
@@ -248,7 +258,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
 
                                 <div className={`${s.loader} ${s.loader_error} ${debt > debtThreshold && !loadWarning && customer.id && s.loader_vis}`}>
                                     <IconInfoErr />
-                                    {debt > debtThreshold && <p>Превышен лимит по задолженности</p>}
+                                    {debt > debtThreshold && <p>Превышен лимит задолженности {addSpaceNumber(debtThreshold)} руб.</p>}
                                 </div>
 
                                 <div className={`${s.loader} ${s.loader_warning} ${debt <= debtThreshold && debt !== 0 && !loadWarning && customer.id && s.loader_vis}`}>
@@ -284,6 +294,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                                     errorText={'Введи имя'}
                                     handleResetError={handleResetErrorName}
                                     type={2}
+                                    maxLength={28}
                                 />
                             </div>
                             <div className={s.switch}>

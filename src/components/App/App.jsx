@@ -322,7 +322,7 @@ const App = () => {
                                 <ErrorWindow />
                             </div>
                             {addCustomer && <AddCustomer setAddCustomer={setAddCustomer} />}
-                            {<Customer setAddCustomer={setAddCustomer} addCustomer={addCustomer} />}
+                            {<Customer setAddCustomer={setAddCustomer}  addCustomer={addCustomer} />}
 
                             <Performers />
                             <Details />

@@ -32,7 +32,7 @@
         opacity: 1;
     }
 
-   
+
 }
 
 .fon {
@@ -173,6 +173,8 @@
     gap: 12px;
     box-shadow: 0px 2px 3px 0px rgba(185, 185, 185, 0.10), 0px 1px 3px 0px rgba(148, 148, 148, 0.12), 0px -1px 2px 0px rgba(0, 0, 0, 0.08);
 
+
+
     &_hidden {
         display: none;
     }
@@ -182,6 +184,11 @@
     font-size: 16px;
     font-weight: 400;
     line-height: 20px;
+
+    &_wrap {
+        word-break: break-all;
+        white-space: pre-wrap;
+    }
 }
 
 .bold {
@@ -195,12 +202,14 @@
     justify-content: space-between;
     align-items: center;
 }
+
 .button {
     width: 100%;
     height: auto;
     box-sizing: border-box;
     margin-top: auto;
 }
+
 .tags {
     display: flex;
     gap: 4px;

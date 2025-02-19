@@ -96,7 +96,11 @@
 .comment {
     margin-top: 12px;
     color: #71869D;
-    white-space: pre-wrap;
+
+    p {
+        word-break: break-all;
+        white-space: pre-wrap;
+    }
 }
 
 .date {
@@ -117,7 +121,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    
+
     p {
         color: #002CFB;
         font-weight: 400;

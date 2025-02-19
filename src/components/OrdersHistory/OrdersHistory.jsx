@@ -73,8 +73,8 @@ const Item = ({ el }) => {
     }
 
     return (
-        <div className={s.item}>
-            <button onClick={handleRetry} className={s.repeat}>
+        <div onClick={handleRetry} className={s.item}>
+            <button className={s.repeat}>
                 <IconRepeat />
             </button>
 
@@ -88,9 +88,9 @@ const Item = ({ el }) => {
 
             <div className={`${s.block} ${s.block_address}`}>
                 <p>{el?.load_address}{el.home !== '' && ','} {el?.home} {el?.k} </p>
-                <span>
-                    {el?.notes.length > 105 ? `${el?.notes.slice(0, 105)}...` : el?.notes}
-                </span>
+                <p className={s.second}>
+                   {el?.notes}
+                </p>
             </div>
 
             <div className={`${s.block} ${s.block_contact}`}>

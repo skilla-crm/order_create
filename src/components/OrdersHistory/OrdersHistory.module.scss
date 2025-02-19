@@ -8,7 +8,7 @@
     max-width: 100%;
     opacity: 0.4;
     transition: opacity 0.25s;
-  
+
 
     &_vis {
         overflow: visible;
@@ -36,6 +36,7 @@
 }
 
 .item {
+    cursor: pointer;
     padding: 9px 9px 9px 0;
     min-height: 56px;
     box-sizing: border-box;
@@ -57,11 +58,6 @@
     align-items: center;
     flex-shrink: 0;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-        rotate: -30deg;
-    }
 }
 
 .block {
@@ -84,6 +80,9 @@
         align-items: center;
         gap: 6px;
         max-width: 96%;
+        text-wrap: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         color: var(--color-text-secondary);
 
         input {
@@ -143,4 +142,12 @@
             color: #CC0101;
         }
     }
+}
+
+.second {
+    max-width: 96%;
+    text-wrap: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--color-text-secondary);
 }

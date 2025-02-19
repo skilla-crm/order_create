@@ -1,5 +1,5 @@
 import s from './Address.module.scss';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { ReactComponent as IconLocation } from '../../../images/icons/iconLocation.svg';
 //API
 import { getCordinateInfo, getMetro } from '../../../Api/ApiDadata';
@@ -13,9 +13,11 @@ import { adressStringUtility, addressUtility } from '../../../utils/AdressUtilit
 
 const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordinate, first, handleNoAdress, noAddress, addressForReturn, errorText, error }) => {
     const [query, setQuery] = useState(adressStringUtility(address) || '');
+    const [openList, setOpenList] = useState(false)
     const [suggestions, setSuggestions] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
     const [openMap, setOpenMap] = useState(false);
+    const listRef = useRef();
 
     useEffect(() => {
         address.city == '' && setOpenMap(false)
@@ -89,6 +91,7 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
 
     const handleFocus = () => {
         setOnFocus(true)
+        setOpenList(true)
     }
 
     const handleBlur = () => {
@@ -103,11 +106,24 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
         console.log('модалка про')
     }
 
+    const closeModal = (e) => {
+        e.stopPropagation()
+        if (listRef.current && !listRef.current.contains(e.target)) {
+            setOpenList(false)
+            return
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('mousedown', closeModal);
+        return () => document.removeEventListener('mousedown', closeModal);
+    }, []);
+
     return (
         <div className={s.container}>
             <span className={s.sub}>{sub}</span>
             <div className={s.block}>
-                <div className={`${s.field} ${noAddress && s.field_disabled} ${onFocus && s.field_focus}`}>
+                <div ref={listRef} className={`${s.field} ${noAddress && s.field_disabled} ${onFocus && s.field_focus}`}>
                     <input disabled={noAddress} onFocus={handleFocus} onBlur={handleBlur} value={query || ''} onChange={handleAdress}></input>
                     <button onClick={handleMap} className={`${s.button} ${(onFocus || ((!address.lat || address.city == '') && !openMap)) && s.button_hidden}`}>
                         <IconLocation />
@@ -115,7 +131,7 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
                         {openMap && <p>Скрыть</p>}
                     </button>
 
-                    <ul className={s.list}>
+                    <ul className={`${s.list} ${openList && s.list_open}`}>
                         {suggestions?.map((el) => {
                             return <li onClick={() => handleSelectAddress(el)} key={el.uri}>{el.address.formatted_address}</li>
                         })}
