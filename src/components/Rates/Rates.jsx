@@ -28,7 +28,6 @@ const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio }) => {
     const [anim, setAnim] = useState(false);
 
     const handleChoseRate = () => {
-        console.log(Number(customerBit))
         dispatch(setRate(customerBit))
         dispatch(setRateWorker(workerBit))
         minTime && Number(minTime) > 0 && dispatch(setMinDurqtion(Number(minTime)))
@@ -122,23 +121,22 @@ const Rates = () => {
             const result2 = Number(rate) + (Number(rate) * id / 100)
             const result3 = ((Number(rate) * 100) / (100 + activeRatio)) * (1 + id / 100)
             const result4 = (Number(rate) * (100 - activeRatio)) / 100 + (((Number(rate) * (100 - activeRatio)) / 100) * id / 100)
-            activeRatio == id && dispatch(setRate(Number(result)))
-            activeRatio == 0 && dispatch(setRate(Number(result2)))
-            activeRatio !== 0 && activeRatio !== id && activeRatio > 0 && dispatch(setRate(Number(result3)))
-            activeRatio !== 0 && activeRatio !== id && activeRatio < 0 && dispatch(setRate(Number(result4)))
+            activeRatio == id && dispatch(setRate(Number(result).toFixed(2)))
+            activeRatio == 0 && dispatch(setRate(Number(result2.toFixed(2))))
+            activeRatio !== 0 && activeRatio !== id && activeRatio > 0 && dispatch(setRate(Number(result3).toFixed(2)))
+            activeRatio !== 0 && activeRatio !== id && activeRatio < 0 && dispatch(setRate(Number(result4).toFixed(2)))
             return
         }
 
         if (id < 0) {
-            console.log(100 + activeRatio, 100 + id)
             const result = (Number(rate) * (100 - activeRatio)) / 100
             const result2 = (Number(rate) * 100) / (100 - id)
             const result3 = (result * 100) / (100 - id)
             const result4 = ((Number(rate) * 100) / (100 + activeRatio)) * 100 / (100 - id)
-            activeRatio == id && dispatch(setRate(Number(result)))
-            activeRatio == 0 && dispatch(setRate(Number(result2)))
-            activeRatio !== 0 && activeRatio !== id && activeRatio < 0 && dispatch(setRate(Number(result3)))
-            activeRatio !== 0 && activeRatio !== id && activeRatio > 0 && dispatch(setRate(Number(result4)))
+            activeRatio == id && dispatch(setRate(Number(result).toFixed(2)))
+            activeRatio == 0 && dispatch(setRate(Number(result2).toFixed(2)))
+            activeRatio !== 0 && activeRatio !== id && activeRatio < 0 && dispatch(setRate(Number(result3).toFixed(2)))
+            activeRatio !== 0 && activeRatio !== id && activeRatio > 0 && dispatch(setRate(Number(result4).toFixed(2)))
             return
         }
 

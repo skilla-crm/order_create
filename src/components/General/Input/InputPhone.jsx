@@ -36,7 +36,7 @@ const InputPhone = ({ sub, disabled, value, setValue, setValueName, contacts, er
 
     const handleChoseContact = (data) => {
         setValue(data.phone)
-     /*    setValueName(data.name) */
+        setValueName(data.name)
         setOpenContacts(false)
     }
 

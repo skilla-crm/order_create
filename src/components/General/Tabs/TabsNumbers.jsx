@@ -29,7 +29,7 @@ const TabsNumbers = ({ sub, value, setValue, max, min, maxVis, forPro }) => {
         if (id == 'optional') {
             inputRef.current.focus()
         } else {
-           setValue(id)
+            setValue(id)
             id > maxVis ? setInputNumberValue(id) : setInputNumberValue('');
         }
     }
@@ -47,7 +47,7 @@ const TabsNumbers = ({ sub, value, setValue, max, min, maxVis, forPro }) => {
         setTimeout(() => {
             handleScroll(value)
         }, 50)
-     
+
     }
 
 
@@ -68,18 +68,21 @@ const TabsNumbers = ({ sub, value, setValue, max, min, maxVis, forPro }) => {
         }, 100)
     }
 
+    const openModalPro = () => {
+        document?.getElementById('pro-open')?.click();
+    };
 
     return (
         <div className={s.container}>
             <span className={s.sub}>{sub}</span>
             <ul className={s.list}>
                 {numbers.map(el => {
-                    return <Tab key={el} id={el} tab={el} value={value} handleTab={handleTab} min={min}/>
+                    return <Tab key={el} id={el} tab={el} value={value} handleTab={handleTab} min={min} />
                 })}
 
-                <li className={`${s.tab} ${s.tab_optional} ${forPro && s.tab_forpro} ${((value > maxVis) || activeOptional) && s.tab_active}`}>
+                {maxVis < max && <li className={`${s.tab} ${s.tab_optional} ${forPro && s.tab_forpro} ${((value > maxVis) || activeOptional) && s.tab_active}`}>
 
-                    {forPro && <div className={s.pro}>
+                    {forPro && <div onClick={openModalPro} className={s.pro}>
                         <span>...</span>
                         <BagePro />
                     </div>}
@@ -109,11 +112,12 @@ const TabsNumbers = ({ sub, value, setValue, max, min, maxVis, forPro }) => {
                         </input>
 
                         <ul className={`${s.list} ${s.list_optional} ${optionalList && s.list_open}`}>
-                         
+
                             {optionalNumbers.map(el => {
                                 return <li key={el} ref={el == inputNumberValue ? activeRef : null} onMouseDown={handleTab} id={el} className={`${el == inputNumberValue && s.number_active} ${el < min && s.number_disabled}`}>{el}</li>
                             })}
                         </ul>
+
                     </div>
                     }
 
@@ -124,6 +128,7 @@ const TabsNumbers = ({ sub, value, setValue, max, min, maxVis, forPro }) => {
                     </span>
 
                 </li>
+                }
             </ul>
 
         </div>

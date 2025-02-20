@@ -14,6 +14,7 @@ import { sortManager } from '../../utils/sortManager';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
+import { selectorDetails } from '../../store/reducer/Details/selector';
 //slice
 import { setManagerId, setPartnershipId, setEmailPasport, setPartnerRates, setPartnerRate, setEmailState } from '../../store/reducer/Managers/slice';
 import { setEmailError, setEmailErrorFormat } from '../../store/reducer/Validation/slice';
@@ -32,10 +33,14 @@ const Manager = () => {
     const [activeRate, setActiveRate] = useState(1);
     const [defaultManagerId, setDefaultManagerId] = useState(null)
     const { managerId, partnershipId, emailPasport, partnerRates, partnerRate, emailState } = useSelector(selectorManagers);
+    const { service } = useSelector(selectorDetails);
     const { contacts, payType } = useSelector(selectorCustomer);
     const { emailError } = useSelector(selectorValidation)
     const dispatch = useDispatch();
-    console.log(supervisors)
+
+    useEffect(() => {
+        service == 8 && dispatch(setEmailState(false))
+    }, [service])
 
     useEffect(() => {
         const result = supervisors?.find(el => el.default == 1)
@@ -161,11 +166,11 @@ const Manager = () => {
 
 
 
-            <Switch
+            {service !== 8 && <Switch
                 text={SUB_SWITCH}
                 switchState={emailState}
                 handleSwitch={handleSwitch}
-            />
+            />}
 
             <div className={`${s.email} ${emailState && s.email_vis}`}>
                 <InputEmail

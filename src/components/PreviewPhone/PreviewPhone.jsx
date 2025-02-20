@@ -34,7 +34,6 @@ const PreviewPhone = ({ activeType }) => {
     const [anim, setAnim] = useState(false);
     const modalRef = useRef();
     const dispatch = useDispatch()
-    console.log(city, address.city)
 
     useEffect(() => {
         setTimeout(() => {
@@ -118,9 +117,9 @@ const PreviewPhone = ({ activeType }) => {
 
                             <div className={s.block_small}>
                                 <p className={s.bold}>Количество мест</p>
-                                {performersNum > 1 && performersNum < 5 && <p className={s.text}>Осталось менее {performersNum}х мест</p>}
-                                {performersNum >= 5 && <p className={s.text}>Осталось менее {performersNum}и мест</p>}
-                                {performersNum == 1 && <p className={s.text}>Осталось 1 место</p>}
+                                {performersNum < 3 && <p className={s.text}>Осталось менее 3х мест</p>}
+                                {performersNum >= 3 && performersNum < 10 && <p className={s.text}>Осталось менее 10и мест</p>}
+
                             </div>
 
                             <div className={`${s.block_small} ${commentSupervisor.length == 0 && s.block_hidden}`}>

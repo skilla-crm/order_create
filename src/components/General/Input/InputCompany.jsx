@@ -8,7 +8,7 @@ import CompanyList from '../CompanyList/CompanyList';
 import { addSpaceNumber } from '../../../utils/addSpaceNumber';
 import { handleSearchCompany } from '../../../utils/SearchCompany';
 
-const InputCompany = ({ sub, list, value, setValue, setAddCustomer, payType, error, errorText }) => {
+const InputCompany = ({ sub, list, value, setValue, handleAdd, payType, error, errorText }) => {
     const [openList, setOpenList] = useState(false);
     const [fieldFocus, setFieldFocus] = useState(false);
     const [valueText, setValueText] = useState('');
@@ -110,7 +110,7 @@ const InputCompany = ({ sub, list, value, setValue, setAddCustomer, payType, err
                     setValueText={setValueText}
                     notFound={notFound}
                     valueText={valueText}
-                    setAddCustomer={setAddCustomer}
+                    handleAdd={handleAdd}
                 />
             </div>
 

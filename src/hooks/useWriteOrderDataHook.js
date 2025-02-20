@@ -13,6 +13,7 @@ import { adressStringUtility } from '../utils/AdressUtility';
 
 
 export const useWriteOrderDataHook = () => {
+    const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
     const [data, setData] = useState({})
     const dispatch = useDispatch();
 
@@ -38,7 +39,7 @@ export const useWriteOrderDataHook = () => {
                 dispatch(setNoContactPerson(true))
                 :
                 dispatch(setNoContactPerson(false))
-            dispatch(setPerformersNum(data.worker_count))
+            pro ? dispatch(setPerformersNum(data.worker_count)) : dispatch(setPerformersNum(data.worker_count > 8 ? 8 : data.worker_count))
             dispatch(setDuration(data.order_duration))
             dispatch(setService(data.order_type))
             dispatch(setMinDurqtion(data.min_time))
@@ -71,7 +72,7 @@ export const useWriteOrderDataHook = () => {
                 color: data?.metro3_color
             }))
 
-            data.city == '' ? dispatch(setNoAddress(true)) : dispatch(setNoAddress(false))
+            data.city == '' &&  pro ? dispatch(setNoAddress(true)) : dispatch(setNoAddress(false))
             dispatch(setManagerId(data.supervisor_id))
             dispatch(setPartnershipId(data.to_partnership_id))
             dispatch(setEmailPasport(data.email_passport))

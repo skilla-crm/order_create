@@ -27,9 +27,9 @@ const Header = ({ title, buttonState, buttonText, handleButton, forPro, PromptTe
         }
     }
 
-    const handlePro = () => {
+    const openModalPro = () => {
         document?.getElementById('pro-open')?.click();
-    }
+    };
 
 
     useEffect(() => {
@@ -50,7 +50,7 @@ const Header = ({ title, buttonState, buttonText, handleButton, forPro, PromptTe
 
             <div ref={modalRef} onClick={handleOpenPopup} className={`${s.button} ${s.button_point} ${!buttonState && s.button_hidden}`}><IconPoints />
                 {!forPro && <button style={{ paddingRight: '44px' }} onClick={handleButton} className={`${s.button} ${s.button_popup} ${!openPopup && s.button_hidden}`}>{buttonText}</button>}
-                {forPro && <button onClick={handlePro} className={`${s.button} ${s.button_popup} ${!openPopup && s.button_hidden}`}>{buttonText}<BagePro /></button>}
+                {forPro && <button onClick={openModalPro} className={`${s.button} ${s.button_popup} ${!openPopup && s.button_hidden}`}>{buttonText}<BagePro /></button>}
             </div>
         </div>
     )

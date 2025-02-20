@@ -2,7 +2,7 @@ import s from './CompanyList.module.scss';
 import { useEffect, useRef } from 'react';
 import { ReactComponent as IconAdd } from '../../../images/icons/iconAdd.svg';
 
-const CompanyList = ({ list, openList, setOpenList, value, setValue, listScroll, setValueText, notFound, valueText, setAddCustomer }) => {
+const CompanyList = ({ list, openList, setOpenList, value, setValue, listScroll, setValueText, notFound, valueText, handleAdd }) => {
     const activeRef = useRef();
 
     /* useEffect(() => {
@@ -16,7 +16,7 @@ const CompanyList = ({ list, openList, setOpenList, value, setValue, listScroll,
     }
 
     const handleOpenAdd = () => {
-        setAddCustomer(true)
+        handleAdd()
         setOpenList(false)
     }
 

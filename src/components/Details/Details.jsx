@@ -47,6 +47,7 @@ const Details = () => {
     const { service, tags, commentSupervisor, notes, payNotes, minDuration, duration } = useSelector(selectorDetails);
     const { adressError } = useSelector(selectorValidation)
     const [minDurationThreshold, setminDurationThreshold] = useState(24)
+    const [payCommentState, setPayCommentState] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -54,10 +55,12 @@ const Details = () => {
     }, [address])
 
     useEffect(() => {
-        console.log(partnerships)
+        payNotes.length > 0 && setPayCommentState(true)
+    }, [payNotes])
+
+    useEffect(() => {
         if (partnerships && partnerships.length > 0) {
             const result = partnerships?.find(el => el.id == customer?.partnership_id)
-            console.log(result, payType)
             const result2 = partnerships?.find(el => el.connect_to == 0)
             if (result && payType == 1) {
                 dispatch(setMinDurqtion(result.min_time))
@@ -91,13 +94,22 @@ const Details = () => {
         dispatch(setAdressError(false))
     }
 
+    const handleAdd = () => {
+        if (payCommentState) {
+            setPayCommentState(false)
+            dispatch(setPayNotes(''))
+        } else {
+            setPayCommentState(true)
+        }
+    }
+
     return (
         <div className={s.details}>
             <Header
                 title={TITLE}
-                /*  buttonState={true}
-                 buttonText={BUTTON_TEXT} */
-                /*  handleButton={handleAdd} */
+                buttonState={true}
+                buttonText={payCommentState ? 'Скрыть комментарий к оплате' : 'Добавить комментарий к оплате'}
+                handleButton={handleAdd}
                 forPro={!user.pro}
                 PromptText={PromptDetails}
             />
@@ -124,23 +136,25 @@ const Details = () => {
             />
 
 
-            <Comment
+            {payCommentState && <Comment
                 sub={SUB_PAYNOTES}
                 maxLength={200}
                 rows={2}
                 value={payNotes}
                 setValue={(data) => dispatch(setPayNotes(data))}
             />
+            }
 
-            <Comment
+            {service !== 8 && <Comment
                 sub={SUB_DESCRIPTION}
                 maxLength={200}
                 rows={2}
                 value={commentSupervisor}
                 setValue={(data) => dispatch(setCommentSupervisor(data))}
             />
+            }
 
-            <Tags
+            {service !== 8 && <Tags
                 sub={SUB_REQUIREMENTS}
                 value={tags}
                 maxVis={3}
@@ -148,8 +162,9 @@ const Details = () => {
                 setValue={(data) => dispatch(addRequirements(data))}
                 deleteValue={(data) => dispatch(deleteRequirements(data))}
             />
+            }
 
-            <TabsNumbers
+            {service !== 8 && <TabsNumbers
                 value={minDuration}
                 setValue={(data) => dispatch(setMinDurqtion(Number(data)))}
                 sub={SUB_MINDURATION}
@@ -158,8 +173,9 @@ const Details = () => {
                 maxVis={6}
                 forPro={false}
             />
+            }
 
-            <TabsNumbers
+            {service !== 8 && <TabsNumbers
                 value={duration}
                 setValue={(data) => dispatch(setDuration(Number(data)))}
                 sub={SUB_DURATION}
@@ -168,6 +184,7 @@ const Details = () => {
                 maxVis={8}
                 forPro={false}
             />
+            }
 
 
             <Address

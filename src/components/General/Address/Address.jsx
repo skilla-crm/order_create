@@ -51,13 +51,10 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
     const handleSelectAddress = (el) => {
         const data = el.address;
         const { city, street, house, apartment } = addressUtility(data.component);
-        console.log(city, street, house)
         getAddressExact(`${city} ${street} ${house}`)
             .then(res => {
                 const data = res.data.response?.GeoObjectCollection?.featureMember?.[0].GeoObject?.Point;
-                console.log(res.data.response)
                 const cordinate = data.pos.split(' ')
-                console.log(cordinate)
                 setAddress({
                     city,
                     street,
@@ -102,9 +99,9 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
         openMap ? setOpenMap(false) : setOpenMap(true)
     }
 
-    const handleProModal = () => {
-        console.log('модалка про')
-    }
+    const openModalPro = () => {
+        document?.getElementById('pro-open')?.click();
+    };
 
     const closeModal = (e) => {
         e.stopPropagation()
@@ -141,7 +138,7 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
                 {first && <Switch
                     text={'Без адреса'}
                     switchState={noAddress}
-                    handleSwitch={!user.pro ? handleProModal : handleNoAdress}
+                    handleSwitch={!user.pro ? openModalPro : handleNoAdress}
                     hidden={false}
                     forPro={!user.pro}
                 />
@@ -157,7 +154,7 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
                 </p>
             </div>
             <div className={`${s.map} ${!openMap && s.map_hidden}`}>
-                <MapAddress openMap={openMap} lat={address?.lat} lng={address?.lng} defaultCordinate={defaultCordinate} width={690} height={292} />
+                <MapAddress openMap={openMap} lat={address?.lat} lng={address?.lng} defaultCordinate={defaultCordinate} width={'100%'} height={392} />
             </div>
 
         </div>

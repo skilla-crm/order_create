@@ -22,7 +22,7 @@ import {
     setName,
     setPhone
 } from '../../store/reducer/Customer/slice';
-import { setTime, setTimerDisabled } from '../../store/reducer/Performers/slice';
+import { setDate, setTime, setTimerDisabled } from '../../store/reducer/Performers/slice';
 import { setDefaultCordinate } from '../../store/reducer/Address/slice';
 import {
     setСompanyError, setPhoneError, setPhoneErrorFormat, setNameError, setTimeError, setAdressError,
@@ -73,14 +73,15 @@ const App = () => {
     const [existOrder, setExistOrder] = useState(false);
     const [id, setId] = useState(0);
     const [activeType, setActiveType] = useState('');
-    const { customer, payType, name, phone, noContactPerson, isBlack, debt, debtThreshold } = useSelector(selectorCustomer);
+    const [hiddenCustomer, setHiddenCustomer] = useState(false);
+    const { customer, payType, name, phone, noContactPerson, isBlack, isBlackOur, debt, debtThreshold } = useSelector(selectorCustomer);
     const { time, timerDisabled } = useSelector(selectorPerformers);
     const { service } = useSelector(selectorDetails);
     const { address, noAddress } = useSelector(selectorAddress);
     const { rate, rateWorker, orderSum } = useSelector(selectorRates);
     const { emailPasport, emailState } = useSelector(selectorManagers);
     const { phoneModal } = useSelector(selectorPreview);
-    console.log(service)
+   
 
     const location = useLocation();
     const path = location.pathname + location.search;
@@ -135,13 +136,17 @@ const App = () => {
             setId(idOrder)
             !loadParametrs && getDetails(idOrder)
                 .then(res => {
-                    console.log(res)
+            
                     const data = res.data.data;
                     const timeA = data.time == '' ? null : moment(`${data.time}`, 'HH:mm')
+                    const date = dayjs(data.date, 'YYYY-MM-DD').locale('ru');
+                 
                     dispatch(setTime(timeA == null ? null : dayjs(timeA).locale('ru')))
+                    dispatch(setDate(date))
                     timeA == null && dispatch(setTimerDisabled(true))
                     setOrderStatus(Number(data.order_status))
                     setData(data)
+
                     const company = parametrs?.companies?.find(el => el.id == data.company_id)
                     data.beznal == 1 && company && dispatch(setCustomer(company))
 
@@ -164,8 +169,7 @@ const App = () => {
                 dispatch(setDefaultCordinate([cordinate[1], cordinate[0]]))
             })
     }, [parametrs.city])
-    console.log(debt, debtThreshold)
-
+ 
     const handleValidation = () => {
         const companyError = payType == 1 && !customer?.id ? true : false;
         const phoneError = !noContactPerson && phone == '' ? true : false;
@@ -178,9 +182,8 @@ const App = () => {
         const paySummError = service == 8 && orderSum == '' ? true : false;
         const emailError = emailState && emailPasport == '' ? true : false;
         const emailErrorFormat = emailState && emailPasport !== '' && !emailValidate(emailPasport) ? true : false;
-        const isBlackError = payType == 1 && isBlack == 1 ? true : false;
+        const isBlackError = payType == 1 && isBlack == 1 && isBlackOur ? true : false;
         const isDebtError = payType == 1 && debt > 0 && debt > debtThreshold ? true : false;
-        console.log(emailState, emailErrorFormat, emailPasport, emailValidate(emailPasport))
 
         dispatch(setСompanyError(companyError))
         dispatch(setPhoneError(phoneError))
@@ -195,7 +198,6 @@ const App = () => {
         dispatch(setEmailErrorFormat(emailErrorFormat))
         dispatch(setIsBlackError(isBlackError))
         dispatch(setIsDebtError(isDebtError))
-        console.log(rateError, rateWorkerError, paySummError)
 
         if (!companyError &&
             !phoneError &&
@@ -219,7 +221,6 @@ const App = () => {
 
     const handleCreate = () => {
         const valid = handleValidation();
-        console.log('Валидация', valid)
         if (!valid) {
             return
         }
@@ -232,7 +233,7 @@ const App = () => {
                 setLoadCreate(false)
                 setTimeout(() => {
                     window.location.href = 'https://lk.skilla.ru/orders/'
-                }, 300)
+                })
             })
             .catch(err => console.log(err))
     }
@@ -251,7 +252,7 @@ const App = () => {
                 setLoadSave(false)
                 setTimeout(() => {
                     window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
-                }, 100)
+                })
             })
             .catch(err => console.log(err))
     }
@@ -266,13 +267,13 @@ const App = () => {
                     setLoadSave(false)
                 }, 200)
 
-               /*  setTimeout(() => {
-                    if (orderStatus == 0) {
-                        window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
-                    } else {
-                        window.location.href = 'https://lk.skilla.ru/orders/'
-                    }
-                }, 100) */
+                 setTimeout(() => {
+                     if (orderStatus == 0) {
+                         window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
+                     } else {
+                         window.location.href = 'https://lk.skilla.ru/orders/'
+                     }
+                 })
 
             })
             .catch(err => console.log(err))
@@ -288,7 +289,7 @@ const App = () => {
                 setLoadCreate(false)
                 setTimeout(() => {
                     window.location.href = 'https://lk.skilla.ru/orders/'
-                }, 100)
+                })
             })
             .catch(err => console.log(err))
     }
@@ -308,7 +309,7 @@ const App = () => {
                         </div>
                         }
 
-                        {<div className={`${s.buttons} ${s.buttons_2} ${existOrder && !loadDetail && orderStatus <= 1 && s.buttons_vis}`}>
+                        {<div className={`${s.buttons} ${s.buttons_2} ${existOrder && !loadDetail && orderStatus < 4 && s.buttons_vis}`}>
                             <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={'second'} load={loadSave} />
                             {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
                         </div>
@@ -321,8 +322,8 @@ const App = () => {
                             <div className={s.errors}>
                                 <ErrorWindow />
                             </div>
-                            {addCustomer && <AddCustomer setAddCustomer={setAddCustomer} />}
-                            {<Customer setAddCustomer={setAddCustomer}  addCustomer={addCustomer} />}
+                            {addCustomer && <AddCustomer setAddCustomer={setAddCustomer} setHiddenCustomer={setHiddenCustomer} />}
+                            {<Customer setAddCustomer={setAddCustomer} addCustomer={addCustomer} hiddenCustomer={hiddenCustomer} setHiddenCustomer={setHiddenCustomer} />}
 
                             <Performers />
                             <Details />

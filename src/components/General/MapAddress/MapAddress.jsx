@@ -13,7 +13,6 @@ const API_KEY_MAP = process.env.REACT_APP_API_KEY_MAP;
 const MapAddress = ({ lat, lng, defaultCordinate, width, height }) => {
     const mapRef = useRef();
 
-
     return (
         <YMaps
             query={{
@@ -29,8 +28,8 @@ const MapAddress = ({ lat, lng, defaultCordinate, width, height }) => {
                     controls: [],
                 }}
                 state={{
-                    center: lat ? [lat, lng] : defaultCordinate,
-                    zoom: lat ? 16 : 10,
+                    center: lat && lat !== '0.000000' ? [lat, lng] : defaultCordinate,
+                    zoom: lat && lat !== '0.000000' ? 16 : 10,
                     controls: []
                 }}
 

@@ -8,6 +8,8 @@ const initialState = {
     phone: '',
     noContactPerson: false,
     isBlack: 0,
+    isBlackOur: 0,
+    blackCreatorPartnership: '',
     debt: 0,
     debtThreshold: 0,
     contacts: [],
@@ -47,6 +49,14 @@ const CustomerSlice = createSlice({
             state.isBlack = action.payload;
         },
 
+        setIsBlackOur(state, action) {
+            state.isBlackOur = action.payload;
+        },
+
+        setIsBlackCreatorPartnership(state, action) {
+            state.blackCreatorPartnership = action.payload;
+        },
+
         setDebt(state, action) {
             state.debt = action.payload;
         },
@@ -77,6 +87,8 @@ export const {
     setName,
     setPhone,
     setIsBlack,
+    setIsBlackOur,
+    setIsBlackCreatorPartnership,
     setDebt,
     setDebtThreshold,
     setContacts,

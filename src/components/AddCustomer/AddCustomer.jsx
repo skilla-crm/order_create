@@ -17,6 +17,7 @@ import {
 import { PromptCustomer } from '../../constants/prompts';
 //utils
 import { emailValidate } from '../../utils/EmailValidate';
+import { handleСharter } from '../../utils/handleСharter';
 //context 
 import { ParametrsContext } from '../../contexts/UserContext';
 //slice
@@ -49,7 +50,7 @@ import InputEmail from '../General/Input/InputEmail';
 import InputNum from '../General/Input/InputNum';
 import InputSelect from '../General/Input/InputSelect';
 
-const AddCustomer = ({ setAddCustomer }) => {
+const AddCustomer = ({ setAddCustomer, setHiddenCustomer }) => {
     const dispatch = useDispatch();
     const companyData = useSelector(selectorAddCustomer);
     const { companies } = useSelector(selectorCustomer);
@@ -146,7 +147,8 @@ const AddCustomer = ({ setAddCustomer }) => {
 
     const handleCancel = () => {
         setAnim(false)
-        window.scroll({top: -340})
+        setHiddenCustomer(false)
+        window.scroll({ top: -340 })
         setTimeout(() => {
             setAddCustomer(false)
             dispatch(setInn(''))
@@ -159,11 +161,13 @@ const AddCustomer = ({ setAddCustomer }) => {
     }
 
     const handleChose = (data) => {
+        console.log(data)
         dispatch(setKpp(data?.kpp ? data.kpp : ''))
         dispatch(setName(data?.name?.short_with_opf))
         dispatch(setOgrn(data?.ogrn))
         dispatch(setDirector(data?.management?.name ? data?.management?.name : ''))
         dispatch(setJobTitle(data?.management?.post ? data?.management?.post : ''))
+        /*     handleСharter(data) */
         dispatch(setLegalBasis(''))
         dispatch(setAddress(`${data?.address?.data?.postal_code}, ${data?.address?.value}`))
         setOpenListInn(false)

@@ -503,6 +503,7 @@
     align-items: center;
     gap: 6px;
     overflow: hidden;
+    flex-shrink: 0;
     opacity: 0;
     height: 0;
     margin-top: -6px;
@@ -653,4 +654,6 @@
 
 .text_bold {
     font-weight: 600;
+    pointer-events: none;
+    cursor: grab !important;
 }

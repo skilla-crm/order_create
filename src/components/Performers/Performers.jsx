@@ -24,7 +24,7 @@ import { setTimeError } from '../../store/reducer/Validation/slice';
 import { selectorPerformers } from '../../store/reducer/Performers/selector';
 import { selectorAdditionalDates } from '../../store/reducer/AdditionalDates/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
-
+import { selectorDetails } from '../../store/reducer/Details/selector';
 
 const Performers = () => {
     const [proCalendar, setProCalendar] = useState(false);
@@ -36,6 +36,7 @@ const Performers = () => {
     const user = useContext(UserContext);
     const dispatch = useDispatch();
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
+    const { service } = useSelector(selectorDetails);
     const { additionalDates, disabledDates } = useSelector(selectorAdditionalDates);
     const { timeError } = useSelector(selectorValidation)
 
@@ -83,22 +84,22 @@ const Performers = () => {
                         errorText={'Выбери время'}
                     />
                 </div>
-                <Switch
+                {/* <Switch
                     text={SWITCH_NAME}
                     switchState={timerDisabled}
                     handleSwitch={handleTimerDisabled}
                     hidden={false}
-                />
+                /> */}
             </div>
 
-            <TabsNumbers
+            {service !== 8 && service !== 9 && <TabsNumbers
                 value={performersNum}
                 setValue={(data) => dispatch(setPerformersNum(data))}
                 sub={SUB_PERFORMERS}
                 max={100}
                 maxVis={8}
                 forPro={!user.pro}
-            />
+            />}
 
             <div className={`${s.container_sub} ${hiddenAddDates && s.hidden}`}>
                 <span className={s.sub}>{SUB_DATES}</span>

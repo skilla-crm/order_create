@@ -11,13 +11,11 @@ const InputNum = ({ sub, disabled, value, setValue, error, errorEmpity, maxValue
     useEffect(() => {
         disabled && setValue('')
     }, [disabled])
-    console.log(value, textValue)
 
     useEffect(() => {
-        console.log(value)
         errorEmpity && value == '' ? setErrorStateEmpity(true) : setErrorStateEmpity(false)
         const lastSymbol = value.toString().slice(-1);
-        (lastSymbol && lastSymbol == '.' || value == 0) ? setTextValue(value.toString()) : setTextValue(Number(parseFloat(value).toFixed(5)))
+        (lastSymbol && lastSymbol == '.' || value == 0) ? setTextValue(value.toString()) : setTextValue(Number(parseFloat(value).toFixed(4)))
     }, [errorEmpity, value])
 
     const handleValue = (e) => {

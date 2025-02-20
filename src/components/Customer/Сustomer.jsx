@@ -7,7 +7,7 @@ import { ReactComponent as IconInfoErr } from '../../images/icons/iconInfoErr.sv
 import { ReactComponent as IconInfoWarning } from '../../images/icons/iconWarning.svg';
 
 //Api
-import { getHistoryOrders, checkCompany, contactCompany } from '../../Api/Api';
+import { getHistoryOrders, checkCompany, contactCompany, checkPhone } from '../../Api/Api';
 //selector
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
@@ -19,10 +19,12 @@ import {
     setPhone,
     setNoContactPerson,
     setIsBlack,
+    setIsBlackOur,
+    setIsBlackCreatorPartnership,
     setDebt,
     setDebtThreshold,
     setContacts,
-    setIsSms
+    setIsSms,
 } from '../../store/reducer/Customer/slice';
 import { setСompanyError, setPhoneError, setPhoneErrorFormat, setNameError, setIsBlackError, setIsDebtError } from '../../store/reducer/Validation/slice';
 //constants
@@ -44,7 +46,7 @@ import Switch from '../General/Switch/Switch';
 import OrdersHistory from '../OrdersHistory/OrdersHistory';
 
 
-const Customer = ({ setAddCustomer, addCustomer }) => {
+const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustomer }) => {
     const [historyLoad, setHistoryLoad] = useState(false);
     const [historyList, setHistoryList] = useState([]);
     const [historyName, setHistoryName] = useState('');
@@ -52,12 +54,10 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
     const [beznal, setBeznal] = useState(true);
     const [loadBage, setLoadBage] = useState(false);
     const [loadWarning, setLoadWarning] = useState(false);
-    const [hiddenCustomer, setHiddenCustomer] = useState(false);
-    const { companies, customer, payType, name, phone, isBlack, debt, debtThreshold, contacts, noContactPerson } = useSelector(selectorCustomer);
+    const [loadWarningPhone, setLoadWarningPhone] = useState(false);
+    const { companies, customer, payType, name, phone, isBlack, isBlackOur, blackCreatorPartnership, debt, debtThreshold, contacts, noContactPerson } = useSelector(selectorCustomer);
     const { companyError, phoneError, nameError } = useSelector(selectorValidation)
     const dispatch = useDispatch();
-
-    console.log(useSelector(selectorValidation))
 
     useEffect(() => {
         payType == 1 ? setBeznal(true) : setBeznal(false)
@@ -71,20 +71,37 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
 
     useEffect(() => {
         !customer?.id && dispatch(setContacts([]))
-        dispatch(setIsBlack(0))
-        dispatch(setDebt(0))
-        dispatch(setDebtThreshold(0))
-        dispatch(setIsBlackError(false))
-        dispatch(setIsDebtError(false))
-    }, [customer])
+        if (beznal) {
+            dispatch(setIsBlack(0))
+            dispatch(setIsBlackOur(false))
+            dispatch(setDebt(0))
+            dispatch(setIsBlackCreatorPartnership(''))
+            dispatch(setDebtThreshold(0))
+            dispatch(setIsBlackError(false))
+            dispatch(setIsDebtError(false))
+            return
+        }
+    }, [customer, beznal])
+
+    useEffect(() => {
+        if (!beznal) {
+            dispatch(setIsBlack(0))
+            dispatch(setIsBlackOur(false))
+            dispatch(setIsBlackCreatorPartnership(''))
+            dispatch(setIsBlackError(false))
+            return
+        }
+    }, [beznal, phone])
 
     useEffect(() => {
         customer?.id && setLoadWarning(true)
         customer?.id && handleResetErrorCompany()
-        customer?.id && checkCompany(customer.id)
+        customer?.id && beznal && checkCompany(customer.id)
             .then(res => {
                 const data = res.data.data;
                 dispatch(setIsBlack(data.is_black))
+                dispatch(setIsBlackOur(data.our_partnership))
+                dispatch(setIsBlackCreatorPartnership(data.black_creator_partnership))
                 dispatch(setDebt(data.debt))
                 dispatch(setDebtThreshold(data.debt_threshold))
                 setTimeout(() => {
@@ -99,7 +116,24 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                 dispatch(setContacts(data))
             })
             .catch(err => console.log(err))
-    }, [customer])
+    }, [customer, beznal])
+
+
+    useEffect(() => {
+        !beznal && phone.length == 11 && setLoadWarningPhone(true)
+        !beznal && phone.length == 11 && checkPhone(phone)
+            .then(res => {
+                const data = res.data.data;
+                dispatch(setIsBlack(data.is_black))
+                dispatch(setIsBlackOur(data.our_partnership))
+                dispatch(setIsBlackCreatorPartnership(data.black_creator_partnership))
+                setTimeout(() => {
+                    setLoadWarningPhone(false)
+                }, 150)
+            })
+            .catch(err => console.log(err))
+
+    }, [phone, beznal])
 
     useEffect(() => {
         if (!customer.id && payType == 1) {
@@ -177,17 +211,13 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
 
     }, [phone, beznal])
 
-    useEffect(() => {
-        !addCustomer && setHiddenCustomer(false)
-    }, [addCustomer])
 
     const handleAdd = () => {
-        setHiddenCustomer(true)
-
+        setAddCustomer(true)
         setTimeout(() => {
-            setAddCustomer(true)
-        }, 500)
-       
+            setHiddenCustomer(true)
+        }, 200)
+
     }
 
     const handleContactPersonState = () => {
@@ -241,7 +271,7 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                                 list={companies}
                                 value={customer?.id}
                                 setValue={(data) => dispatch(setCustomer(data))}
-                                setAddCustomer={setAddCustomer}
+                                handleAdd={handleAdd}
                                 payType={payType}
                                 error={companyError}
                                 errorText={'Выбери заказчика'}
@@ -251,9 +281,14 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                                 <div className={`${s.loader}  ${s.loader_error} ${loadWarning && s.loader_vis}`}>
                                     {loadWarning && <div className={s.loader_anim}><IconLoader /></div>}
                                 </div>
-                                <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && !loadWarning && customer.id && s.loader_vis}`}>
+                                <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && isBlackOur && !loadWarning && customer.id && s.loader_vis}`}>
                                     <IconInfoErr />
                                     <p>Заказчик в черном списке</p>
+                                </div>
+
+                                <div className={`${s.loader} ${s.loader_warning} ${isBlack == 1 && !isBlackOur && !loadWarning && customer.id && s.loader_vis}`}>
+                                    <IconInfoWarning />
+                                    <p>В черном списке {blackCreatorPartnership !== '' && `у партнера ${blackCreatorPartnership}`}</p>
                                 </div>
 
                                 <div className={`${s.loader} ${s.loader_error} ${debt > debtThreshold && !loadWarning && customer.id && s.loader_vis}`}>
@@ -297,6 +332,22 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                                     maxLength={28}
                                 />
                             </div>
+
+                            {!beznal && <div className={`${s.warnings} ${s.warnings_phone}`}>
+                                <div className={`${s.loader}  ${s.loader_error} ${loadWarningPhone && s.loader_vis}`}>
+                                    {loadWarningPhone && <div className={s.loader_anim}><IconLoader /></div>}
+                                </div>
+                                <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && isBlackOur && !loadWarningPhone && phone.length == 11 && s.loader_vis}`}>
+                                    <IconInfoErr />
+                                    <p>Заказчик в черном списке</p>
+                                </div>
+
+                                <div className={`${s.loader} ${s.loader_warning} ${isBlack == 1 && !isBlackOur && !loadWarningPhone && phone.length == 11 && s.loader_vis}`}>
+                                    <IconInfoWarning />
+                                    <p>В черном списке {blackCreatorPartnership !== '' && `у партнера ${blackCreatorPartnership}`}</p>
+                                </div>
+                            </div>
+                            }
                             <div className={s.switch}>
                                 <Switch
                                     text={SWITCH_NAME}
@@ -313,7 +364,8 @@ const Customer = ({ setAddCustomer, addCustomer }) => {
                             {historyLoad && <div className={s.loader_anim}><IconLoader /></div>}
                             {historyLoad && <p>Проверяем историю заказов</p>}
                             {!historyLoad && historyList?.length == 0 && <IconInfo />}
-                            {!historyLoad && historyList?.length == 0 && <p>Заказы не найдены</p>}
+                            {!historyLoad && historyList?.length == 0 && <p>Заказы не найдены{phone.length == 11 && `, клиент получить СМС уведомление о заказе`}</p>}
+                            {!historyLoad && historyList?.length == 0 && <p></p>}
                         </div>
                     </div>
 

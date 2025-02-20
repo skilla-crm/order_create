@@ -23,7 +23,6 @@ const InputData = ({ sub, nosub, setDate, date, disabledDates }) => {
         const today = dayjs(date).format('D MM YYYY') == dayjs().format('D MM YYYY')
         const tomorrow = dayjs(date).format('MM YYYY') == dayjs().format('MM YYYY') && dayjs(date).format('D') - dayjs().format('D') == 1;
         const dayAfterTomorrow = dayjs(date).format('MM YYYY') == dayjs().format('MM YYYY') && dayjs(date).format('D') - dayjs().format('D') == 2;
-        console.log(dayjs(date).format('D MM YYYY'), dayjs().format('D MM YYYY'))
 
         if (date && currentYear && today) {
             const dateFormat = dayjs(date).format(', D MMMM');

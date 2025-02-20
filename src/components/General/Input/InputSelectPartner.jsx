@@ -13,7 +13,6 @@ const InputSelectPartner = ({ sub, list, value, setValue, type, position, defaul
         if (value !== null && value !== 0) {
             const result = list?.find(el => el.to_id == value)
             setName(result?.name)
-            console.log(result)
             const rateNal = [{ id: 1, text: result?.nal_price }, { id: 2, text: result?.nal_price2 }, { id: 3, text: result?.nal_price3 }].filter(el => el.text !== 0)
             const rateBezal = [{ id: 1, text: result?.beznal_price }, { id: 2, text: result?.beznal_price2 }, { id: 3, text: result?.beznal_price3 }].filter(el => el.text !== 0)
             payType == 1 ? setPartnerRates(rateBezal) : setPartnerRates(rateNal)
