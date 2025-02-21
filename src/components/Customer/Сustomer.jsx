@@ -248,6 +248,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                 setTimeout(() => {
                     setHistoryLoad(false)
                     setHistoryList(data);
+                    setHistoryListPhone(data)
                 }, 350)
             })
     }
