@@ -62,6 +62,7 @@ const AddCustomer = ({ setAddCustomer, setHiddenCustomer }) => {
     const [kppValidate, setKppValidate] = useState(false);
     const [existCompany, setExistCompany] = useState(false);
 
+
     useEffect(() => {
         setTimeout(() => {
             setAnim(true)
@@ -167,8 +168,8 @@ const AddCustomer = ({ setAddCustomer, setHiddenCustomer }) => {
         dispatch(setOgrn(data?.ogrn))
         dispatch(setDirector(data?.management?.name ? data?.management?.name : ''))
         dispatch(setJobTitle(data?.management?.post ? data?.management?.post : ''))
-        /*     handleСharter(data) */
-        dispatch(setLegalBasis(''))
+        const legalBaseText = handleСharter(data)
+        dispatch(setLegalBasis(legalBaseText))
         dispatch(setAddress(`${data?.address?.data?.postal_code}, ${data?.address?.value}`))
         setOpenListInn(false)
     }
