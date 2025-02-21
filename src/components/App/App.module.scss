@@ -16,6 +16,10 @@
         opacity: 1;
     }
 
+    &_disabled {
+        pointer-events: none;
+    }
+
     a {
         color: inherit;
         text-decoration: none;

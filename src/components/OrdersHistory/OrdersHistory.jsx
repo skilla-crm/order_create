@@ -59,6 +59,9 @@ const Item = ({ el }) => {
     const companies = useContext(ParametrsContext).companies;
     const { setData } = useWriteOrderDataHook();
     const dispatch = useDispatch();
+    const yearNow = dayjs().locale('ru').format('YYYY')
+    const year = dayjs(el?.date).locale('ru').format('YYYY')
+    console.log(yearNow)
 
 
     const handleRetry = () => {
@@ -79,7 +82,8 @@ const Item = ({ el }) => {
             </button>
 
             <div className={`${s.block} ${s.block_date}`}>
-                <p>{dayjs(el?.date).locale('ru').format('D MMMM')}</p>
+                {yearNow == year && <p>{dayjs(el?.date).locale('ru').format('D MMMM')}</p>}
+                {yearNow !== year && <p>{dayjs(el?.date).locale('ru').format('D.MM.YYYY')}</p>}
                 <span>
                     <IconBuilder />
                     {el?.worker_count}
@@ -89,7 +93,7 @@ const Item = ({ el }) => {
             <div className={`${s.block} ${s.block_address}`}>
                 <p>{el?.load_address}{el.home !== '' && ','} {el?.home} {el?.k} </p>
                 <p className={s.second}>
-                   {el?.notes}
+                    {el?.notes}
                 </p>
             </div>
 

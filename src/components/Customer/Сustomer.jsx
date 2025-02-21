@@ -49,6 +49,7 @@ import OrdersHistory from '../OrdersHistory/OrdersHistory';
 const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustomer }) => {
     const [historyLoad, setHistoryLoad] = useState(false);
     const [historyList, setHistoryList] = useState([]);
+    const [historyListPhone, setHistoryListPhone] = useState([]);
     const [historyName, setHistoryName] = useState('');
     const [phoneWithMask, setPhoneWithMask] = useState('');
     const [beznal, setBeznal] = useState(true);
@@ -113,7 +114,8 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
         customer?.id && contactCompany(customer.id)
             .then(res => {
                 const data = res.data.data;
-                dispatch(setContacts(data))
+                console.log(data)
+                Array.isArray(data) ? dispatch(setContacts(data)) : dispatch(setContacts([]))
             })
             .catch(err => console.log(err))
     }, [customer, beznal])
@@ -135,29 +137,29 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
     }, [phone, beznal])
 
+    /*  useEffect(() => {
+         if (!customer.id && payType == 1) {
+             setLoadBage(false)
+             return
+         }
+ 
+         if (phone?.length !== 11 && payType !== 1) {
+             setLoadBage(false)
+             return
+         }
+     }, [customer, payType, phone]) */
+
+
     useEffect(() => {
-        if (!customer.id && payType == 1) {
-            setLoadBage(false)
-            return
-        }
-
-        if (phone?.length !== 11 && payType !== 1) {
-            setLoadBage(false)
-            return
-        }
-    }, [customer, payType, phone])
-
-
-    useEffect(() => {
-        if ((phone?.length !== 11) && !beznal) {
+       /*  if ((phone?.length !== 11) && !beznal) {
             setHistoryList([])
             setHistoryName('')
             return
-        }
+        } */
 
         if (beznal && !customer.id) {
-            setHistoryList([])
-            setHistoryName('')
+            /*   setHistoryList([]) */
+            /*  setHistoryName('') */
             return
         }
     }, [phone, customer, beznal])
@@ -165,14 +167,14 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     useEffect(() => {
         if (beznal && customer.id) {
             setHistoryName(customer.name)
-            setHistoryList([])
             setHistoryLoad(true)
             setLoadBage(true)
             getHistoryOrders(payType, customer.id)
                 .then(res => {
                     const data = res.data.data;
-
-
+                    if (data.length == 0) {
+                        setHistoryLoad(false)
+                    }
                     setTimeout(() => {
                         data.length > 0 && setLoadBage(false)
                     }, 200)
@@ -187,29 +189,68 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
         }
     }, [customer, beznal])
 
+    /*    useEffect(() => {
+           if (beznal && !historyLoad && !historyList.length && phone.length == 11) {
+               setHistoryName(phoneWithMask)
+               setHistoryList([])
+               setHistoryLoad(true)
+               setLoadBage(true)
+               getHistoryOrders(2, phone)
+                   .then(res => {
+                       const data = res.data.data;
+   
+   
+                       setTimeout(() => {
+                           data.length > 0 && setLoadBage(false)
+                       }, 200)
+   
+                       setTimeout(() => {
+                           setHistoryList(data);
+                           setHistoryLoad(false)
+                       }, 350)
+   
+                   })
+               return
+           }
+       }, [beznal, phone, historyLoad]) */
+
+
     useEffect(() => {
-        if (!beznal && phone?.length == 11) {
-            setHistoryName(phoneWithMask)
-            setHistoryList([])
-            setHistoryLoad(true)
-            setLoadBage(true)
-            getHistoryOrders(payType, phone)
-                .then(res => {
-                    const data = res.data.data;
-
-                    setTimeout(() => {
-                        data.length > 0 && setLoadBage(false)
-                    }, 200)
-
-                    setTimeout(() => {
-                        setHistoryLoad(false)
-                        setHistoryList(data);
-                    }, 350)
-                })
+        if (phone?.length == 11 && (!customer.id || (customer.id && historyList.length == 0))) {
+            handleHistoryPhone()
             return
         }
 
-    }, [phone, beznal])
+        if (phone?.length !== 11 && !customer.id) {
+            setHistoryList([])
+            return
+        }
+
+        if (phone?.length !== 11 && customer.id && historyList.length == 0) {
+            setHistoryList([])
+            return
+        }
+
+    }, [phone, customer])
+
+    const handleHistoryPhone = () => {
+        setHistoryName(phoneWithMask)
+        setHistoryLoad(true)
+        setLoadBage(true)
+        getHistoryOrders(2, phone)
+            .then(res => {
+                const data = res.data.data;
+
+                setTimeout(() => {
+                    data.length > 0 && setLoadBage(false)
+                }, 200)
+
+                setTimeout(() => {
+                    setHistoryLoad(false)
+                    setHistoryList(data);
+                }, 350)
+            })
+    }
 
 
     const handleAdd = () => {
@@ -291,12 +332,12 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                                     <p>В черном списке {blackCreatorPartnership !== '' && `у партнера ${blackCreatorPartnership}`}</p>
                                 </div>
 
-                                <div className={`${s.loader} ${s.loader_error} ${debt > debtThreshold && !loadWarning && customer.id && s.loader_vis}`}>
+                                <div className={`${s.loader} ${s.loader_error} ${debt > 0 && debtThreshold > 0 && debt > debtThreshold && !loadWarning && customer.id && s.loader_vis}`}>
                                     <IconInfoErr />
                                     {debt > debtThreshold && <p>Превышен лимит задолженности {addSpaceNumber(debtThreshold)} руб.</p>}
                                 </div>
 
-                                <div className={`${s.loader} ${s.loader_warning} ${debt <= debtThreshold && debt !== 0 && !loadWarning && customer.id && s.loader_vis}`}>
+                                <div className={`${s.loader} ${s.loader_warning} ${debt > 0 && debtThreshold > 0 && debt <= debtThreshold && debt !== 0 && !loadWarning && customer.id && s.loader_vis}`}>
                                     <IconInfoWarning />
                                     {debt <= debtThreshold && debt !== 0 && <p>Задолженность {addSpaceNumber(debt)} ₽</p>}
                                 </div>
@@ -309,7 +350,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                                 <InputPhone
                                     sub={SUB_PHONE}
                                     disabled={noContactPerson}
-                                    contacts={contacts.filter((el) => el.phone !== '')}
+                                    contacts={contacts?.filter((el) => el.phone !== '')}
                                     value={phone}
                                     setPhoneWithMask={setPhoneWithMask}
                                     setValue={(data) => dispatch(setPhone(data))}

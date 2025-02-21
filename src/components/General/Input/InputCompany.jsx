@@ -65,7 +65,6 @@ const InputCompany = ({ sub, list, value, setValue, handleAdd, payType, error, e
             setListScroll(true)
         }, 100)
         setFieldFocus(true)
-        value !== '' && setSearchResult(list)
     }
 
 

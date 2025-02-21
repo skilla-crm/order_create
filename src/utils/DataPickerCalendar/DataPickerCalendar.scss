@@ -59,6 +59,11 @@
     color: var(--color-text-primary) !important;
 }
 
+.Mui-disabled:not(.Mui-selected) {
+    pointer-events: none;
+    color: #71869D !important;
+}
+
 
 
 

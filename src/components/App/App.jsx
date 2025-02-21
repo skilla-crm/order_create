@@ -81,7 +81,7 @@ const App = () => {
     const { rate, rateWorker, orderSum } = useSelector(selectorRates);
     const { emailPasport, emailState } = useSelector(selectorManagers);
     const { phoneModal } = useSelector(selectorPreview);
-   
+
 
     const location = useLocation();
     const path = location.pathname + location.search;
@@ -136,11 +136,11 @@ const App = () => {
             setId(idOrder)
             !loadParametrs && getDetails(idOrder)
                 .then(res => {
-            
+
                     const data = res.data.data;
                     const timeA = data.time == '' ? null : moment(`${data.time}`, 'HH:mm')
                     const date = dayjs(data.date, 'YYYY-MM-DD').locale('ru');
-                 
+
                     dispatch(setTime(timeA == null ? null : dayjs(timeA).locale('ru')))
                     dispatch(setDate(date))
                     timeA == null && dispatch(setTimerDisabled(true))
@@ -169,7 +169,7 @@ const App = () => {
                 dispatch(setDefaultCordinate([cordinate[1], cordinate[0]]))
             })
     }, [parametrs.city])
- 
+
     const handleValidation = () => {
         const companyError = payType == 1 && !customer?.id ? true : false;
         const phoneError = !noContactPerson && phone == '' ? true : false;
@@ -183,7 +183,7 @@ const App = () => {
         const emailError = emailState && emailPasport == '' ? true : false;
         const emailErrorFormat = emailState && emailPasport !== '' && !emailValidate(emailPasport) ? true : false;
         const isBlackError = payType == 1 && isBlack == 1 && isBlackOur ? true : false;
-        const isDebtError = payType == 1 && debt > 0 && debt > debtThreshold ? true : false;
+        const isDebtError = payType == 1 && debt > 0 && debtThreshold > 0 && debt > debtThreshold ? true : false;
 
         dispatch(setСompanyError(companyError))
         dispatch(setPhoneError(phoneError))
@@ -267,13 +267,13 @@ const App = () => {
                     setLoadSave(false)
                 }, 200)
 
-                 setTimeout(() => {
-                     if (orderStatus == 0) {
-                         window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
-                     } else {
-                         window.location.href = 'https://lk.skilla.ru/orders/'
-                     }
-                 })
+                setTimeout(() => {
+                    if (orderStatus == 0) {
+                        window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
+                    } else {
+                        window.location.href = 'https://lk.skilla.ru/orders/'
+                    }
+                })
 
             })
             .catch(err => console.log(err))
@@ -299,7 +299,7 @@ const App = () => {
     return (
         <UserContext.Provider value={{ pro, role }}>
             <ParametrsContext.Provider value={parametrs}>
-                <div className={`${s.app} ${anim && !loadDetail && s.app_anim}`}>
+                <div className={`${s.app} ${anim && !loadDetail && s.app_anim} ${loadParametrs && !loadDetail && s.app_disabled}`}>
                     <div className={s.header}>
                         <h2 className={s.title}>Создание заказа</h2>
                         {<div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>

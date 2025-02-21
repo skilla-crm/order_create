@@ -2,7 +2,7 @@ import './MultiDatePicker.scss';
 import { Calendar } from "react-multi-date-picker"
 import { getAllDatesInRange } from 'react-multi-date-picker';
 import transition from "react-element-popper/animations/transition"
-const weekDays = ["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"]
+const weekDays = ["ВС", "ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"]
 const months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"]
 
 const MultiDatePicker = ({ type, dates, setDates, setAllDatesRange }) => {
@@ -14,6 +14,8 @@ const MultiDatePicker = ({ type, dates, setDates, setAllDatesRange }) => {
         type == 2 && setAllDatesRange(arr.slice(0, 20))
     }
 
+    console.log(dates)
+
     return (
         <Calendar
             multiple
@@ -21,11 +23,12 @@ const MultiDatePicker = ({ type, dates, setDates, setAllDatesRange }) => {
             numberOfMonths={2}
             weekDays={weekDays}
             months={months}
-            disableYearPicker={true}
-            hideYear={true}
+            disableYearPicker={false}
+            hideYear={false}
             disableMonthPicker={true}
-
             value={dates}
+            weekStartDayIndex={1}
+            rangeHover={true}
             onChange={handleChangeDates}
             animations={[
                 transition({ duration: 100, from: 1 })
