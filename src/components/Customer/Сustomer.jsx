@@ -63,7 +63,6 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     const { companies, customer, payType, name, phone, isBlack, isBlackOur, blackCreatorPartnership, debt, debtThreshold, contacts, noContactPerson } = useSelector(selectorCustomer);
     const { companyError, phoneError, nameError } = useSelector(selectorValidation)
     const dispatch = useDispatch();
-    console.log(historyName)
 
     useEffect(() => {
         payType == 1 ? setBeznal(true) : setBeznal(false)
@@ -72,8 +71,8 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     }, [payType])
 
     useEffect(() => {
-        phone?.length == 11 && historyList?.length == 0 ? dispatch(setIsSms(true)) : dispatch(setIsSms(false))
-    }, [historyList, phone])
+        phone?.length == 11 && (historyList?.length == 0 || historyListPhone?.length == 0) ? dispatch(setIsSms(true)) : dispatch(setIsSms(false))
+    }, [historyList, historyListPhone, phone])
 
     useEffect(() => {
         !customer?.id && dispatch(setContacts([]))
@@ -158,7 +157,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
             setTimeout(() => {
                 setLoadBage(false)
             }, 300)
-           
+
             return
         }
     }, [customer, payType, phone])
