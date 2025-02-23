@@ -18,6 +18,7 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
     const [onFocus, setOnFocus] = useState(false);
     const [openMap, setOpenMap] = useState(false);
     const listRef = useRef();
+    console.log(address)
 
     useEffect(() => {
         address.city == '' && setOpenMap(false)

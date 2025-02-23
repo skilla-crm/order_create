@@ -44,21 +44,26 @@ import InputCompany from '../General/Input/InputCompany';
 import InputPhone from '../General/Input/InputPhone';
 import Switch from '../General/Switch/Switch';
 import OrdersHistory from '../OrdersHistory/OrdersHistory';
+import Tooltip from '../General/Tooltip/Tooltip';
 
 
 const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustomer }) => {
     const [historyLoad, setHistoryLoad] = useState(false);
     const [historyList, setHistoryList] = useState([]);
     const [historyListPhone, setHistoryListPhone] = useState([]);
+    const [historyListCompany, setHistoryListCompany] = useState([]);
     const [historyName, setHistoryName] = useState('');
     const [phoneWithMask, setPhoneWithMask] = useState('');
     const [beznal, setBeznal] = useState(true);
     const [loadBage, setLoadBage] = useState(false);
     const [loadWarning, setLoadWarning] = useState(false);
     const [loadWarningPhone, setLoadWarningPhone] = useState(false);
+    const [tooltip, setTooltip] = useState(false)
+    const [blackComment, setBlackComment] = useState('')
     const { companies, customer, payType, name, phone, isBlack, isBlackOur, blackCreatorPartnership, debt, debtThreshold, contacts, noContactPerson } = useSelector(selectorCustomer);
     const { companyError, phoneError, nameError } = useSelector(selectorValidation)
     const dispatch = useDispatch();
+    console.log(historyName)
 
     useEffect(() => {
         payType == 1 ? setBeznal(true) : setBeznal(false)
@@ -77,6 +82,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
             dispatch(setIsBlackOur(false))
             dispatch(setDebt(0))
             dispatch(setIsBlackCreatorPartnership(''))
+            setBlackComment('')
             dispatch(setDebtThreshold(0))
             dispatch(setIsBlackError(false))
             dispatch(setIsDebtError(false))
@@ -89,6 +95,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
             dispatch(setIsBlack(0))
             dispatch(setIsBlackOur(false))
             dispatch(setIsBlackCreatorPartnership(''))
+            setBlackComment('')
             dispatch(setIsBlackError(false))
             return
         }
@@ -105,6 +112,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                 dispatch(setIsBlackCreatorPartnership(data.black_creator_partnership))
                 dispatch(setDebt(data.debt))
                 dispatch(setDebtThreshold(data.debt_threshold))
+                setBlackComment(data.black_comment)
                 setTimeout(() => {
                     setLoadWarning(false)
                 }, 150)
@@ -129,6 +137,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                 dispatch(setIsBlack(data.is_black))
                 dispatch(setIsBlackOur(data.our_partnership))
                 dispatch(setIsBlackCreatorPartnership(data.black_creator_partnership))
+                setBlackComment(data.black_comment)
                 setTimeout(() => {
                     setLoadWarningPhone(false)
                 }, 150)
@@ -137,117 +146,96 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
     }, [phone, beznal])
 
-    /*  useEffect(() => {
-         if (!customer.id && payType == 1) {
-             setLoadBage(false)
-             return
-         }
- 
-         if (phone?.length !== 11 && payType !== 1) {
-             setLoadBage(false)
-             return
-         }
-     }, [customer, payType, phone]) */
-
-
     useEffect(() => {
-       /*  if ((phone?.length !== 11) && !beznal) {
-            setHistoryList([])
-            setHistoryName('')
-            return
-        } */
-
-        if (beznal && !customer.id) {
-            /*   setHistoryList([]) */
-            /*  setHistoryName('') */
+        if (!customer.id && payType == 1) {
+            setTimeout(() => {
+                setLoadBage(false)
+            }, 300)
             return
         }
-    }, [phone, customer, beznal])
 
-    useEffect(() => {
-        if (beznal && customer.id) {
-            setHistoryName(customer.name)
-            setHistoryLoad(true)
-            setLoadBage(true)
-            getHistoryOrders(payType, customer.id)
-                .then(res => {
-                    const data = res.data.data;
-                    if (data.length == 0) {
-                        setHistoryLoad(false)
-                    }
-                    setTimeout(() => {
-                        data.length > 0 && setLoadBage(false)
-                    }, 200)
-
-                    setTimeout(() => {
-                        setHistoryList(data);
-                        setHistoryLoad(false)
-                    }, 350)
-
-                })
+        if (phone?.length !== 11 && payType !== 1) {
+            setTimeout(() => {
+                setLoadBage(false)
+            }, 300)
+           
             return
         }
-    }, [customer, beznal])
-
-    /*    useEffect(() => {
-           if (beznal && !historyLoad && !historyList.length && phone.length == 11) {
-               setHistoryName(phoneWithMask)
-               setHistoryList([])
-               setHistoryLoad(true)
-               setLoadBage(true)
-               getHistoryOrders(2, phone)
-                   .then(res => {
-                       const data = res.data.data;
-   
-   
-                       setTimeout(() => {
-                           data.length > 0 && setLoadBage(false)
-                       }, 200)
-   
-                       setTimeout(() => {
-                           setHistoryList(data);
-                           setHistoryLoad(false)
-                       }, 350)
-   
-                   })
-               return
-           }
-       }, [beznal, phone, historyLoad]) */
-
+    }, [customer, payType, phone])
 
     useEffect(() => {
-        if (phone?.length == 11 && (!customer.id || (customer.id && historyList.length == 0))) {
+        if (phone?.length == 11 && !customer?.id) {
             handleHistoryPhone()
             return
         }
 
-        if (phone?.length !== 11 && !customer.id) {
+        if (phone?.length !== 11 && !customer?.id) {
             setHistoryList([])
             return
         }
 
-        if (phone?.length !== 11 && customer.id && historyList.length == 0) {
-            setHistoryList([])
+        if (phone?.length !== 11 && customer?.id) {
+            setHistoryList(historyListCompany)
+            historyListCompany.length == 0 && setLoadBage(true)
             return
         }
-
     }, [phone, customer])
 
+    useEffect(() => {
+        if (customer?.id) {
+            handleHistory()
+            return
+        }
+
+        if (phone?.length !== 11 && customer?.id) {
+            handleHistory()
+            return
+        }
+    }, [customer])
+
+    const handleHistory = () => {
+
+        setHistoryList([])
+        setHistoryLoad(true)
+        setLoadBage(true)
+        getHistoryOrders(1, customer?.id)
+            .then(res => {
+                const data = res.data.data;
+                setHistoryName(customer?.name)
+                setTimeout(() => {
+                    data.length > 0 && setLoadBage(false)
+                }, 300)
+
+                setTimeout(() => {
+                    setHistoryLoad(false)
+                    setHistoryList(data)
+                    setHistoryListCompany(data)
+                    if (data.length == 0 && historyListPhone?.length !== 0) {
+                        setHistoryList(historyListPhone)
+                        setLoadBage(false)
+                        setHistoryName(phoneWithMask)
+                        return
+                    }
+                }, 350)
+            })
+    }
+
     const handleHistoryPhone = () => {
-        setHistoryName(phoneWithMask)
+        setHistoryList([])
+        console.log(phoneWithMask)
         setHistoryLoad(true)
         setLoadBage(true)
         getHistoryOrders(2, phone)
             .then(res => {
                 const data = res.data.data;
-
+                setHistoryName(phoneWithMask)
                 setTimeout(() => {
                     data.length > 0 && setLoadBage(false)
-                }, 200)
+                }, 300)
 
                 setTimeout(() => {
                     setHistoryLoad(false)
-                    setHistoryList(data);
+                    setHistoryList(data)
                     setHistoryListPhone(data)
                 }, 350)
             })
@@ -287,6 +275,14 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
         dispatch(setNameError(false))
     }
 
+    const handleOpenTooltip = () => {
+        setTooltip(true)
+    }
+
+    const handleCloseTooltip = () => {
+        setTooltip(false)
+    }
+
     return (
         <div className={`${s.window} ${hiddenCustomer && s.window_hidden}`}>
             <div className={s.customer}>
@@ -320,17 +316,26 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                             />
 
                             <div className={s.warnings}>
+                                {tooltip && <Tooltip text={!isBlackOur ? blackCreatorPartnership : ''} comment={blackComment} />}
                                 <div className={`${s.loader}  ${s.loader_error} ${loadWarning && s.loader_vis}`}>
                                     {loadWarning && <div className={s.loader_anim}><IconLoader /></div>}
                                 </div>
-                                <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && isBlackOur && !loadWarning && customer.id && s.loader_vis}`}>
+                                <div
+                                    onMouseEnter={handleOpenTooltip}
+                                    onMouseLeave={handleCloseTooltip}
+                                    className={`${s.loader} ${s.loader_error} ${s.pointer} ${isBlack == 1 && isBlackOur && !loadWarning && customer.id && s.loader_vis}`}
+                                >
                                     <IconInfoErr />
                                     <p>Заказчик в черном списке</p>
                                 </div>
 
-                                <div className={`${s.loader} ${s.loader_warning} ${isBlack == 1 && !isBlackOur && !loadWarning && customer.id && s.loader_vis}`}>
+                                <div
+                                    onMouseEnter={handleOpenTooltip}
+                                    onMouseLeave={handleCloseTooltip}
+                                    className={`${s.loader} ${s.loader_warning} ${s.pointer} ${isBlack == 1 && !isBlackOur && !loadWarning && customer.id && s.loader_vis}`}
+                                >
                                     <IconInfoWarning />
-                                    <p>В черном списке {blackCreatorPartnership !== '' && `у партнера ${blackCreatorPartnership}`}</p>
+                                    <p>В черном списке {blackCreatorPartnership !== '' && `у партнера`}</p>
                                 </div>
 
                                 <div className={`${s.loader} ${s.loader_error} ${debt > 0 && debtThreshold > 0 && debt > debtThreshold && !loadWarning && customer.id && s.loader_vis}`}>
@@ -376,17 +381,26 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                             </div>
 
                             {!beznal && <div className={`${s.warnings} ${s.warnings_phone}`}>
+                                {tooltip && <Tooltip text={!isBlackOur ? blackCreatorPartnership : ''} comment={blackComment} />}
                                 <div className={`${s.loader}  ${s.loader_error} ${loadWarningPhone && s.loader_vis}`}>
                                     {loadWarningPhone && <div className={s.loader_anim}><IconLoader /></div>}
                                 </div>
-                                <div className={`${s.loader} ${s.loader_error} ${isBlack == 1 && isBlackOur && !loadWarningPhone && phone.length == 11 && s.loader_vis}`}>
+                                <div
+                                    onMouseEnter={handleOpenTooltip}
+                                    onMouseLeave={handleCloseTooltip}
+                                    className={`${s.loader} ${s.loader_error} ${s.pointer} ${isBlack == 1 && isBlackOur && !loadWarningPhone && phone.length == 11 && s.loader_vis}`}
+                                >
                                     <IconInfoErr />
                                     <p>Заказчик в черном списке</p>
                                 </div>
 
-                                <div className={`${s.loader} ${s.loader_warning} ${isBlack == 1 && !isBlackOur && !loadWarningPhone && phone.length == 11 && s.loader_vis}`}>
+                                <div
+                                    onMouseEnter={handleOpenTooltip}
+                                    onMouseLeave={handleCloseTooltip}
+                                    className={`${s.loader} ${s.loader_warning} ${s.pointer} ${isBlack == 1 && !isBlackOur && !loadWarningPhone && phone.length == 11 && s.loader_vis}`}
+                                >
                                     <IconInfoWarning />
-                                    <p>В черном списке {blackCreatorPartnership !== '' && `у партнера ${blackCreatorPartnership}`}</p>
+                                    <p>В черном списке {blackCreatorPartnership !== '' && `у партнера`}</p>
                                 </div>
                             </div>
                             }

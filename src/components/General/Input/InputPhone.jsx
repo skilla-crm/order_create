@@ -9,16 +9,23 @@ const InputPhone = ({ sub, disabled, value, setValue, setValueName, contacts, er
     const [openContacts, setOpenContacts] = useState(false);
     const listRef = useRef();
 
+
     const handleChangeValue = (e) => {
         const value = e.currentTarget.value;
         const regex = /[0-9]/g;
-        const cleanValue = value?.match(regex)?.join('');
         setPhoneWithMask(value)
+        console.log(value)
+        const cleanValue = value?.match(regex)?.join('');
         setValue(!cleanValue ? '' : cleanValue)
         cleanValue?.length > 1 && handleResetError()
     }
 
-   
+    useEffect(() => {
+        console.log(value.length)
+        value.length == 11 && setPhoneWithMask(`+${value.slice(0, 1)} (${value.slice(1, 4)}) ${value.slice(4, 7)}-${value.slice(7, 9)}-${value.slice(9, 11)}`)
+        value.length !== 11 && setPhoneWithMask('')
+    }, [value])
+
 
     useEffect(() => {
         !error && setErrorState(false)
@@ -31,11 +38,13 @@ const InputPhone = ({ sub, disabled, value, setValue, setValueName, contacts, er
     const handleFocus = () => {
         setErrorState(false)
         setOpenContacts(true)
-      
+
     }
+
 
     const handleChoseContact = (data) => {
         setValue(data.phone)
+        data.phone.length == 11 && setPhoneWithMask(`+${data.phone.slice(0, 1)} (${data.phone.slice(1, 4)}) ${data.phone.slice(4, 7)}-${data.phone.slice(7, 9)}-${data.phone.slice(9, 11)}`)
         setValueName(data.name)
         setOpenContacts(false)
     }

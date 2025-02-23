@@ -13,7 +13,7 @@ import InputNumList from '../../General/Input/InputNumList';
 import { deleteAdditionalDates, editAdditionalDates } from '../../../store/reducer/AdditionalDates/slice';
 
 
-const AdditionalDate = ({ id, performers, date, time, disabledDates, setProType, setHiddenAddDates }) => {
+const AdditionalDate = ({ id, performers, date, time, disabledDates, setProType, setHiddenAddDates, service }) => {
     const [anim, setAnim] = useState(true)
     const [performersNum, setPerformersNum] = useState(performers);
     const [dateEdit, setDateEdit] = useState(date);
@@ -27,6 +27,10 @@ const AdditionalDate = ({ id, performers, date, time, disabledDates, setProType,
             setFirstLoad(false)
         }, 150)
     }, [])
+
+    useEffect(() => {
+        service == 8 && setPerformersNum(1)
+    }, [service])
 
 
     useEffect(() => {
@@ -63,7 +67,14 @@ const AdditionalDate = ({ id, performers, date, time, disabledDates, setProType,
         <div className={`${s.container} ${anim && s.container_anim}`}>
             <InputData nosub={true} date={dayjs(dateEdit).locale('ru')} setDate={setDateEdit} disabledDates={disabledDates} />
             <InputTime nosub={true} time={timeEdit} setTime={setTimeEdit} />
-            <InputNumList nosub={true} inputWidth={64} Icon={IconBuilder} max={100} value={performersNum} setValue={setPerformersNum} />
+            {service !== 8 && <InputNumList
+                nosub={true}
+                inputWidth={64}
+                Icon={IconBuilder}
+                max={100}
+                value={performersNum}
+                setValue={setPerformersNum}
+            />}
             <div id={id} onClick={handleDelete} className={s.delete}><IconClose /></div>
         </div>
     )

@@ -54,12 +54,30 @@
     min-height: 44px;
     opacity: 0;
     visibility: hidden;
-  
+
 
     &_2 {
         position: absolute;
         top: 0;
         right: 0;
+    }
+
+
+    &_bottom {
+        opacity: 0;
+        width: fit-content;
+        visibility: hidden;
+        margin: 0 auto;
+        border-radius: 4px;
+        padding: 12px;
+        background-color: var(--color-bg-card);
+        box-shadow: 0px 0px 20px 0px rgba(0, 32, 51, 0.10);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: sticky;
+        bottom: 0;
+        transition: all 0.2s;
     }
 
     &_vis {
@@ -75,8 +93,8 @@
 }
 
 .left {
-     width: calc(71.5% - 8px);
-   /*  width: 100%; */
+    width: calc(71.5% - 8px);
+    /*  width: 100%; */
     display: flex;
     flex-direction: column;
     gap: 16px;

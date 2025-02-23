@@ -135,6 +135,7 @@ const OrdersHistory = ({ vis, client, historyList }) => {
                     title={`История заказов ${client}`}
                     buttonState={false}
                     PromptText={PromptCustomer}
+                    hiddenPrompt={true}
                 />
                 {historyList.length > 5 && <InputSelect
                     sub={false}

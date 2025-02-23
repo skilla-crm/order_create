@@ -69,7 +69,8 @@ const InputSelectPartner = ({ sub, list, value, setValue, type, position, defaul
 
                     {list?.map(el => {
                         return <li onClick={handleValue} key={el.id} id={el.to_id} className={`${s.item} ${el.id == value && s.item_active}`}>
-                            <p>{el.name} {el?.ur_city  && el?.ur_city !== '' && <span>{el.ur_city}</span>}</p>
+                            <p>{el.name}</p>
+                            {el?.ur_city  && el?.ur_city !== '' && <span>{el.ur_city}</span>}
                         </li>
                     })}
                 </ul>

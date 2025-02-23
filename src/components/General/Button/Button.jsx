@@ -9,12 +9,12 @@ const Button = ({ id, text, Icon, type, handleClick, width, load, disabled }) =>
             {Icon && !load && <div className={s.icon}>
                 <Icon />
             </div>}
-            {load && type !== 'second' &&
+            {load && type !== 'second' && type !== 'tr' &&
                 <div className={s.icon}>
                     <LoaderButton color={type == 'second' ? '#002CFB' : '#ffff'} />
                 </div>}
 
-                {type == 'second' &&
+                {(type == 'second' || type == 'tr') &&
                 <div className={`${s.icon} ${!load && s.icon_hidden}`}>
                     <LoaderButton color={type == 'second' ? '#002CFB' : '#ffff'} />
                 </div>}

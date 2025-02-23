@@ -24,6 +24,7 @@ const PreviewApp = () => {
     const { rate, rateWorker } = useSelector(selectorRates);
     const [activeType, setActiveType] = useState('');
     const dispatch = useDispatch()
+    console.log(commentSupervisor.length)
 
     useEffect(() => {
         const result = types?.find(el => el.id == service)

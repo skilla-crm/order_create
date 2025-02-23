@@ -27,7 +27,7 @@ export const addressUtility = (data) => {
     const isProvince = data?.find(el => el.kind[0] == "PROVINCE")?.name;
     const isArea = data?.find(el => el.kind[0] == "AREA")?.name;
     const isStreet = data?.find(el => el.kind[0] == "STREET")?.name;
-    const isDistrict = data?.find(el => el.kind[0] == "DISTRICT")?.name;
+    const isDistrict = data?.findLast(el => el.kind[0] == "DISTRICT")?.name;
     const isRoute = data?.find(el => el.kind[0] == "ROUTE")?.name;
     const isStation = data?.find(el => el.kind[0] == "STATION")?.name;
     const isRailway = data?.find(el => el.kind[0] == "RAILWAY_STATION")?.name;

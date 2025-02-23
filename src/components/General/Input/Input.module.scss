@@ -541,10 +541,16 @@
         align-items: center;
         flex-shrink: 2;
         width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        text-wrap: nowrap;
     }
 
     span {
         margin-left: auto;
+        display: flex;
+        align-items: center;
+        text-wrap: nowrap;
     }
 }
 

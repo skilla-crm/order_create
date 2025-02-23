@@ -106,7 +106,17 @@ const Performers = () => {
                 <div className={`${s.container_dates} ${scrollState && s.container_scroll}`}>
 
                     {additionalDates.map((el) => {
-                        return <AdditionalDate key={el.id} id={el.id} date={el.date} time={el.time} performers={el.performers} disabledDates={[date, ...disabledDates]} setProType={setProType} setHiddenAddDates={setHiddenAddDates} />
+                        return <AdditionalDate 
+                        key={el.id} 
+                        id={el.id} 
+                        date={el.date} 
+                        time={el.time} 
+                        performers={el.performers} 
+                        disabledDates={[date, ...disabledDates]} 
+                        setProType={setProType} 
+                        setHiddenAddDates={setHiddenAddDates} 
+                        service={service}
+                        />
                     })}
                 </div>
             </div>
