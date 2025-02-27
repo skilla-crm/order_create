@@ -1,6 +1,7 @@
 import s from './OrderSum.module.scss';
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import CurrencyFormat from 'react-currency-format';
 //components
 import Header from '../General/Header/Header';
 import InputNum from '../General/Input/InputNum';
@@ -15,7 +16,8 @@ import { selectorValidation } from '../../store/reducer/Validation/selector';
 
 const OrderSum = () => {
     const { orderSum } = useSelector(selectorRates);
-    const { paySummError } = useSelector(selectorValidation)
+    const { paySummError } = useSelector(selectorValidation);
+
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -29,6 +31,7 @@ const OrderSum = () => {
                 PromptText={PromptSum}
             />
             <div className={s.block}>
+              {/*   <CurrencyFormat thousandSeparator={' '} decimalSeparator={','}/> */}
                 <InputNum
                     sub={'Сумма заказа'}
                     disabled={false}

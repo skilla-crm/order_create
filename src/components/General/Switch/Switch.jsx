@@ -4,7 +4,7 @@ import { ReactComponent as IconClose2 } from '../../../images/icons/iconClose2.s
 
 const Switch = ({ text, switchState, handleSwitch, hidden, forPro, disabled }) => {
     return (
-        <div onClick={handleSwitch} className={`${s.container} ${hidden && s.container_hidden}`}>
+        <div onClick={handleSwitch} className={`${s.container} ${hidden && s.container_hidden} ${disabled && s.container_disabled}`}>
             <div className={`${s.switch} ${disabled && s.switch_disabled} ${switchState && s.switch_on}`}>
                 <div></div>
                 {forPro && <IconClose2/>}

@@ -28,8 +28,8 @@ const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio }) => {
     const [anim, setAnim] = useState(false);
 
     const handleChoseRate = () => {
-        dispatch(setRate(customerBit))
-        dispatch(setRateWorker(workerBit))
+        dispatch(setRate(parseFloat(customerBit)))
+        dispatch(setRateWorker(parseFloat(workerBit)))
         minTime && Number(minTime) > 0 && dispatch(setMinDurqtion(Number(minTime)))
         handleResetRatio()
     }
@@ -157,6 +157,8 @@ const Rates = () => {
         return () => document.removeEventListener('mousedown', closeModal);
     }, []);
 
+    console.log(customer?.works)
+
     return (
         <div className={s.rates}>
             <Header
@@ -217,7 +219,7 @@ const Rates = () => {
                 <div className={`${s.warning} ${warning && s.warning_vis}`}>
                     <IconWarning />
                     <p>
-                        Указанная ставка отсутсвует в прайс-листе
+                        Указанная ставка отсутствует в прайс-листе
                     </p>
                 </div>
             </div>

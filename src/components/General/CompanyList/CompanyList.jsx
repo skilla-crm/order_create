@@ -28,7 +28,11 @@ const CompanyList = ({ list, openList, setOpenList, value, setValue, listScroll,
         <ul className={`${s.list} ${openList && s.list_open} ${listScroll && s.list_scroll}`}>
             {list?.map(el => {
                 return <li ref={el.id == value ? activeRef : null} onClick={() => handleChose(el)} key={el.id} id={el.id} className={`${el.id == value && s.item_active}`}>
-                    <p>{el.name}</p>
+                    <div className={s.company}>
+                    <p>{el?.name}</p>
+                    {el?.label?.replaceAll(' ', '') !== '' && <span className={s.label}><p>{el.label}</p></span>}
+                    </div>
+                   
                     <span>ИНН {el.inn} {el.kpp && `КПП ${el.kpp}`} {el.partnership_name}</span>
                 </li>
             })}

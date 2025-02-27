@@ -32,7 +32,7 @@ import { PromptCustomer } from '../../constants/prompts';
 import {
     TITLE, BUTTON_TEXT,
     SUB_NAME, SUB_COMPANY, SUB_PHONE,
-    SWITCH_NAME, ERROR_PHONE, segments
+    SWITCH_NAME, SWITCH_NAME_SMS, ERROR_PHONE, segments
 } from '../../constants/customer';
 //utils
 import { addSpaceNumber } from '../../utils/addSpaceNumber';
@@ -60,7 +60,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     const [loadWarningPhone, setLoadWarningPhone] = useState(false);
     const [tooltip, setTooltip] = useState(false)
     const [blackComment, setBlackComment] = useState('')
-    const { companies, customer, payType, name, phone, isBlack, isBlackOur, blackCreatorPartnership, debt, debtThreshold, contacts, noContactPerson } = useSelector(selectorCustomer);
+    const { companies, customer, payType, name, phone, isBlack, isBlackOur, blackCreatorPartnership, debt, debtThreshold, contacts, noContactPerson, isSms } = useSelector(selectorCustomer);
     const { companyError, phoneError, nameError } = useSelector(selectorValidation)
     const dispatch = useDispatch();
 
@@ -71,8 +71,10 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     }, [payType])
 
     useEffect(() => {
-        phone?.length == 11 && (historyList?.length == 0 || historyListPhone?.length == 0) ? dispatch(setIsSms(true)) : dispatch(setIsSms(false))
-    }, [historyList, historyListPhone, phone])
+        noContactPerson && dispatch(setIsSms(false))
+    }, [noContactPerson])
+
+
 
     useEffect(() => {
         !customer?.id && dispatch(setContacts([]))
@@ -203,7 +205,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                 setHistoryName(customer?.name)
                 setTimeout(() => {
                     data.length > 0 && setLoadBage(false)
-                }, 300)
+                }, 200)
 
                 setTimeout(() => {
                     setHistoryLoad(false)
@@ -215,7 +217,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                         setHistoryName(phoneWithMask)
                         return
                     }
-                }, 350)
+                }, 400)
             })
     }
 
@@ -230,13 +232,13 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                 setHistoryName(phoneWithMask)
                 setTimeout(() => {
                     data.length > 0 && setLoadBage(false)
-                }, 300)
+                }, 200)
 
                 setTimeout(() => {
                     setHistoryLoad(false)
                     setHistoryList(data)
                     setHistoryListPhone(data)
-                }, 350)
+                }, 400)
             })
     }
 
@@ -280,6 +282,10 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
     const handleCloseTooltip = () => {
         setTooltip(false)
+    }
+
+    const handleSmsState = () => {
+        isSms ? dispatch(setIsSms(false)) : dispatch(setIsSms(true))
     }
 
     return (
@@ -350,7 +356,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
 
                         </div>
-                        <div className={s.container}>
+                        <div className={`${s.container} ${s.container_2}`}>
                             <div className={s.contact}>
                                 <InputPhone
                                     sub={SUB_PHONE}
@@ -414,12 +420,20 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
                         </div>
 
+                        <Switch
+                            text={SWITCH_NAME_SMS}
+                            handleSwitch={handleSmsState}
+                            switchState={isSms}
+                            hidden={false}
+                            disabled={noContactPerson}
+                        />
+
 
                         <div className={`${s.loader} ${s.loader_history} ${loadBage && s.loader_vis}`}>
                             {historyLoad && <div className={s.loader_anim}><IconLoader /></div>}
                             {historyLoad && <p>Проверяем историю заказов</p>}
                             {!historyLoad && historyList?.length == 0 && <IconInfo />}
-                            {!historyLoad && historyList?.length == 0 && <p>Заказы не найдены{phone.length == 11 && `, клиент получить СМС уведомление о заказе`}</p>}
+                            {!historyLoad && historyList?.length == 0 && <p>Заказы не найдены</p>}
                             {!historyLoad && historyList?.length == 0 && <p></p>}
                         </div>
                     </div>

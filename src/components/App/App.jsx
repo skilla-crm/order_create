@@ -329,7 +329,7 @@ const App = () => {
                         }
 
                         {<div className={`${s.buttons} ${s.buttons_2} ${existOrder && !loadDetail && orderStatus < 4 && s.buttons_vis}`}>
-                            <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ?'second' : 'tr'} load={loadSave} />
+                            <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />
                             {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
                         </div>
                         }
@@ -350,7 +350,7 @@ const App = () => {
                             {service !== 8 && <Rates />}
                             <Manager />
 
-                            <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
+                            {orderStatus < 4 && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
                                 {!existOrder && !loadDetail && <div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>
                                     {/*  <Button Icon={IconPoints} type={'points'} /> */}
                                     <Button disabled={loadSave} id={'save'} handleClick={handleSave} text={'Сохранить черновик'} type={'second'} load={loadSave} />
@@ -359,11 +359,12 @@ const App = () => {
                                 }
 
                                 {existOrder && !loadDetail && orderStatus < 4 && <div className={`${s.buttons} ${existOrder && !loadDetail && orderStatus < 4 && s.buttons_vis}`}>
-                                    <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ?'second' : 'tr'} load={loadSave} />
+                                    <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />
                                     {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
                                 </div>
                                 }
                             </div>
+                            }
 
 
 

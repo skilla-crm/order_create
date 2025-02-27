@@ -39,7 +39,7 @@ export const useOrderDataForSend = () => {
         name,
         date: dayjs(date).format('YYYY-MM-DD'),
         time: time == null ? null : dayjs(time).format('HH:mm'),
-        worker_count: service == 8 ? 1 : service == 9 ? 1 : performersNum,
+        worker_count: service == 8 ? 0 : service == 9 ? 1 : performersNum,
         dop_dates: dopDates,
         order_type: service,
         notes,

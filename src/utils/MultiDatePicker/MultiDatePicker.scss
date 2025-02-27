@@ -71,6 +71,14 @@
     transition: all 0.2s;
 }
 
+.rmdp-range-hover {
+    background-color: #ECF2FC !important;
+    span {
+        background: none !important;
+        color: var(--color-text-primary) !important;
+    }
+}
+
 .start,
 .end,
 .rmdp-selected 

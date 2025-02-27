@@ -4,6 +4,7 @@ export const SUB_NAME = 'Имя';
 export const SUB_COMPANY = 'ИНН или название';
 export const SUB_PHONE = 'Контактный телефон';
 export const SWITCH_NAME = 'Без контактного лица';
+export const SWITCH_NAME_SMS = 'Отправить SMS о создании заказа';
 export const ERROR_PHONE = 'Введи корректный номер';
 export const ERROR_NAME = 'Заполни поле';
 

@@ -41,6 +41,10 @@ const Performers = () => {
     const { timeError } = useSelector(selectorValidation)
 
     useEffect(() => {
+        service !== 8 && performersNum == 0 && dispatch(setPerformersNum(1))
+    }, [service, performersNum])
+
+    useEffect(() => {
         additionalDates.length > 0 ? setHiddenAddDates(false) : setHiddenAddDates(true)
         additionalDates.length > 15 ? setScrollState(true) : setScrollState(false)
     }, [additionalDates])
@@ -106,16 +110,16 @@ const Performers = () => {
                 <div className={`${s.container_dates} ${scrollState && s.container_scroll}`}>
 
                     {additionalDates.map((el) => {
-                        return <AdditionalDate 
-                        key={el.id} 
-                        id={el.id} 
-                        date={el.date} 
-                        time={el.time} 
-                        performers={el.performers} 
-                        disabledDates={[date, ...disabledDates]} 
-                        setProType={setProType} 
-                        setHiddenAddDates={setHiddenAddDates} 
-                        service={service}
+                        return <AdditionalDate
+                            key={el.id}
+                            id={el.id}
+                            date={el.date}
+                            time={el.time}
+                            performers={el.performers}
+                            disabledDates={[date, ...disabledDates]}
+                            setProType={setProType}
+                            setHiddenAddDates={setHiddenAddDates}
+                            service={service}
                         />
                     })}
                 </div>

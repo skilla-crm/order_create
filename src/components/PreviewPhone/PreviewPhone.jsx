@@ -118,7 +118,7 @@ const PreviewPhone = ({ activeType }) => {
                             <div className={s.block_small}>
                                 <p className={s.bold}>Количество мест</p>
                                 {performersNum < 3 && <p className={s.text}>Осталось менее 3х мест</p>}
-                                {performersNum >= 3 && performersNum < 10 && <p className={s.text}>Осталось менее 10и мест</p>}
+                                {performersNum >= 3 && <p className={s.text}>Осталось менее 10и мест</p>}
 
                             </div>
 
