@@ -1,18 +1,19 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useDispatch } from "react-redux"
-import { setPayType, setName, setPhone, setNoContactPerson } from '../store/reducer/Customer/slice';
+import { setPayType, setName, setCustomer, setPhone, setNoContactPerson } from '../store/reducer/Customer/slice';
 import { setPerformersNum, setTime } from '../store/reducer/Performers/slice';
 import { setService, setRequirements, setMinDurqtion, setDuration, setCommentSupervisor, setNotes, setPayNotes } from '../store/reducer/Details/slice';
 import { setAddress, setMetro, deleteMetro, setNoAddress, setAddressForReturn } from '../store/reducer/Address/slice';
 import { setRate, setRateWorker, setOrderSum } from '../store/reducer/Rates/slice';
-import { setManagerId, setPartnershipId, setEmailPasport, setPartnerRate } from '../store/reducer/Managers/slice';
+import { setManagerId, setPartnershipId, setFromPartnership, setAcceptStatus, setEmailPasport, setPartnerRate } from '../store/reducer/Managers/slice';
 //utils
 import { adressStringUtility } from '../utils/AdressUtility';
 
 
 
 export const useWriteOrderDataHook = () => {
+
     const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
     const [data, setData] = useState({})
     const dispatch = useDispatch();
@@ -28,6 +29,8 @@ export const useWriteOrderDataHook = () => {
                 lat: data.lat,
                 lng: data.lng
             }
+
+        
 
             data.beznal == 1 && dispatch(setPayType(1))
             data.beznal == 0 && data.to_card == 1 && dispatch(setPayType(2))
@@ -77,6 +80,8 @@ export const useWriteOrderDataHook = () => {
             dispatch(setPartnershipId(data.to_partnership_id))
             dispatch(setEmailPasport(data.email_passport))
             data.partner_client_bit && dispatch(setPartnerRate(data.partner_client_bit))
+            dispatch(setFromPartnership(data.from_partnership_id))
+            dispatch(setAcceptStatus(data.accept_status))
             return
         }
     }, [data])

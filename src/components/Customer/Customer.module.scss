@@ -142,3 +142,18 @@
 .pointer {
     cursor: pointer;
 }
+
+.sms {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    &_info {
+        position: relative;
+        padding-top: 2px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+}

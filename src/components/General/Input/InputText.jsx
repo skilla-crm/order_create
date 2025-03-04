@@ -1,7 +1,7 @@
 import s from './Input.module.scss';
 import { useEffect, useState } from 'react';
 
-const InputText = ({ sub, disabled, value, setValue, error, errorText, type, handleResetError, maxLength }) => {
+const InputText = ({ sub, disabled, value, setValue, error, errorText, type, handleResetError, maxLength, disabledEdit }) => {
     const [errorState, setErrorState] = useState(false);
 
     useEffect(() => {
@@ -18,7 +18,7 @@ const InputText = ({ sub, disabled, value, setValue, error, errorText, type, han
     return (
         <div className={s.container}>
             <span className={s.sub}>{sub}</span>
-            <input value={value || ''} onChange={handleValue} disabled={disabled} className={s.input} type='text' maxLength={maxLength}></input>
+            <input value={value || ''} onChange={handleValue} disabled={disabled || disabledEdit} className={`${s.input} ${disabled && s.input_diabled}`} type='text' maxLength={maxLength}></input>
 
             <div className={`${s.error} ${type !== 2 && s.error_2} ${errorState && s.error_vis}`}>
                 <p>

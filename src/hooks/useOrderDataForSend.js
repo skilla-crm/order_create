@@ -63,7 +63,7 @@ export const useOrderDataForSend = () => {
         metro3_km: metro[2]?.distance,
         metro3_color: metro[2]?.color,
         client_bit: service !== 8 ? Number(rate) : null,
-        worker_bit: service !== 8 ? Number(rateWorker) : null,
+        worker_bit: partnershipId !== null && partnershipId !== 0 ? partnerRate : service !== 8 ? Number(rateWorker) : null,
         pay_summ: service == 8 ? orderSum : null,
         supervisor_id: managerId == 0 ? null : managerId,
         to_partnership_id: partnershipId == 0 ? null : partnershipId,

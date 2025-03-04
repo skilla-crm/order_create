@@ -4,7 +4,15 @@ import LoaderButton from '../LoaderButton/LoaderButton';
 
 const Button = ({ id, text, Icon, type, handleClick, width, load, disabled }) => {
     return (
-        <button disabled={disabled} id={id} style={{ width: width ? `${width}px` : '' }} onClick={handleClick} className={`${s.button} ${(type == 'second' || type == 'points') && s.button_second} ${type == 'points' && s.button_points}`}>
+        <button disabled={disabled} id={id} style={{ width: width ? `${width}px` : '' }}
+            onClick={handleClick}
+            className={
+             `${s.button} 
+                  ${(type == 'second' || type == 'points') && s.button_second} 
+                   ${type == 'points' && s.button_points}
+                   ${type == 'reject' && s.button_cancle}
+                `
+            }>
             {text && <p>{text}</p>}
             {Icon && !load && <div className={s.icon}>
                 <Icon />
@@ -14,7 +22,7 @@ const Button = ({ id, text, Icon, type, handleClick, width, load, disabled }) =>
                     <LoaderButton color={type == 'second' ? '#002CFB' : '#ffff'} />
                 </div>}
 
-                {(type == 'second' || type == 'tr') &&
+            {(type == 'second' || type == 'tr') &&
                 <div className={`${s.icon} ${!load && s.icon_hidden}`}>
                     <LoaderButton color={type == 'second' ? '#002CFB' : '#ffff'} />
                 </div>}

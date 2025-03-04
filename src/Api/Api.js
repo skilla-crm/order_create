@@ -82,4 +82,10 @@ export const editOrder = (data, id) => {
 }
 
 
+export const rejectOrder = (order_id) => {
+  return instanceWithToken.post(`${baseURL}api/orders/reject/${order_id}`)
+}
+
+
+
 

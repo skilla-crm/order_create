@@ -32,7 +32,7 @@ const Manager = () => {
     const [activeSegment, setActiveSegment] = useState(1);
     const [activeRate, setActiveRate] = useState(1);
     const [defaultManagerId, setDefaultManagerId] = useState(null)
-    const { managerId, partnershipId, emailPasport, partnerRates, partnerRate, emailState } = useSelector(selectorManagers);
+    const { managerId, partnershipId, emailPasport, partnerRates, partnerRate, emailState, fromPartnership, acceptStatus } = useSelector(selectorManagers);
     const { service } = useSelector(selectorDetails);
     const { contacts, payType } = useSelector(selectorCustomer);
     const { emailError } = useSelector(selectorValidation)
@@ -116,7 +116,7 @@ const Manager = () => {
                 buttonState={false}
                 PromptText={PromptManager}
             />
-            {skilla_partnerships?.length > 0 && <SegmentControl
+            {skilla_partnerships?.length > 0 && fromPartnership == 0 && <SegmentControl
                 segments={segments}
                 setActive={(data) => handleActive(data)}
                 active={activeSegment}

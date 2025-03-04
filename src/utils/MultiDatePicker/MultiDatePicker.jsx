@@ -1,5 +1,5 @@
 import './MultiDatePicker.scss';
-import { Calendar } from "react-multi-date-picker"
+import { Calendar, DateObject } from "react-multi-date-picker"
 import { getAllDatesInRange } from 'react-multi-date-picker';
 import transition from "react-element-popper/animations/transition"
 const weekDays = ["ВС", "ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ"]
@@ -8,10 +8,10 @@ const months = ["Январь", "Февраль", "Март", "Апрель", "�
 const MultiDatePicker = ({ type, dates, setDates, setAllDatesRange }) => {
 
     const handleChangeDates = (value) => {
-        setDates(value.slice(0, 20))
+        setDates(value.slice(0, 31))
         let arr = []
         type == 2 && value.forEach(el => arr.push(...getAllDatesInRange(el)))
-        type == 2 && setAllDatesRange(arr.slice(0, 20))
+        type == 2 && setAllDatesRange(arr.slice(0, 31))
     }
 
     console.log(dates)

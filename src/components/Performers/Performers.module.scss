@@ -11,6 +11,10 @@
    align-items: center;
    gap: 12px;
 
+   &_disabled {
+      pointer-events: none;
+   }
+
    &_time {
       height: 100%;
    }
@@ -29,16 +33,16 @@
    &_dates {
       display: flex;
       flex-direction: column;
-      max-height: 772px;
+      max-height: 1772px;
  
       padding: 1px;
       margin-bottom: 20px;
 
    }
-
+/* 
    &_scroll {
       overflow: auto;
-   }
+   } */
 }
 
 .sub {

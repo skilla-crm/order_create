@@ -4,7 +4,7 @@ import { ReactComponent as IconPhone } from '../../../images/icons/iconPhone.svg
 
 import InputMask from 'comigo-tech-react-input-mask/lib/react-input-mask.development';
 
-const InputPhone = ({ sub, disabled, value, setValue, setValueName, contacts, errorText, error, errorEmpyty, errorTextEmpyty, setPhoneWithMask, handleResetError }) => {
+const InputPhone = ({ sub, disabled, value, setValue, setValueName, contacts, errorText, error, errorEmpyty, errorTextEmpyty, setPhoneWithMask, handleResetError, disabledEdit }) => {
     const [errorState, setErrorState] = useState(false);
     const [openContacts, setOpenContacts] = useState(false);
     const listRef = useRef();
@@ -72,7 +72,7 @@ const InputPhone = ({ sub, disabled, value, setValue, setValueName, contacts, er
                         onBlur={handleBlur}
                         onFocus={handleFocus}
                         value={value || ''}
-                        disabled={disabled}
+                        disabled={disabled || disabledEdit}
                         mask="+7 (999) 999-99-99"
                         onChange={handleChangeValue}
                         placeholder='+7 (___) ___-__-__'

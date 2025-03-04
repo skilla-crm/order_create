@@ -12,6 +12,7 @@ import { ReactComponent as IconRate } from '../../images/icons/iconBackForward.s
 import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
+import { selectorManagers } from '../../store/reducer/Managers/selector';
 //slice
 import { setRate, setRateWorker } from '../../store/reducer/Rates/slice';
 import { setMinDurqtion } from '../../store/reducer/Details/slice';
@@ -23,12 +24,12 @@ import { addSpaceNumber2 } from '../../utils/addSpaceNumber';
 import Header from '../General/Header/Header';
 import InputNum from '../General/Input/InputNum';
 
-const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio }) => {
+const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership }) => {
     const dispatch = useDispatch();
     const [anim, setAnim] = useState(false);
 
     const handleChoseRate = () => {
-        dispatch(setRate(parseFloat(customerBit)))
+        fromPartnership == 0 && dispatch(setRate(parseFloat(customerBit)))
         dispatch(setRateWorker(parseFloat(workerBit)))
         minTime && Number(minTime) > 0 && dispatch(setMinDurqtion(Number(minTime)))
         handleResetRatio()
@@ -70,6 +71,7 @@ const Rates = () => {
     const { rate, rateWorker } = useSelector(selectorRates)
     const { payType, customer } = useSelector(selectorCustomer)
     const { rateError, rateWorkerError } = useSelector(selectorValidation)
+    const { partnershipId, partnerRate, fromPartnership } = useSelector(selectorManagers);
     const listRef = useRef();
     const buttonRef = useRef();
 
@@ -169,9 +171,9 @@ const Rates = () => {
 
             <div className={s.block}>
                 <div className={s.inputs}>
-                    <div className={s.block_point}>
+                    <div className={`${s.block_point} ${fromPartnership !== 0 && s.disabled}`}>
                         <InputNum
-                            sub={SUB_CUSTOMER}
+                            sub={fromPartnership == 0 ? SUB_CUSTOMER : 'Партнеру'}
                             disabled={false}
                             value={rate}
                             setValue={(data) => {
@@ -183,9 +185,10 @@ const Rates = () => {
                             maxValue={14}
                             errorText={'Укажи ставку'}
                         />
-                        <button disabled={(rate == '' || payType !== 1)} ref={buttonRef} onClick={handleOpenRatioList} className={s.point}>
+                        {fromPartnership == 0 && <button disabled={(rate == '' || payType !== 1)} ref={buttonRef} onClick={handleOpenRatioList} className={s.point}>
                             <IconPoints />
                         </button>
+                        }
 
                         <ul ref={listRef} className={`${s.list} ${ratioList && s.list_open}`}>
                             {ratersChangeList.map(el => {
@@ -203,16 +206,20 @@ const Rates = () => {
 
                     </div>
 
-                    <InputNum
-                        sub={SUB_WORKER}
-                        disabled={false}
-                        value={rateWorker}
-                        setValue={(data) => dispatch(setRateWorker(data))}
-                        error={false}
-                        errorEmpity={rateWorkerError}
-                        maxValue={10}
-                        errorText={'Укажи ставку'}
-                    />
+                    <div className={s.field_rate}>
+                        {partnershipId == null && <InputNum
+                            sub={SUB_WORKER}
+                            disabled={false}
+                            value={rateWorker}
+                            setValue={(data) => dispatch(setRateWorker(data))}
+                            error={false}
+                            errorEmpity={rateWorkerError}
+                            maxValue={10}
+                            errorText={'Укажи ставку'}
+                        />
+                        }
+                    </div>
+
                 </div>
 
 
@@ -243,6 +250,7 @@ const Rates = () => {
                 {(payType == 1 && customer?.works?.length > 0) && < ul className={`${s.block_list}`}>
                     {customer?.works?.map((el, i) => {
                         return <Rate
+                            fromPartnership={fromPartnership}
                             customerBit={el.price}
                             workerBit={el.bit}
                             name={el.work}

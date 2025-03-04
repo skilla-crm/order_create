@@ -1,16 +1,20 @@
 import s from './Customer.module.scss';
-import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
+import { useEffect, useState, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import { ParametrsContext } from '../../contexts/UserContext';
 import { ReactComponent as IconLoader } from '../../images/icons/IconLoader.svg';
 import { ReactComponent as IconInfo } from '../../images/icons/header/iconInfo.svg';
 import { ReactComponent as IconInfoErr } from '../../images/icons/iconInfoErr.svg';
 import { ReactComponent as IconInfoWarning } from '../../images/icons/iconWarning.svg';
-
 //Api
 import { getHistoryOrders, checkCompany, contactCompany, checkPhone } from '../../Api/Api';
 //selector
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
+import { selectorPerformers } from '../../store/reducer/Performers/selector';
+import { selectorManagers } from '../../store/reducer/Managers/selector';
 //slice
 import {
     setCustomer,
@@ -45,9 +49,12 @@ import InputPhone from '../General/Input/InputPhone';
 import Switch from '../General/Switch/Switch';
 import OrdersHistory from '../OrdersHistory/OrdersHistory';
 import Tooltip from '../General/Tooltip/Tooltip';
+import InputPartner from '../General/Input/InputPartner';
 
 
 const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustomer }) => {
+    const location = useLocation();
+    const path = location.pathname + location.search;
     const [historyLoad, setHistoryLoad] = useState(false);
     const [historyList, setHistoryList] = useState([]);
     const [historyListPhone, setHistoryListPhone] = useState([]);
@@ -58,11 +65,36 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     const [loadBage, setLoadBage] = useState(false);
     const [loadWarning, setLoadWarning] = useState(false);
     const [loadWarningPhone, setLoadWarningPhone] = useState(false);
-    const [tooltip, setTooltip] = useState(false)
+    const [tooltip, setTooltip] = useState(false);
+    const [tooltipSms, setTooltipSms] = useState(false)
     const [blackComment, setBlackComment] = useState('')
+    const [activePartnership, setActivePartnership] = useState('');
+    const [historyDisabled, setHistoryDisabled] = useState(false);
     const { companies, customer, payType, name, phone, isBlack, isBlackOur, blackCreatorPartnership, debt, debtThreshold, contacts, noContactPerson, isSms } = useSelector(selectorCustomer);
-    const { companyError, phoneError, nameError } = useSelector(selectorValidation)
+    const { companyError, phoneError, nameError } = useSelector(selectorValidation);
+    const { data, time, timerDisabled } = useSelector(selectorPerformers);
+    const { partnershipId, fromPartnership, acceptStatus } = useSelector(selectorManagers);
+    const { partnerships, skilla_partnerships } = useContext(ParametrsContext);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (path.includes('orders/edit/?order_id=')) {
+            setHistoryDisabled(true)
+            return
+        }
+    }, [path])
+
+    /* useEffect(() => {
+      if(beznal) {
+        setHistoryDisabled(false)
+        return
+      }
+
+      if(!beznal) {
+        setHistoryDisabled(false)
+        return
+      }
+    }, [customer, phone]) */
 
     useEffect(() => {
         payType == 1 ? setBeznal(true) : setBeznal(false)
@@ -73,6 +105,24 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     useEffect(() => {
         noContactPerson && dispatch(setIsSms(false))
     }, [noContactPerson])
+
+    useEffect(() => {
+        if (payType == 1 && (partnershipId == null || partnershipId == 0)) {
+            setActivePartnership(customer?.partnership_name ? customer?.partnership_name : '')
+            return
+        }
+
+        if (payType !== 1 && (partnershipId == null || partnershipId == 0)) {
+            setActivePartnership(partnerships?.[0].name)
+            return
+        }
+
+        if (partnershipId !== null && partnershipId !== 0) {
+            const result = skilla_partnerships?.find(el => el.to_id == partnershipId)?.name;
+            setActivePartnership(result)
+            return
+        }
+    }, [customer, payType, partnerships, skilla_partnerships])
 
 
 
@@ -148,17 +198,15 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     }, [phone, beznal])
 
     useEffect(() => {
-        if (!customer.id && payType == 1) {
-            setTimeout(() => {
-                setLoadBage(false)
-            }, 300)
+        if (!customer.id && phone.length < 11) {
+            setLoadBage(false)
             return
         }
 
-        if (phone?.length !== 11 && payType !== 1) {
-            setTimeout(() => {
-                setLoadBage(false)
-            }, 300)
+        if (phone?.length < 11 && !customer.id) {
+
+            setLoadBage(false)
+
 
             return
         }
@@ -284,16 +332,25 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
         setTooltip(false)
     }
 
+    const handleOpenTooltipSms = () => {
+        setTooltipSms(true)
+    }
+
+    const handleCloseTooltipSms = () => {
+        setTooltipSms(false)
+    }
+
     const handleSmsState = () => {
         isSms ? dispatch(setIsSms(false)) : dispatch(setIsSms(true))
     }
+    console.log(fromPartnership)
 
     return (
         <div className={`${s.window} ${hiddenCustomer && s.window_hidden}`}>
             <div className={s.customer}>
                 <Header
                     title={TITLE}
-                    buttonState={addCustomer ? false : true}
+                    buttonState={(addCustomer || historyDisabled) ? false : true}
                     buttonText={BUTTON_TEXT}
                     handleButton={handleAdd}
                     forPro={false}
@@ -304,12 +361,13 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                     segments={segments}
                     setActive={(data) => dispatch(setPayType(Number(data)))}
                     active={payType}
+                    disabled={fromPartnership !== 0 && acceptStatus == 0}
                 />
 
                 <div className={s.container}>
                     <div className={s.block}>
                         <div className={`${s.company} ${payType == 1 && s.company_vis}`}>
-                            <InputCompany
+                            {fromPartnership == 0 && <InputCompany
                                 sub={SUB_COMPANY}
                                 list={companies}
                                 value={customer?.id}
@@ -318,7 +376,13 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                                 payType={payType}
                                 error={companyError}
                                 errorText={'Выбери заказчика'}
-                            />
+                            />}
+
+                            {fromPartnership !== 0 &&
+                                <InputPartner
+                                    sub={'Партнер'}
+                                    value={`${skilla_partnerships?.find(el => el.to_id == fromPartnership)?.name}`}
+                                />}
 
                             <div className={s.warnings}>
                                 {tooltip && <Tooltip text={!isBlackOur ? blackCreatorPartnership : ''} comment={blackComment} />}
@@ -361,6 +425,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                                 <InputPhone
                                     sub={SUB_PHONE}
                                     disabled={noContactPerson}
+                                    disabledEdit={fromPartnership !== 0 && acceptStatus == 0}
                                     contacts={contacts?.filter((el) => el.phone !== '')}
                                     value={phone}
                                     setPhoneWithMask={setPhoneWithMask}
@@ -375,6 +440,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                                 <InputText
                                     sub={SUB_NAME}
                                     disabled={noContactPerson}
+                                    disabledEdit={fromPartnership !== 0 && acceptStatus == 0}
                                     value={name}
                                     setValue={(data) => dispatch(setName(data))}
                                     error={nameError}
@@ -409,7 +475,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                                 </div>
                             </div>
                             }
-                            <div className={s.switch}>
+                            {fromPartnership == 0 && acceptStatus == 1 && <div className={s.switch}>
                                 <Switch
                                     text={SWITCH_NAME}
                                     handleSwitch={handleContactPersonState}
@@ -417,19 +483,39 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                                     hidden={payType == 1 ? false : true}
                                 />
                             </div>
+                            }
 
                         </div>
 
-                        <Switch
-                            text={SWITCH_NAME_SMS}
-                            handleSwitch={handleSmsState}
-                            switchState={isSms}
-                            hidden={false}
-                            disabled={noContactPerson}
-                        />
+
+                        {!historyDisabled && <div className={s.sms}>
+                            <Switch
+                                text={SWITCH_NAME_SMS}
+                                handleSwitch={handleSmsState}
+                                switchState={isSms}
+                                hidden={false}
+                                disabled={noContactPerson}
+                            />
+                            <div
+                                onMouseEnter={handleOpenTooltipSms}
+                                onMouseLeave={handleCloseTooltipSms}
+                                className={s.sms_info}
+                            >
+                                <IconInfo />
+                                {tooltipSms && activePartnership !== '' && <Tooltip text={!isBlackOur ? blackCreatorPartnership : ''}
+                                    comment={`Заказ ${dayjs(data).format('DD.MM')} ${(timerDisabled || time == null) ? '' : `в ${dayjs(time).format('H:mm')}`} принят.`} type={2}
+                                    comment2={activePartnership}
+                                />
+
+                                }
+                            </div>
+
+                        </div>
+                        }
 
 
-                        <div className={`${s.loader} ${s.loader_history} ${loadBage && s.loader_vis}`}>
+
+                        <div className={`${s.loader} ${s.loader_history} ${loadBage && !historyDisabled && s.loader_vis}`}>
                             {historyLoad && <div className={s.loader_anim}><IconLoader /></div>}
                             {historyLoad && <p>Проверяем историю заказов</p>}
                             {!historyLoad && historyList?.length == 0 && <IconInfo />}
@@ -443,7 +529,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
             </div>
 
-            <OrdersHistory vis={historyList?.length > 0} client={historyName} historyList={historyList} />
+            <OrdersHistory vis={(historyList?.length > 0 && !historyDisabled)} client={historyName} historyList={historyList} />
         </div>
 
     )

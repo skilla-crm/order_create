@@ -5,6 +5,10 @@
     position: relative;
 }
 
+.field_rate {
+    width: 100%;
+}
+
 .inputs {
     display: flex;
   
@@ -162,4 +166,8 @@
     &_anim {
         transform: translateX(3px);
     }
+}
+
+.disabled {
+    pointer-events: none;
 }

@@ -25,6 +25,7 @@ import { selectorPerformers } from '../../store/reducer/Performers/selector';
 import { selectorAdditionalDates } from '../../store/reducer/AdditionalDates/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
 import { selectorDetails } from '../../store/reducer/Details/selector';
+import { selectorManagers } from '../../store/reducer/Managers/selector';
 
 const Performers = () => {
     const [proCalendar, setProCalendar] = useState(false);
@@ -38,7 +39,8 @@ const Performers = () => {
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { service } = useSelector(selectorDetails);
     const { additionalDates, disabledDates } = useSelector(selectorAdditionalDates);
-    const { timeError } = useSelector(selectorValidation)
+    const { timeError } = useSelector(selectorValidation);
+    const { fromPartnership, acceptStatus } = useSelector(selectorManagers);
 
     useEffect(() => {
         service !== 8 && performersNum == 0 && dispatch(setPerformersNum(1))
@@ -66,17 +68,18 @@ const Performers = () => {
         dispatch(setTimeError(false))
     }
 
+
     return (
         <div className={s.performers}>
             <Header
                 title={TITLE}
-                buttonState={true}
+                buttonState={fromPartnership !== 0 && acceptStatus == 0 ? false : true}
                 buttonText={BUTTON_TEXT}
                 handleButton={handleAdd}
                 forPro={!user.pro}
                 PromptText={PromptPerformers}
             />
-            <div className={s.container}>
+            <div className={`${s.container} ${fromPartnership !== 0 && acceptStatus == 0 && s.container_disabled}`}>
                 <InputData sub={SUB_DATE} setDate={(data) => dispatch(setDate(data))} date={date} disabledDates={disabledDates} />
                 <div className={s.container_time}>
                     <InputTime
@@ -95,15 +98,18 @@ const Performers = () => {
                     hidden={false}
                 /> */}
             </div>
+            <div className={`${fromPartnership !== 0 && acceptStatus == 0 && s.container_disabled}`}>
+                {service !== 8 && service !== 9 && <TabsNumbers
+                    value={performersNum}
+                    setValue={(data) => dispatch(setPerformersNum(data))}
+                    sub={SUB_PERFORMERS}
+                    max={100}
+                    maxVis={8}
+                    forPro={!user.pro}
+                />}
+            </div>
 
-            {service !== 8 && service !== 9 && <TabsNumbers
-                value={performersNum}
-                setValue={(data) => dispatch(setPerformersNum(data))}
-                sub={SUB_PERFORMERS}
-                max={100}
-                maxVis={8}
-                forPro={!user.pro}
-            />}
+
 
             <div className={`${s.container_sub} ${hiddenAddDates && s.hidden}`}>
                 <span className={s.sub}>{SUB_DATES}</span>
@@ -127,6 +133,7 @@ const Performers = () => {
 
             {proCalendar && <ProCalendar
                 proType={proType}
+                date={date}
                 setProType={setProType}
                 periodDates={periodDates}
                 setPeriodDates={setPeriodDates}

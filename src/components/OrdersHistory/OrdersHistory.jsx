@@ -24,7 +24,7 @@ import { addSpaceNumber2 } from '../../utils/addSpaceNumber';
 
 //constants
 import { PromptCustomer } from '../../constants/prompts';
-const list = [{ id: 5, name: 'Последние 5 заказов' }, { id: 10, name: 'Последние 10 заказов' }, { id: 20, name: 'Последние 20 заказов' }, { id: 0, name: 'Все' }]
+const list = [{ id: 5, name: 'Последние 5 заказов' }, { id: 10, name: 'Последние 10 заказов' }, { id: 20, name: 'Последние 20 заказов' }/* , { id: 0, name: 'Все' } */]
 
 
 
@@ -139,7 +139,7 @@ const OrdersHistory = ({ vis, client, historyList }) => {
                 />
                 {historyList.length > 5 && <InputSelect
                     sub={false}
-                    list={list.filter(el => el.id < historyList.length)}
+                    list={[...list, {id: 0, name: `Последние ${historyList?.length} заказов`}].filter(el => el.id < historyList.length)}
                     value={historyLength}
                     setValue={setHistoryLength}
                     type={2}

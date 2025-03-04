@@ -7,7 +7,7 @@ import MultiDatePicker from '../../../utils/MultiDatePicker/MultiDatePicker';
 import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 
-const ProCalendar = ({ setProCalendar, dates, setDates, proType, setProType, setPeriodDates, allDatesRange, setAllDatesRange }) => {
+const ProCalendar = ({ setProCalendar, date, dates, setDates, proType, setProType, setPeriodDates, allDatesRange, setAllDatesRange }) => {
     const [anim, setAnim] = useState(false);
     const [datesPrev, setDatesPrev] = useState(dates || []);
     const [calendarType, setCalendarType] = useState(proType || 1);
@@ -19,6 +19,8 @@ const ProCalendar = ({ setProCalendar, dates, setDates, proType, setProType, set
         })
     }, [])
 
+    console.log(date, allDatesRange)
+
     const handleSwitch = (e) => {
         const id = Number(e.currentTarget.id);
         setCalendarType(id)
@@ -29,7 +31,10 @@ const ProCalendar = ({ setProCalendar, dates, setDates, proType, setProType, set
     const handleConfirm = () => {
         setProType(calendarType)
         setPeriodDates(datesPrev)
-        calendarType == 1 ? setDates(datesPrev) : setDates(allDatesRange)
+        const result = allDatesRange.filter(el => dayjs(el).format('DD-MM-YYYY') !== date.format('DD-MM-YYYY'))
+        const result2 = datesPrev.filter(el => dayjs(el).format('DD-MM-YYYY') !== date.format('DD-MM-YYYY'))
+        console.log(result)
+        calendarType == 1 ? setDates(result2) : setDates(result)
         handleClose()
     }
 

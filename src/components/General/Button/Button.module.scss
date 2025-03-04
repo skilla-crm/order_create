@@ -54,15 +54,17 @@
     }
 
     &_cancle {
-        color: #E75A5A;
-        border: 1px solid #E75A5A;
+        color: #E10D0D;
+        border: 1px solid #E10D0D;
         box-sizing: border-box;
+        background: none;
 
         &:hover {
-            color: #c94a4a;
-            border-color: #c94a4a;
+            background: none;
+            opacity: 0.8;
         }
     }
+
 
     &:disabled {
         pointer-events: none;
