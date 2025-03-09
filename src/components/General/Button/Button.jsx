@@ -7,7 +7,7 @@ const Button = ({ id, text, Icon, type, handleClick, width, load, disabled }) =>
         <button disabled={disabled} id={id} style={{ width: width ? `${width}px` : '' }}
             onClick={handleClick}
             className={
-             `${s.button} 
+                `${s.button} 
                   ${(type == 'second' || type == 'points') && s.button_second} 
                    ${type == 'points' && s.button_points}
                    ${type == 'reject' && s.button_cancle}
@@ -17,15 +17,23 @@ const Button = ({ id, text, Icon, type, handleClick, width, load, disabled }) =>
             {Icon && !load && <div className={s.icon}>
                 <Icon />
             </div>}
-            {load && type !== 'second' && type !== 'tr' &&
+            {load && type !== 'second' && type !== 'tr' && type !== 'reject' &&
                 <div className={s.icon}>
                     <LoaderButton color={type == 'second' ? '#002CFB' : '#ffff'} />
-                </div>}
+                </div>
+            }
 
             {(type == 'second' || type == 'tr') &&
                 <div className={`${s.icon} ${!load && s.icon_hidden}`}>
                     <LoaderButton color={type == 'second' ? '#002CFB' : '#ffff'} />
-                </div>}
+                </div>
+            }
+
+            {load && type == 'reject' &&
+                <div className={`${s.icon}`}>
+                    <LoaderButton color={'#E10D0D'} />
+                </div>
+            }
         </button>
     )
 };

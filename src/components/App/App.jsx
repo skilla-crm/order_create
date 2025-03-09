@@ -28,7 +28,7 @@ import { setDefaultCordinate } from '../../store/reducer/Address/slice';
 import {
     setСompanyError, setPhoneError, setPhoneErrorFormat, setNameError, setTimeError, setAdressError,
     setRateError, setRateWorkerError, setEmailError, setEmailErrorFormat, setIsBlackError, setIsDebtError,
-    setPaySummError
+    setPaySummError, setIsServiceError
 } from '../../store/reducer/Validation/slice';
 //selector
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
@@ -83,7 +83,7 @@ const App = () => {
     const { service } = useSelector(selectorDetails);
     const { address, noAddress } = useSelector(selectorAddress);
     const { rate, rateWorker, orderSum } = useSelector(selectorRates);
-    const { emailPasport, emailState, fromPartnership, acceptStatus } = useSelector(selectorManagers);
+    const { emailPasport, emailState, fromPartnership, acceptStatus, fromLk } = useSelector(selectorManagers);
     const { phoneModal } = useSelector(selectorPreview);
     const appRef = useRef();
 
@@ -195,7 +195,7 @@ const App = () => {
     }, [parametrs.city])
 
     const handleValidation = () => {
-        const companyError = payType == 1 && !customer?.id ? true : false;
+        const companyError = payType == 1 && !customer?.id && acceptStatus == 1 ? true : false;
         const phoneError = !noContactPerson && phone == '' ? true : false;
         const phoneErrorFormat = phone?.length > 0 && phone?.length < 11 ? true : false;
         const nameError = !noContactPerson && name == '' ? true : false;
@@ -208,6 +208,7 @@ const App = () => {
         const emailErrorFormat = emailState && emailPasport !== '' && !emailValidate(emailPasport) ? true : false;
         const isBlackError = payType == 1 && isBlack == 1 && isBlackOur ? true : false;
         const isDebtError = payType == 1 && debt > 0 && debtThreshold > 0 && debt > debtThreshold ? true : false;
+        const isServiceError = service == 0 ? true : false;
 
         dispatch(setСompanyError(companyError))
         dispatch(setPhoneError(phoneError))
@@ -222,6 +223,7 @@ const App = () => {
         dispatch(setEmailErrorFormat(emailErrorFormat))
         dispatch(setIsBlackError(isBlackError))
         dispatch(setIsDebtError(isDebtError))
+        dispatch(setIsServiceError(isServiceError))
 
         if (!companyError &&
             !phoneError &&
@@ -235,7 +237,8 @@ const App = () => {
             !emailError &&
             !emailErrorFormat &&
             !isBlackError &&
-            !isDebtError) {
+            !isDebtError &&
+            !isServiceError) {
             return true
         } else {
             return false
@@ -282,6 +285,10 @@ const App = () => {
     }
 
     const handleEditOrder = () => {
+        const valid = handleValidation();
+        if (!valid) {
+            return
+        }
         setLoadSave(true)
         const data = { preorder: orderStatus == 0 ? 1 : 0, ...orderData }
         editOrder(data, id)
@@ -291,19 +298,23 @@ const App = () => {
                     setLoadSave(false)
                 }, 200)
 
-               /*  setTimeout(() => {
-                    if (orderStatus == 0) {
-                        window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
-                    } else {
-                        window.location.href = 'https://lk.skilla.ru/orders/'
-                    }
-                }) */
+                 setTimeout(() => {
+                     if (orderStatus == 0) {
+                         window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
+                     } else {
+                         window.location.href = 'https://lk.skilla.ru/orders/'
+                     }
+                 })
 
             })
             .catch(err => console.log(err))
     }
 
     const handlePublishOrder = () => {
+        const valid = handleValidation();
+        if (!valid) {
+            return
+        }
         setLoadCreate(true)
         const data = { preorder: 0, ...orderData }
         editOrder(data, id)
@@ -312,7 +323,7 @@ const App = () => {
                 setOrderStatus(Number(data.order_status))
                 setLoadCreate(false)
                 setTimeout(() => {
-                    /* window.location.href = 'https://lk.skilla.ru/orders/' */
+                    window.location.href = 'https://lk.skilla.ru/orders/'
                 })
             })
             .catch(err => console.log(err))
@@ -326,7 +337,7 @@ const App = () => {
                 console.log(res)
                 setLoadReject(false)
                 setTimeout(() => {
-               /*      window.location.href = 'https://lk.skilla.ru/orders/' */
+                         window.location.href = 'https://lk.skilla.ru/orders/'
                 })
             })
             .catch(err => { setLoadReject(false) })
@@ -338,7 +349,7 @@ const App = () => {
         <UserContext.Provider value={{ pro, role }}>
             <ParametrsContext.Provider value={parametrs}>
                 <div ref={appRef} className={`${s.app} ${anim && !loadDetail && s.app_anim} ${loadParametrs && !loadDetail && s.app_disabled}`}>
-                    {acceptStatus == 1 && <div className={s.header}>
+                    {acceptStatus == 1 && !fromLk && <div className={s.header}>
                         <h2 className={s.title}>{title}</h2>
                         {<div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>
                             {/*  <Button Icon={IconPoints} type={'points'} /> */}
@@ -354,11 +365,11 @@ const App = () => {
                         }
                     </div>}
 
-                    {fromPartnership !== 0 && acceptStatus == 0 && <div className={s.header}>
+                    {((fromPartnership !== 0 && acceptStatus == 0) || fromLk) && <div className={s.header}>
                         <h2 className={s.title}>{title}</h2>
                         <div className={`${s.buttons} ${s.buttons_vis}`}>
                             <Button disabled={loadReject} id={'reject'} type={'reject'} handleClick={handleRejectOrder} text={'Отклонить заказ'} Icon={IconReject} load={loadReject} />
-                            <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Принять заказ'} Icon={IconDone} load={loadSave} />
+                            <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={fromLk ? 'Подтвердить заказ' : 'Принять заказ'} Icon={IconDone} load={loadSave} />
                         </div>
                     </div>}
 
@@ -375,9 +386,9 @@ const App = () => {
                             <Details />
                             {service == 8 && <OrderSum />}
                             {service !== 8 && <Rates />}
-                            <Manager />
+                            {service !== 8 && <Manager />}
 
-                            {orderStatus < 4 && acceptStatus == 1 && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
+                            {orderStatus < 4 && acceptStatus == 1 && !fromLk && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
                                 {!existOrder && !loadDetail && <div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>
                                     {/*  <Button Icon={IconPoints} type={'points'} /> */}
                                     <Button disabled={loadSave} id={'save'} handleClick={handleSave} text={'Сохранить черновик'} type={'second'} load={loadSave} />
@@ -393,9 +404,9 @@ const App = () => {
                             </div>
                             }
 
-                            {fromPartnership !== 0 && acceptStatus == 0 && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
+                            {((fromPartnership !== 0 && acceptStatus == 0) || fromLk) && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
                                 <Button disabled={loadReject} id={'reject'} type={'reject'} handleClick={handleRejectOrder} text={'Отклонить заказ'} Icon={IconReject} load={loadReject} />
-                                <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Принять заказ'} Icon={IconDone} load={loadSave} />
+                                <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={fromLk ? 'Подтвердить заказ' : 'Принять заказ'} Icon={IconDone} load={loadSave} />
                             </div>}
 
 

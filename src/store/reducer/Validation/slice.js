@@ -15,7 +15,8 @@ const initialState = {
     emailError: false,
     emailErrorFormat: false,
     isBlackError: false,
-    isDebtError: false
+    isDebtError: false,
+    isServiceError: false,
 };
 
 const ValidtionSlice = createSlice({
@@ -78,6 +79,10 @@ const ValidtionSlice = createSlice({
         setIsDebtError(state, action) {
             state.isDebtError = action.payload;
         },
+
+        setIsServiceError(state, action) {
+            state.isServiceError = action.payload;
+        },
     },
 });
 
@@ -95,7 +100,8 @@ export const {
     setEmailErrorFormat,
     setIsBlackError,
     setIsDebtError,
-    setPaySummError
+    setPaySummError,
+    setIsServiceError
 } = ValidtionSlice.actions;
 
 export default ValidtionSlice.reducer;

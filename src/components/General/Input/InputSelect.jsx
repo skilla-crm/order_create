@@ -4,7 +4,7 @@ import { ReactComponent as IconChewron2 } from '../../../images/icons/iconChewro
 import avatardef from '../../../images/avatarDef.png';
 import { useRef, useState, useEffect } from 'react';
 
-const InputSelect = ({ sub, list, value, setValue, type, position, defaultRow }) => {
+const InputSelect = ({ sub, list, value, setValue, type, position, defaultRow, error, errorText }) => {
     const [openList, setOpenList] = useState(false);
     const [name, setName] = useState('');
     const [avatar, setAvatar] = useState('')
@@ -91,6 +91,12 @@ const InputSelect = ({ sub, list, value, setValue, type, position, defaultRow })
                         </>
                     })}
                 </ul>
+            </div>
+
+            <div className={`${s.error} ${error && s.error_vis}`}>
+                <p>
+                    {errorText}
+                </p>
             </div>
 
         </div>

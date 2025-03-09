@@ -19,7 +19,7 @@ import {
     setMinDurqtion,
     setDuration
 } from '../../store/reducer/Details/slice';
-import { setAdressError } from '../../store/reducer/Validation/slice';
+import { setAdressError, setIsServiceError } from '../../store/reducer/Validation/slice';
 //constants
 import {
     TITLE, BUTTON_TEXT,
@@ -45,7 +45,7 @@ const Details = () => {
     const { customer, payType } = useSelector(selectorCustomer);
     const { address, metro, defaultCordinate, noAddress, addressForReturn } = useSelector(selectorAddress);
     const { service, tags, commentSupervisor, notes, payNotes, minDuration, duration } = useSelector(selectorDetails);
-    const { adressError } = useSelector(selectorValidation)
+    const { adressError, isServiceError } = useSelector(selectorValidation)
     const [minDurationThreshold, setminDurationThreshold] = useState(24)
     const [payCommentState, setPayCommentState] = useState(false);
     const dispatch = useDispatch();
@@ -53,6 +53,10 @@ const Details = () => {
     useEffect(() => {
         address.city && handleResetErrorAddress()
     }, [address])
+
+    useEffect(() => {
+        dispatch(setIsServiceError(false))
+    }, [service])
 
     useEffect(() => {
         payNotes.length > 0 && setPayCommentState(true)
@@ -119,7 +123,10 @@ const Details = () => {
                 value={service}
                 setValue={(data) => dispatch(setService(Number(data)))}
                 list={types}
+                error={isServiceError}
+                errorText={'Выбери тип услуги'}
             />
+
 
             {/*  <InputSelectSearch
                 sub={SUB_TYPE}

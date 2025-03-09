@@ -6,7 +6,7 @@ import { setPerformersNum, setTime } from '../store/reducer/Performers/slice';
 import { setService, setRequirements, setMinDurqtion, setDuration, setCommentSupervisor, setNotes, setPayNotes } from '../store/reducer/Details/slice';
 import { setAddress, setMetro, deleteMetro, setNoAddress, setAddressForReturn } from '../store/reducer/Address/slice';
 import { setRate, setRateWorker, setOrderSum } from '../store/reducer/Rates/slice';
-import { setManagerId, setPartnershipId, setFromPartnership, setAcceptStatus, setEmailPasport, setPartnerRate } from '../store/reducer/Managers/slice';
+import { setManagerId, setPartnershipId, setFromPartnership, setAcceptStatus, setEmailPasport, setPartnerRate, setFromLk } from '../store/reducer/Managers/slice';
 //utils
 import { adressStringUtility } from '../utils/AdressUtility';
 
@@ -30,11 +30,15 @@ export const useWriteOrderDataHook = () => {
                 lng: data.lng
             }
 
-        
 
-            data.beznal == 1 && dispatch(setPayType(1))
-            data.beznal == 0 && data.to_card == 1 && dispatch(setPayType(2))
-            data.beznal == 0 && data.to_card == 0 && dispatch(setPayType(3))
+            if (data.accept_status == 1) {
+                data.beznal == 1 && dispatch(setPayType(1))
+                data.beznal == 0 && data.to_card == 1 && dispatch(setPayType(2))
+                data.beznal == 0 && data.to_card == 0 && dispatch(setPayType(3))
+            } else {
+                dispatch(setPayType(1))
+            }
+
             dispatch(setName(data.name))
             dispatch(setPhone(data.phone))
             data.name == '' && data.phone == ''
@@ -75,13 +79,14 @@ export const useWriteOrderDataHook = () => {
                 color: data?.metro3_color
             }))
 
-            data.city == '' &&  pro ? dispatch(setNoAddress(true)) : dispatch(setNoAddress(false))
+            data.city == '' && pro ? dispatch(setNoAddress(true)) : dispatch(setNoAddress(false))
             dispatch(setManagerId(data.supervisor_id))
             dispatch(setPartnershipId(data.to_partnership_id))
             dispatch(setEmailPasport(data.email_passport))
             data.partner_client_bit && dispatch(setPartnerRate(data.partner_client_bit))
             dispatch(setFromPartnership(data.from_partnership_id))
             dispatch(setAcceptStatus(data.accept_status))
+            dispatch(setFromLk(data.from_lk > 0 ? true : false))
             return
         }
     }, [data])

@@ -27,9 +27,10 @@ import InputNum from '../General/Input/InputNum';
 const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership }) => {
     const dispatch = useDispatch();
     const [anim, setAnim] = useState(false);
+    console.log(fromPartnership)
 
     const handleChoseRate = () => {
-        fromPartnership == 0 && dispatch(setRate(parseFloat(customerBit)))
+        (fromPartnership == 0 || !fromPartnership) && dispatch(setRate(parseFloat(customerBit)))
         dispatch(setRateWorker(parseFloat(workerBit)))
         minTime && Number(minTime) > 0 && dispatch(setMinDurqtion(Number(minTime)))
         handleResetRatio()
@@ -242,7 +243,9 @@ const Rates = () => {
                             customerBit={el.client_bit}
                             workerBit={el.worker_bit}
                             name={`Тариф ${i + 1}`}
-                            handleResetRatio={handleResetRatio} />
+                            handleResetRatio={handleResetRatio}
+                            fromPartnership={fromPartnership}
+                        />
                     })}
                 </ul>
                 }

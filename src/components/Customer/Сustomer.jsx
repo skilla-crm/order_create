@@ -343,7 +343,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     const handleSmsState = () => {
         isSms ? dispatch(setIsSms(false)) : dispatch(setIsSms(true))
     }
-    console.log(fromPartnership)
+
 
     return (
         <div className={`${s.window} ${hiddenCustomer && s.window_hidden}`}>
@@ -357,12 +357,12 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                     PromptText={PromptCustomer}
                 />
 
-                <SegmentControl
+                {acceptStatus == 1 && <SegmentControl
                     segments={segments}
                     setActive={(data) => dispatch(setPayType(Number(data)))}
                     active={payType}
-                    disabled={fromPartnership !== 0 && acceptStatus == 0}
                 />
+                }
 
                 <div className={s.container}>
                     <div className={s.block}>

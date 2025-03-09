@@ -10,6 +10,7 @@ const initialState = {
     emailState: false,
     fromPartnership: 0,
     acceptStatus: 1,
+    fromLk: false
 };
 
 const ManagersSlice = createSlice({
@@ -25,13 +26,6 @@ const ManagersSlice = createSlice({
             state.partnershipId = action.payload;
         },
 
-        setFromPartnership(state, action) {
-            state.fromPartnership = action.payload;
-        },
-
-        setAcceptStatus(state, action) {
-            state.acceptStatus = action.payload;
-        },
 
         setEmailPasport(state, action) {
             state.emailPasport = action.payload;
@@ -47,6 +41,18 @@ const ManagersSlice = createSlice({
 
         setEmailState(state, action) {
             state.emailState = action.payload;
+        },
+
+        setFromPartnership(state, action) {
+            state.fromPartnership = action.payload;
+        },
+
+        setAcceptStatus(state, action) {
+            state.acceptStatus = action.payload;
+        },
+
+        setFromLk(state, action) {
+            state.fromLk = action.payload;
         }
     },
 });
@@ -59,7 +65,8 @@ export const {
     setPartnerRates,
     setPartnerRate,
     setEmailState,
-    setAcceptStatus
+    setAcceptStatus,
+    setFromLk
 } = ManagersSlice.actions;
 
 export default ManagersSlice.reducer;
