@@ -30,6 +30,8 @@ import {
     setRateError, setRateWorkerError, setEmailError, setEmailErrorFormat, setIsBlackError, setIsDebtError,
     setPaySummError, setIsServiceError
 } from '../../store/reducer/Validation/slice';
+
+import { setFromPartnership, setAcceptStatus, setFromLk } from '../../store/reducer/Managers/slice';
 //selector
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorPerformers } from '../../store/reducer/Performers/selector';
@@ -154,6 +156,7 @@ const App = () => {
             document.title = 'Редактировать заказ'
             fromPartnership == 0 && setTitle('Редактировать заказ')
             fromPartnership !== 0 && setTitle('Заказ от партнера')
+
             setExistOrder(true)
             setLoadDetail(true)
             const idOrder = Number(path.split('order_id=').pop());
@@ -164,6 +167,11 @@ const App = () => {
                     const data = res.data.data;
                     const timeA = data.time == '' ? null : moment(`${data.time}`, 'HH:mm')
                     const date = dayjs(data.date, 'YYYY-MM-DD').locale('ru');
+
+                    dispatch(setFromPartnership(data?.from_partnership_id))
+                    dispatch(setAcceptStatus(data?.accept_status))
+                    dispatch(setFromLk(data?.from_lk > 0 ? true : false))
+
 
                     dispatch(setTime(timeA == null ? null : dayjs(timeA).locale('ru')))
                     dispatch(setDate(date))
@@ -298,13 +306,13 @@ const App = () => {
                     setLoadSave(false)
                 }, 200)
 
-                 setTimeout(() => {
-                     if (orderStatus == 0) {
-                         window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
-                     } else {
-                         window.location.href = 'https://lk.skilla.ru/orders/'
-                     }
-                 })
+                setTimeout(() => {
+                    if (orderStatus == 0) {
+                        window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
+                    } else {
+                        window.location.href = 'https://lk.skilla.ru/orders/'
+                    }
+                })
 
             })
             .catch(err => console.log(err))
@@ -337,7 +345,7 @@ const App = () => {
                 console.log(res)
                 setLoadReject(false)
                 setTimeout(() => {
-                         window.location.href = 'https://lk.skilla.ru/orders/'
+                    window.location.href = 'https://lk.skilla.ru/orders/'
                 })
             })
             .catch(err => { setLoadReject(false) })
@@ -358,7 +366,7 @@ const App = () => {
                         </div>
                         }
 
-                        {<div className={`${s.buttons} ${s.buttons_2} ${existOrder && !loadDetail && orderStatus < 4 && s.buttons_vis}`}>
+                        {<div className={`${s.buttons} ${s.buttons_2} ${existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 5)) && s.buttons_vis}`}>
                             <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />
                             {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
                         </div>
@@ -388,7 +396,7 @@ const App = () => {
                             {service !== 8 && <Rates />}
                             {service !== 8 && <Manager />}
 
-                            {orderStatus < 4 && acceptStatus == 1 && !fromLk && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
+                            {(orderStatus < 4 || (role == 'director' && orderStatus < 5)) && acceptStatus == 1 && !fromLk && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
                                 {!existOrder && !loadDetail && <div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>
                                     {/*  <Button Icon={IconPoints} type={'points'} /> */}
                                     <Button disabled={loadSave} id={'save'} handleClick={handleSave} text={'Сохранить черновик'} type={'second'} load={loadSave} />
@@ -396,7 +404,7 @@ const App = () => {
                                 </div>
                                 }
 
-                                {existOrder && !loadDetail && orderStatus < 4 && <div className={`${s.buttons} ${existOrder && !loadDetail && orderStatus < 4 && s.buttons_vis}`}>
+                                {existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 5)) && <div className={`${s.buttons} ${existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 5)) && s.buttons_vis}`}>
                                     <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />
                                     {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
                                 </div>

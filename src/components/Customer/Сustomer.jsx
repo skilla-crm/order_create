@@ -366,7 +366,8 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
                 <div className={s.container}>
                     <div className={s.block}>
-                        <div className={`${s.company} ${payType == 1 && s.company_vis}`}>
+
+                        <div className={`${s.company} ${(payType == 1 || fromPartnership !== 0) && s.company_vis}`}>
                             {fromPartnership == 0 && <InputCompany
                                 sub={SUB_COMPANY}
                                 list={companies}
@@ -377,12 +378,12 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                                 error={companyError}
                                 errorText={'Выбери заказчика'}
                             />}
-
                             {fromPartnership !== 0 &&
                                 <InputPartner
                                     sub={'Партнер'}
                                     value={`${skilla_partnerships?.find(el => el.to_id == fromPartnership)?.name}`}
                                 />}
+
 
                             <div className={s.warnings}>
                                 {tooltip && <Tooltip text={!isBlackOur ? blackCreatorPartnership : ''} comment={blackComment} />}

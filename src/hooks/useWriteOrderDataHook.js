@@ -30,14 +30,10 @@ export const useWriteOrderDataHook = () => {
                 lng: data.lng
             }
 
-
-            if (data.accept_status == 1) {
                 data.beznal == 1 && dispatch(setPayType(1))
                 data.beznal == 0 && data.to_card == 1 && dispatch(setPayType(2))
                 data.beznal == 0 && data.to_card == 0 && dispatch(setPayType(3))
-            } else {
-                dispatch(setPayType(1))
-            }
+          
 
             dispatch(setName(data.name))
             dispatch(setPhone(data.phone))
@@ -84,9 +80,6 @@ export const useWriteOrderDataHook = () => {
             dispatch(setPartnershipId(data.to_partnership_id))
             dispatch(setEmailPasport(data.email_passport))
             data.partner_client_bit && dispatch(setPartnerRate(data.partner_client_bit))
-            dispatch(setFromPartnership(data.from_partnership_id))
-            dispatch(setAcceptStatus(data.accept_status))
-            dispatch(setFromLk(data.from_lk > 0 ? true : false))
             return
         }
     }, [data])
