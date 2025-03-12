@@ -13,7 +13,7 @@ const initialState = {
     debt: 0,
     debtThreshold: 0,
     contacts: [],
-    isSms: false
+    isSms: true
 };
 
 const CustomerSlice = createSlice({

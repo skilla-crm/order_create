@@ -10,6 +10,10 @@
     align-items: center;
     gap: 6px;
     user-select: none;
+
+    h3 {
+        font-family: Inter, "sans-serif" !important;
+    }
 }
 
 .button {
