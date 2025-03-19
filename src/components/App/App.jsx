@@ -10,10 +10,9 @@ import moment from 'moment/moment';
 
 import { ReactComponent as IconDone } from '../../images/icons/iconDone16-16-white.svg';
 import { ReactComponent as IconPoints } from '../../images/icons/iconPoints16-16-blue.svg';
-import { ReactComponent as IconReject } from '../../images/icons/iconCloseRed.svg';
 import { UserContext, ParametrsContext } from '../../contexts/UserContext';
 //Api
-import { getParametrs, createOrder, getDetails, editOrder, rejectOrder } from '../../Api/Api';
+import { getParametrs, createOrder, getDetails, editOrder } from '../../Api/Api';
 import { getAddressExact } from '../../Api/ApiYandex';
 //slice
 import {
@@ -28,10 +27,8 @@ import { setDefaultCordinate } from '../../store/reducer/Address/slice';
 import {
     setСompanyError, setPhoneError, setPhoneErrorFormat, setNameError, setTimeError, setAdressError,
     setRateError, setRateWorkerError, setEmailError, setEmailErrorFormat, setIsBlackError, setIsDebtError,
-    setPaySummError, setIsServiceError
+    setPaySummError
 } from '../../store/reducer/Validation/slice';
-
-import { setFromPartnership, setAcceptStatus, setFromLk } from '../../store/reducer/Managers/slice';
 //selector
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorPerformers } from '../../store/reducer/Performers/selector';
@@ -68,7 +65,6 @@ const App = () => {
     const [parametrs, setParametrs] = useState({});
     const [loadCreate, setLoadCreate] = useState(false);
     const [loadSave, setLoadSave] = useState(false);
-    const [loadReject, setLoadReject] = useState(false);
     const [successWindow, setSuccessWindow] = useState(false);
     const [successWindowType, setSuccessWindowType] = useState(1);
     const [loadParametrs, setLoadParametrs] = useState(true);
@@ -78,14 +74,13 @@ const App = () => {
     const [id, setId] = useState(0);
     const [activeType, setActiveType] = useState('');
     const [hiddenCustomer, setHiddenCustomer] = useState(false);
-    const [positionButtonBotom, setPositionButtonBotom] = useState(false);
-    const [title, setTitle] = useState('Создание заказа')
+    const [positionButtonBotom, setPositionButtonBotom] = useState(false)
     const { customer, payType, name, phone, noContactPerson, isBlack, isBlackOur, debt, debtThreshold } = useSelector(selectorCustomer);
     const { time, timerDisabled } = useSelector(selectorPerformers);
     const { service } = useSelector(selectorDetails);
     const { address, noAddress } = useSelector(selectorAddress);
     const { rate, rateWorker, orderSum } = useSelector(selectorRates);
-    const { emailPasport, emailState, fromPartnership, acceptStatus, fromLk } = useSelector(selectorManagers);
+    const { emailPasport, emailState } = useSelector(selectorManagers);
     const { phoneModal } = useSelector(selectorPreview);
     const appRef = useRef();
 
@@ -154,9 +149,6 @@ const App = () => {
     useEffect(() => {
         if (path.includes('orders/edit/?order_id=')) {
             document.title = 'Редактировать заказ'
-            fromPartnership == 0 && setTitle('Редактировать заказ')
-            fromPartnership !== 0 && setTitle('Заказ от партнера')
-
             setExistOrder(true)
             setLoadDetail(true)
             const idOrder = Number(path.split('order_id=').pop());
@@ -167,11 +159,6 @@ const App = () => {
                     const data = res.data.data;
                     const timeA = data.time == '' ? null : moment(`${data.time}`, 'HH:mm')
                     const date = dayjs(data.date, 'YYYY-MM-DD').locale('ru');
-
-                    dispatch(setFromPartnership(data?.from_partnership_id))
-                    dispatch(setAcceptStatus(data?.accept_status))
-                    dispatch(setFromLk(data?.from_lk > 0 ? true : false))
-
 
                     dispatch(setTime(timeA == null ? null : dayjs(timeA).locale('ru')))
                     dispatch(setDate(date))
@@ -190,7 +177,7 @@ const App = () => {
                 .catch(err => console.log(err))
         }
 
-    }, [path, loadParametrs, fromPartnership]);
+    }, [path, loadParametrs]);
 
 
     useEffect(() => {
@@ -203,7 +190,7 @@ const App = () => {
     }, [parametrs.city])
 
     const handleValidation = () => {
-        const companyError = payType == 1 && !customer?.id && acceptStatus == 1 ? true : false;
+        const companyError = payType == 1 && !customer?.id ? true : false;
         const phoneError = !noContactPerson && phone == '' ? true : false;
         const phoneErrorFormat = phone?.length > 0 && phone?.length < 11 ? true : false;
         const nameError = !noContactPerson && name == '' ? true : false;
@@ -216,7 +203,6 @@ const App = () => {
         const emailErrorFormat = emailState && emailPasport !== '' && !emailValidate(emailPasport) ? true : false;
         const isBlackError = payType == 1 && isBlack == 1 && isBlackOur ? true : false;
         const isDebtError = payType == 1 && debt > 0 && debtThreshold > 0 && debt > debtThreshold ? true : false;
-        const isServiceError = service == 0 ? true : false;
 
         dispatch(setСompanyError(companyError))
         dispatch(setPhoneError(phoneError))
@@ -231,7 +217,6 @@ const App = () => {
         dispatch(setEmailErrorFormat(emailErrorFormat))
         dispatch(setIsBlackError(isBlackError))
         dispatch(setIsDebtError(isDebtError))
-        dispatch(setIsServiceError(isServiceError))
 
         if (!companyError &&
             !phoneError &&
@@ -245,8 +230,7 @@ const App = () => {
             !emailError &&
             !emailErrorFormat &&
             !isBlackError &&
-            !isDebtError &&
-            !isServiceError) {
+            !isDebtError) {
             return true
         } else {
             return false
@@ -293,10 +277,6 @@ const App = () => {
     }
 
     const handleEditOrder = () => {
-        const valid = handleValidation();
-        if (!valid) {
-            return
-        }
         setLoadSave(true)
         const data = { preorder: orderStatus == 0 ? 1 : 0, ...orderData }
         editOrder(data, id)
@@ -319,10 +299,6 @@ const App = () => {
     }
 
     const handlePublishOrder = () => {
-        const valid = handleValidation();
-        if (!valid) {
-            return
-        }
         setLoadCreate(true)
         const data = { preorder: 0, ...orderData }
         editOrder(data, id)
@@ -338,27 +314,13 @@ const App = () => {
     }
 
 
-    const handleRejectOrder = () => {
-        setLoadReject(true)
-        rejectOrder(id)
-            .then(res => {
-                console.log(res)
-                setLoadReject(false)
-                setTimeout(() => {
-                    window.location.href = 'https://lk.skilla.ru/orders/'
-                })
-            })
-            .catch(err => { setLoadReject(false) })
-    }
-
-
     document.documentElement.dataset.theme = theme;
     return (
         <UserContext.Provider value={{ pro, role }}>
             <ParametrsContext.Provider value={parametrs}>
                 <div ref={appRef} className={`${s.app} ${anim && !loadDetail && s.app_anim} ${loadParametrs && !loadDetail && s.app_disabled}`}>
-                    {acceptStatus == 1 && !fromLk && <div className={s.header}>
-                        <h2 className={s.title}>{title}</h2>
+                    <div className={s.header}>
+                        <h2 className={s.title}>Создание заказа</h2>
                         {<div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>
                             {/*  <Button Icon={IconPoints} type={'points'} /> */}
                             <Button disabled={loadSave} id={'save'} handleClick={handleSave} text={'Сохранить черновик'} type={'second'} load={loadSave} />
@@ -366,20 +328,12 @@ const App = () => {
                         </div>
                         }
 
-                        {<div className={`${s.buttons} ${s.buttons_2} ${existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 5)) && s.buttons_vis}`}>
-                            <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />
+                        {<div className={`${s.buttons} ${s.buttons_2} ${existOrder && !loadDetail && orderStatus < 4 && s.buttons_vis}`}>
+                            <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ?'second' : 'tr'} load={loadSave} />
                             {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
                         </div>
                         }
-                    </div>}
-
-                    {((fromPartnership !== 0 && acceptStatus == 0) || fromLk) && <div className={s.header}>
-                        <h2 className={s.title}>{title}</h2>
-                        <div className={`${s.buttons} ${s.buttons_vis}`}>
-                            <Button disabled={loadReject} id={'reject'} type={'reject'} handleClick={handleRejectOrder} text={'Отклонить заказ'} Icon={IconReject} load={loadReject} />
-                            <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={fromLk ? 'Подтвердить заказ' : 'Принять заказ'} Icon={IconDone} load={loadSave} />
-                        </div>
-                    </div>}
+                    </div>
 
 
                     <div className={s.container}>
@@ -394,9 +348,9 @@ const App = () => {
                             <Details />
                             {service == 8 && <OrderSum />}
                             {service !== 8 && <Rates />}
-                            {service !== 8 && <Manager />}
+                            <Manager />
 
-                            {(orderStatus < 4 || (role == 'director' && orderStatus < 5)) && acceptStatus == 1 && !fromLk && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
+                            <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
                                 {!existOrder && !loadDetail && <div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>
                                     {/*  <Button Icon={IconPoints} type={'points'} /> */}
                                     <Button disabled={loadSave} id={'save'} handleClick={handleSave} text={'Сохранить черновик'} type={'second'} load={loadSave} />
@@ -404,18 +358,12 @@ const App = () => {
                                 </div>
                                 }
 
-                                {existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 5)) && <div className={`${s.buttons} ${existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 5)) && s.buttons_vis}`}>
-                                    <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />
+                                {existOrder && !loadDetail && orderStatus < 4 && <div className={`${s.buttons} ${existOrder && !loadDetail && orderStatus < 4 && s.buttons_vis}`}>
+                                    <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ?'second' : 'tr'} load={loadSave} />
                                     {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
                                 </div>
                                 }
                             </div>
-                            }
-
-                            {((fromPartnership !== 0 && acceptStatus == 0) || fromLk) && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
-                                <Button disabled={loadReject} id={'reject'} type={'reject'} handleClick={handleRejectOrder} text={'Отклонить заказ'} Icon={IconReject} load={loadReject} />
-                                <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={fromLk ? 'Подтвердить заказ' : 'Принять заказ'} Icon={IconDone} load={loadSave} />
-                            </div>}
 
 
 
