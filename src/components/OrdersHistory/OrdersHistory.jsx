@@ -31,7 +31,7 @@ const list = [{ id: 5, name: 'Последние 5 заказов' }, { id: 10, 
 const Bage = ({ status }) => {
     return (
         <>
-            {(status == 4 || status == 20) &&
+            {(status === 4 || status === 20) &&
                 <div className={s.bage}>
                     <IconDone />
                     <p>Завершен</p>

@@ -8,7 +8,8 @@ import { useLocation } from 'react-router-dom';
 import dayjs from 'dayjs';
 import moment from 'moment/moment';
 
-import { ReactComponent as IconDone } from '../../images/icons/iconDone16-16-white.svg';
+import { ReactComponent as IconDone } from '../../images/icons/iconDone16-16-white.svg'; 
+import { ReactComponent as IconTime2 } from '../../images/icons/iconTime2.svg';
 import { ReactComponent as IconPoints } from '../../images/icons/iconPoints16-16-blue.svg';
 import { UserContext, ParametrsContext } from '../../contexts/UserContext';
 //Api
@@ -148,7 +149,11 @@ const App = () => {
 
     useEffect(() => {
         if (path.includes('orders/edit/?order_id=')) {
-            document.title = 'Редактировать заказ'
+            document.title = orderStatus === 5 ? 'Повторить заказ' : 'Редактировать заказ'
+            fromPartnership == 0 && orderStatus !== 5 && setTitle('Редактировать заказ')
+            fromPartnership == 0 && orderStatus === 5 && setTitle('Повторить заказ')
+            fromPartnership !== 0 && setTitle('Заказ от партнера')
+
             setExistOrder(true)
             setLoadDetail(true)
             const idOrder = Number(path.split('order_id=').pop());
@@ -177,7 +182,7 @@ const App = () => {
                 .catch(err => console.log(err))
         }
 
-    }, [path, loadParametrs]);
+    }, [path, loadParametrs, fromPartnership, orderStatus]);
 
 
     useEffect(() => {
@@ -333,7 +338,19 @@ const App = () => {
                             {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
                         </div>
                         }
-                    </div>
+
+                        {orderStatus === 5 && <Button disabled={loadCreate} id={'create'} handleClick={handleCreate} text={'Повторить заказ'} Icon={IconDone} load={loadCreate} />}
+                    </div>}
+
+                    {((fromPartnership !== 0 && acceptStatus == 0) || fromLk) && <div className={s.header}>
+                        <h2 className={s.title}>{title}</h2>
+                        <div className={`${s.buttons} ${s.buttons_vis}`}>
+                            <Button disabled={loadReject} id={'reject'} type={'reject'} handleClick={handleRejectOrder} text={'Отклонить заказ'} Icon={IconReject} load={loadReject} />
+                            <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={fromLk ? 'Подтвердить заказ' : 'Принять заказ'} Icon={IconDone} load={loadSave} />
+                        </div>
+                    </div>}
+
+
 
 
                     <div className={s.container}>
