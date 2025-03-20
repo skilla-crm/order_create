@@ -153,9 +153,10 @@ const App = () => {
 
     useEffect(() => {
         if (path.includes('orders/edit/?order_id=')) {
-            document.title = 'Редактировать заказ'
-            fromPartnership == 0 && setTitle('Редактировать заказ')
+            document.title = fromPartnership !== 0 ? 'Заказ от партнера' : orderStatus === 5 ? 'Повторить заказ' : 'Редактировать заказ'
+            fromPartnership === 0 && orderStatus !== 5 && setTitle('Редактировать заказ')
             fromPartnership !== 0 && setTitle('Заказ от партнера')
+            orderStatus === 5 && setTitle('Повторить заказ')
 
             setExistOrder(true)
             setLoadDetail(true)
@@ -190,7 +191,7 @@ const App = () => {
                 .catch(err => console.log(err))
         }
 
-    }, [path, loadParametrs, fromPartnership]);
+    }, [path, loadParametrs, fromPartnership, orderStatus]);
 
 
     useEffect(() => {
