@@ -61,6 +61,11 @@
     outline: 1px solid var(--color-input-outline);
     transition: all 0.1s;
 
+    &::placeholder {
+        opacity: 0.4;
+        color: var(--color-text-secondary);
+    }
+
     &:focus {
         outline: 1px solid var(--color-button-accent) !important;
     }
@@ -70,11 +75,9 @@
     }
 
     &:disabled {
+        background-color: rgba(212, 223, 243, 0.17);
+        color: var(--color-text-secondary);
 
-
-        &::placeholder {
-            opacity: 0;
-        }
     }
 
     &_err {

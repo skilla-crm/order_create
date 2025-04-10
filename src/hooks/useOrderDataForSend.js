@@ -51,6 +51,7 @@ export const useOrderDataForSend = () => {
         load_address: address.street,
         city: address.city,
         home: address.house,
+        apartment: address.apartment,
         lat: address.lat,
         lng: address.lng,
         metro: metro[0]?.name,

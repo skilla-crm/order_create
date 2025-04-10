@@ -8,7 +8,7 @@ import InputMask from 'comigo-tech-react-input-mask/lib/react-input-mask.develop
 import { ReactComponent as IconRepeat } from '../../images/icons/iconRepeat.svg';
 import { ReactComponent as IconBuilder } from '../../images/icons/IconBuilder.svg';
 import { ReactComponent as IconDone } from '../../images/icons/bage/iconDone.svg';
-import { ReactComponent as IconDoneYellow } from '../../images/icons/bage/iconDoneYellow.svg';
+import { ReactComponent as IconTimeYellow } from '../../images/icons/bage/iconTimeYellow.svg';
 import { ReactComponent as IconClose } from '../../images/icons/bage/iconClose.svg';
 import dayjs from 'dayjs';
 //Api
@@ -34,21 +34,21 @@ const Bage = ({ status }) => {
             {(status === 4 || status === 20) &&
                 <div className={s.bage}>
                     <IconDone />
-                    <p>Завершен</p>
+                 
                 </div>
             }
 
             {status < 4 &&
                 <div className={`${s.bage} ${s.bage_yellow}`}>
-                    <IconDoneYellow />
-                    <p>Не завершен</p>
+                    <IconTimeYellow />
+                  
                 </div>
             }
 
             {(status == 5 || status == 21) &&
                 <div className={`${s.bage} ${s.bage_red}`}>
                     <IconClose />
-                    <p>Отменен</p>
+                  
                 </div>
             }
         </>

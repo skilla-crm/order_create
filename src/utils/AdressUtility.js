@@ -8,6 +8,20 @@ export const adressStringUtility2 = (address) => {
     return addressString
 }
 
+export const adressStringUtility3 = (address) => {
+    const addressString = `${address?.city ? address?.city : ''}${address?.street ? ', ' : ' '}${address?.street ?  address?.street : ''}`
+    return addressString
+}
+
+export const adressStringUtility4 = (address) => {
+    const addressString = `${address?.city ? address?.city : ''}${address?.street ? ', ' : ' '}${address?.street ?  address?.street : ''}${address?.house ? ', ' : ' '}${address?.house ? '' + address?.house : ''}${address?.k ? ' ' + address?.k : ''}${address?.apartment ? ', кв. ' : ' '}${address?.apartment ? '' + address?.apartment : ''}`
+    return addressString
+}
+
+export const adressStringUtility5 = (address) => {
+    const addressString = `${address?.street ? ', ' : ' '}${address?.street ?  address?.street : ''}${address?.house ? ', ' : ' '}${address?.house ? '' + address?.house : ''}${address?.k ? ' ' + address?.k : ''}${address?.apartment ? ', кв. ' : ' '}${address?.apartment ? '' + address?.apartment : ''}`
+    return addressString
+}
 
 export const cityStringUtility = (data) => {
     const city = `${data.city_with_type ? data.city_with_type : ''}${data.city_with_type && data.settlement_with_type ? ', ' : ''}${data.settlement_with_type ? data.settlement_with_type : ''}`;
@@ -55,5 +69,7 @@ export const addressUtility = (data) => {
         apartment: isApartment ? isApartment : '',
     }
 }
+
+
 
 /* {isEntrance && isHouse ? ' ' + isEntrance : isEntrance && !isHouse ? isEntrance : ''} */

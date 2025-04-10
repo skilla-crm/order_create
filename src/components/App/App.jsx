@@ -48,6 +48,7 @@ import { emailValidate } from '../../utils/EmailValidate';
 import Button from '../General/Button/Button';
 import Customer from '../Customer/Сustomer';
 import Performers from '../Performers/Performers';
+import Addresses from '../Addresses/Addresses';
 import Details from '../Details/Details';
 import Preview from '../Preview/Preview';
 import PreviewApp from '../PreviewApp/PreviewApp';
@@ -307,13 +308,13 @@ const App = () => {
                     setLoadSave(false)
                 }, 200)
 
-                setTimeout(() => {
+                /* setTimeout(() => {
                     if (orderStatus == 0) {
                         window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
                     } else {
                         window.location.href = 'https://lk.skilla.ru/orders/'
                     }
-                })
+                }) */
 
             })
             .catch(err => console.log(err))
@@ -393,30 +394,30 @@ const App = () => {
                             {<Customer setAddCustomer={setAddCustomer} addCustomer={addCustomer} hiddenCustomer={hiddenCustomer} setHiddenCustomer={setHiddenCustomer} />}
 
                             <Performers />
+                            <Addresses />
                             <Details />
                             {service == 8 && <OrderSum />}
                             {service !== 8 && <Rates />}
-                            {service !== 8 && <Manager />}
+                            {<Manager/>}
 
                             {(orderStatus < 4 || (role == 'director' && orderStatus < 5)) && acceptStatus == 1 && !fromLk && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
                                 {!existOrder && !loadDetail && <div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>
-                                    {/*  <Button Icon={IconPoints} type={'points'} /> */}
-                                    <Button disabled={loadSave} id={'save'} handleClick={handleSave} text={'Сохранить черновик'} type={'second'} load={loadSave} />
                                     <Button disabled={loadCreate} id={'create'} handleClick={handleCreate} text={'Создать заказ'} Icon={IconDone} load={loadCreate} />
+                                    <Button disabled={loadSave} id={'save'} handleClick={handleSave} text={'Черновик'} type={'second'} load={loadSave} />
                                 </div>
                                 }
 
                                 {existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 5)) && <div className={`${s.buttons} ${existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 5)) && s.buttons_vis}`}>
-                                    <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />
                                     {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
+                                    <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />
                                 </div>
                                 }
                             </div>
                             }
 
                             {((fromPartnership !== 0 && acceptStatus == 0) || fromLk) && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
-                                <Button disabled={loadReject} id={'reject'} type={'reject'} handleClick={handleRejectOrder} text={'Отклонить заказ'} Icon={IconReject} load={loadReject} />
                                 <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={fromLk ? 'Подтвердить заказ' : 'Принять заказ'} Icon={IconDone} load={loadSave} />
+                                <Button disabled={loadReject} id={'reject'} type={'reject'} handleClick={handleRejectOrder} text={'Отклонить заказ'} Icon={IconReject} load={loadReject} />
                             </div>}
 
 

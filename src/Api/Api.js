@@ -16,7 +16,7 @@ instanceWithToken.interceptors.request.use((config) => {
 export const getParametrs = () => {
   return instanceWithToken.get(`${baseURL}api/orders/parameters`)
 }
-
+/* api/orders/parameters?partnership_id={id} */
 export const createCompany = (data) => {
   return instanceWithToken({
     method: 'post',

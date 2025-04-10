@@ -4,27 +4,23 @@ import { useSelector, useDispatch } from 'react-redux';
 import { ParametrsContext } from '../../contexts/UserContext';
 import { ReactComponent as IconWarning } from '../../images/icons/iconWarning.svg';
 //constants
-import { TITLE, SUB_SWITCH, SUB_EMAIL, segments, defaultRow } from '../../constants/managers';
-import { ERR_EMAIL } from '../../constants/addCustomer';
+import { TITLE, segments, defaultRow } from '../../constants/managers';
+
 import { PromptManager } from '../../constants/prompts';
 //utils
-import { emailValidate } from '../../utils/EmailValidate';
+
 import { sortManager } from '../../utils/sortManager';
 //selector
 import { selectorManagers } from '../../store/reducer/Managers/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
-import { selectorValidation } from '../../store/reducer/Validation/selector';
 import { selectorDetails } from '../../store/reducer/Details/selector';
 //slice
-import { setManagerId, setPartnershipId, setEmailPasport, setPartnerRates, setPartnerRate, setEmailState } from '../../store/reducer/Managers/slice';
-import { setEmailError, setEmailErrorFormat } from '../../store/reducer/Validation/slice';
+import { setManagerId, setPartnershipId, setPartnerRates, setPartnerRate, setEmailState } from '../../store/reducer/Managers/slice';
 //components 
 import Header from '../General/Header/Header';
 import SegmentControl from '../General/SegmentControl/SegmentControl';
 import InputSelect from '../General/Input/InputSelect';
 import InputSelectPartner from '../General/Input/InputSelectPartner';
-import Switch from '../General/Switch/Switch';
-import InputEmail from '../General/Input/InputEmail';
 
 
 const Manager = () => {
@@ -34,9 +30,9 @@ const Manager = () => {
     const [defaultManagerId, setDefaultManagerId] = useState(null)
     const { managerId, partnershipId, emailPasport, partnerRates, partnerRate, emailState, fromPartnership, acceptStatus } = useSelector(selectorManagers);
     const { service } = useSelector(selectorDetails);
-    const { contacts, payType } = useSelector(selectorCustomer);
-    const { emailError } = useSelector(selectorValidation)
+    const { payType } = useSelector(selectorCustomer);
     const dispatch = useDispatch();
+    console.log(service)
 
     useEffect(() => {
         service == 8 && dispatch(setEmailState(false))
@@ -89,24 +85,6 @@ const Manager = () => {
         }
     }
 
-    const handleSwitch = () => {
-        if (emailState) {
-            dispatch(setEmailState(false))
-            handleResetErrorEmail()
-            dispatch(setEmailPasport(''))
-        } else {
-            dispatch(setEmailState(true))
-        }
-    }
-
-    useEffect(() => {
-        emailPasport !== '' && dispatch(setEmailState(true))
-    }, [emailPasport])
-
-    const handleResetErrorEmail = () => {
-        dispatch(setEmailError(false))
-        dispatch(setEmailErrorFormat(false))
-    }
 
 
     return (
@@ -116,7 +94,7 @@ const Manager = () => {
                 buttonState={false}
                 PromptText={PromptManager}
             />
-            {skilla_partnerships?.length > 0 && fromPartnership == 0 && <SegmentControl
+            {skilla_partnerships?.length > 0 && service !== 8 && fromPartnership == 0 && <SegmentControl
                 segments={segments}
                 setActive={(data) => handleActive(data)}
                 active={activeSegment}
@@ -129,7 +107,7 @@ const Manager = () => {
                     setValue={(data) => dispatch(setManagerId(Number(data)))}
                     defaultRow={defaultRow}
                     type={3}
-                    position={supervisors?.length > 2 ? 'top' : ''}
+                    position={supervisors?.length > 1 ? 'top' : ''}
                 />
 
                 <div className={`${s.warning} ${managerId == 0 && s.warning_vis}`}>
@@ -141,7 +119,7 @@ const Manager = () => {
             </div>
             }
 
-            {activeSegment == 2 && skilla_partnerships?.length > 0 &&
+            {activeSegment == 2 && skilla_partnerships?.length > 0 && service !== 8 &&
                 <div>
                     <InputSelectPartner
                         list={skilla_partnerships}
@@ -166,27 +144,7 @@ const Manager = () => {
 
 
 
-            {service !== 8 && <Switch
-                text={SUB_SWITCH}
-                switchState={emailState}
-                handleSwitch={handleSwitch}
-            />}
 
-            <div className={`${s.email} ${emailState && s.email_vis}`}>
-                <InputEmail
-                    sub={SUB_EMAIL}
-                    value={emailPasport}
-                    setValue={(data) => dispatch(setEmailPasport(data))}
-                    error={!emailValidate(emailPasport) && emailPasport.length > 0}
-                    errorEmpity={emailError}
-                    errorText={ERR_EMAIL}
-                    errorTextEmpity={'заполни поле'}
-                    contacts={contacts.filter((el) => el.email !== '')}
-                    type={2}
-                    handleResetErrorEmail={handleResetErrorEmail}
-                />
-
-            </div>
 
         </div>
     )

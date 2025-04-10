@@ -3,12 +3,10 @@ import { useContext, useEffect, useState } from 'react';
 import { UserContext, ParametrsContext } from '../../contexts/UserContext';
 import { useSelector, useDispatch } from 'react-redux';
 //selectors
-import { selectorAddress } from '../../store/reducer/Address/selector';
 import { selectorDetails } from '../../store/reducer/Details/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 //slice
-import { setAddress, setMetro, setNoAddress, deleteMetro } from '../../store/reducer/Address/slice';
 import {
     setService,
     addRequirements,
@@ -22,7 +20,7 @@ import {
 import { setAdressError, setIsServiceError } from '../../store/reducer/Validation/slice';
 //constants
 import {
-    TITLE, BUTTON_TEXT,
+    TITLE,
     SUB_TYPE, SUB_COMMENT,
     SUB_DESCRIPTION, SUB_MINDURATION,
     SUB_DURATION, SUB_REQUIREMENTS,
@@ -31,28 +29,23 @@ import {
 import { PromptDetails } from '../../constants/prompts';
 //components
 import Header from '../General/Header/Header';
-import InputSelectSearch from '../General/Input/InputSelectSearch';
 import InputSelect from '../General/Input/InputSelect';
 import Comment from '../General/Comment/Comment';
 import TabsNumbers from '../General/Tabs/TabsNumbers';
 import Tags from '../General/Tags/Tags';
-import Address from '../General/Address/Address';
 
 
 const Details = () => {
     const user = useContext(UserContext);
     const { types, requirements, partnerships } = useContext(ParametrsContext)
     const { customer, payType } = useSelector(selectorCustomer);
-    const { address, metro, defaultCordinate, noAddress, addressForReturn } = useSelector(selectorAddress);
     const { service, tags, commentSupervisor, notes, payNotes, minDuration, duration } = useSelector(selectorDetails);
-    const { adressError, isServiceError } = useSelector(selectorValidation)
+    const { isServiceError } = useSelector(selectorValidation)
     const [minDurationThreshold, setminDurationThreshold] = useState(24)
     const [payCommentState, setPayCommentState] = useState(false);
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        address.city && handleResetErrorAddress()
-    }, [address])
+
 
     useEffect(() => {
         dispatch(setIsServiceError(false))
@@ -83,16 +76,6 @@ const Details = () => {
         minDuration > duration && dispatch(setDuration(Number(minDuration)))
     }, [minDuration, duration])
 
-    const handleNoAdress = () => {
-        if (noAddress) {
-            dispatch(setNoAddress(false))
-        } else {
-            dispatch(setNoAddress(true))
-            dispatch(setAddress({}))
-            dispatch(deleteMetro())
-            handleResetErrorAddress()
-        }
-    }
 
     const handleResetErrorAddress = () => {
         dispatch(setAdressError(false))
@@ -192,24 +175,6 @@ const Details = () => {
                 forPro={false}
             />
             }
-
-
-            <Address
-                address={address}
-                metro={metro}
-                sub={SUB_ADDRESS}
-                user={user}
-                defaultCordinate={defaultCordinate}
-                setAddress={(data) => dispatch(setAddress(data))}
-                setMetro={(data) => dispatch(setMetro(data))}
-                first={true}
-                handleNoAdress={handleNoAdress}
-                noAddress={noAddress}
-                addressForReturn={addressForReturn}
-                error={adressError}
-                errorText={'Укажи адрес'}
-            />
-
         </div>
     )
 };

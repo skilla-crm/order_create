@@ -17,11 +17,11 @@ import ErrorWindow from '../ErrorWindow/ErrorWindow';
 //utils
 import { handleTextNumEnding } from '../../utils/HandleTextNumEndind';
 import { addSpaceNumber2, addSpaceNumber } from '../../utils/addSpaceNumber';
-import { adressStringUtility } from '../../utils/AdressUtility';
+import { adressStringUtility4, adressStringUtility5 } from '../../utils/AdressUtility';
 const tags2 = [{ id: 1, description: 'Паспорт' }]
 
 const Preview = () => {
-    const { requirements } = useContext(ParametrsContext)
+    const { requirements, city } = useContext(ParametrsContext)
     const { performersNum, date, time } = useSelector(selectorPerformers);
     const { customer, payType, name, phone, noContactPerson } = useSelector(selectorCustomer);
     const { tags, notes, minDuration, duration } = useSelector(selectorDetails);
@@ -56,7 +56,7 @@ const Preview = () => {
             <div className={s.container}>
                 <div className={s.block}>
                     <span>Заказчик</span>
-                    <div style={{marginBottom: noContactPerson ? '20px' : ''}} className={`${s.block} ${payType !== 1 && s.block_hidden2}`}>
+                    <div style={{ marginBottom: noContactPerson ? '20px' : '' }} className={`${s.block} ${payType !== 1 && s.block_hidden2}`}>
                         {<div className={`${s.item} ${s.item_company}`}>
                             <Overlay active={!customer?.id} />
                             <p>{customer?.name}</p>
@@ -98,7 +98,8 @@ const Preview = () => {
                     <span>Адрес</span>
                     <div className={`${s.item} ${s.item_address}`}>
                         <Overlay active={!address.city} />
-                        <p>{adressStringUtility(address)}</p>
+                        {city !== address.city && <p className={s.bold}>{adressStringUtility4(address)}</p>}
+                        {city == address.city && <p className={s.bold}>{adressStringUtility5(address)}</p>}
                     </div>
                     <div className={s.map}>
                         <MapAddress lat={address.lat} lng={address.lng} defaultCordinate={defaultCordinate} width={'100%'} height={160} />
@@ -121,7 +122,7 @@ const Preview = () => {
                         {minDuration < duration && <p>{performersNum} чел на {minDuration}-{duration} {handleTextNumEnding(duration)}</p>}
                         {minDuration == duration && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
                         {minDuration > duration && <p>{performersNum} чел на {duration} {handleTextNumEnding(duration)}</p>}
-                 
+
                     </div>
                 </div>
             </div>

@@ -8,15 +8,16 @@ import { getAddressExact, getAddressSuggest } from '../../../Api/ApiYandex';
 import MapAddress from '../MapAddress/MapAddress';
 import Switch from '../Switch/Switch';
 import Metro from '../Metro/Metro';
+import InputText from '../Input/InputText';
 //utils
-import { adressStringUtility, addressUtility } from '../../../utils/AdressUtility';
+import { adressStringUtility, addressUtility, adressStringUtility3 } from '../../../utils/AdressUtility';
 
-const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordinate, first, handleNoAdress, noAddress, addressForReturn, errorText, error }) => {
+const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordinate, first, handleNoAdress, noAddress, addressForReturn, errorText, error, openMap, setOpenMap }) => {
     const [query, setQuery] = useState(adressStringUtility(address) || '');
     const [openList, setOpenList] = useState(false)
     const [suggestions, setSuggestions] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
-    const [openMap, setOpenMap] = useState(false);
+
     const listRef = useRef();
     console.log(address)
 
@@ -96,9 +97,7 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
         setOnFocus(false)
     }
 
-    const handleMap = () => {
-        openMap ? setOpenMap(false) : setOpenMap(true)
-    }
+   
 
     const openModalPro = () => {
         document?.getElementById('pro-open')?.click();
@@ -123,11 +122,11 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
             <div className={s.block}>
                 <div ref={listRef} className={`${s.field} ${noAddress && s.field_disabled} ${onFocus && s.field_focus}`}>
                     <input disabled={noAddress} onFocus={handleFocus} onBlur={handleBlur} value={query || ''} onChange={handleAdress}></input>
-                    <button onClick={handleMap} className={`${s.button} ${(onFocus || ((!address.lat || address.city == '') && !openMap)) && s.button_hidden}`}>
+                    {/*    <button onClick={handleMap} className={`${s.button} ${(onFocus || ((!address.lat || address.city == '') && !openMap)) && s.button_hidden}`}>
                         <IconLocation />
                         {!openMap && <p>На карте</p>}
                         {openMap && <p>Скрыть</p>}
-                    </button>
+                    </button> */}
 
                     <ul className={`${s.list} ${openList && s.list_open}`}>
                         {suggestions?.map((el) => {
@@ -145,9 +144,37 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
                 />
                 }
             </div>
-            <div className={`${s.metro} ${metro.length >= 2 && s.metro_open}`}>
-                <Metro station={metro} />
+            <div className={`${s.info} ${address?.city && s.info_open}`}>
+                <div className={s.manual}>
+                    <InputText
+                        disabledEdit={true}
+                        value={adressStringUtility3(address)}
+                    />
+
+                    <div className={s.input_small}>
+                        <InputText
+                            disabledEdit={true}
+                            value={address?.house}
+                            placeholder={'Дом'}
+                        />
+                    </div>
+
+                    <div className={s.input_small}>
+
+                        <InputText
+                            disabledEdit={false}
+                            value={address?.apartment}
+                            setValue={(value) => setAddress({ ...address, apartment: value })}
+                            placeholder={'Кв/оф'}
+                        />
+                    </div>
+
+                </div>
+                <div className={`${s.metro} ${metro.length >= 2 && s.metro_open}`}>
+                    <Metro station={metro} />
+                </div>
             </div>
+
 
             <div className={`${s.error} ${error && s.error_vis}`}>
                 <p>

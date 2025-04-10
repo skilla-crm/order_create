@@ -7,6 +7,8 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/ru'
 //constants
 import { TITLE, BUTTON_TEXT, SUB_DATE, SUB_TIME, SWITCH_NAME, SUB_PERFORMERS, SUB_DATES } from '../../constants/performers';
+import { SUB_EMAIL, SUB_SWITCH } from '../../constants/managers';
+import { ERR_EMAIL } from '../../constants/addCustomer';
 import { PromptPerformers } from '../../constants/prompts';
 //components
 import Header from '../General/Header/Header';
@@ -16,16 +18,21 @@ import Switch from '../General/Switch/Switch';
 import TabsNumbers from '../General/Tabs/TabsNumbers';
 import AdditionalDate from './AdditionalDate/AdditionalDate';
 import ProCalendar from './ProCalendar/ProCalendar';
+import InputEmail from '../General/Input/InputEmail';
 //slice
 import { setPerformersNum, setDate, setTime, setTimerDisabled } from '../../store/reducer/Performers/slice';
 import { setAdditionalDates } from '../../store/reducer/AdditionalDates/slice';
-import { setTimeError } from '../../store/reducer/Validation/slice';
+import { setTimeError, setEmailError, setEmailErrorFormat } from '../../store/reducer/Validation/slice';
+import { setEmailState, setEmailPasport } from '../../store/reducer/Managers/slice';
 //selector
 import { selectorPerformers } from '../../store/reducer/Performers/selector';
 import { selectorAdditionalDates } from '../../store/reducer/AdditionalDates/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
 import { selectorDetails } from '../../store/reducer/Details/selector';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
+import { selectorCustomer } from '../../store/reducer/Customer/selector';
+//utils
+import { emailValidate } from '../../utils/EmailValidate';
 
 const Performers = () => {
     const [proCalendar, setProCalendar] = useState(false);
@@ -39,8 +46,10 @@ const Performers = () => {
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { service } = useSelector(selectorDetails);
     const { additionalDates, disabledDates } = useSelector(selectorAdditionalDates);
-    const { timeError } = useSelector(selectorValidation);
-    const { fromPartnership, acceptStatus } = useSelector(selectorManagers);
+    const { timeError, emailError } = useSelector(selectorValidation);
+    const { fromPartnership, acceptStatus, emailState, emailPasport } = useSelector(selectorManagers);
+    const { contacts } = useSelector(selectorCustomer);
+
 
     useEffect(() => {
         service !== 8 && performersNum == 0 && dispatch(setPerformersNum(1))
@@ -55,6 +64,13 @@ const Performers = () => {
         handleResetErrorTime()
     }, [time])
 
+
+    useEffect(() => {
+        emailPasport !== '' && dispatch(setEmailState(true))
+    }, [emailPasport])
+
+
+
     const handleTimerDisabled = () => {
         timerDisabled ? dispatch(setTimerDisabled(false)) : dispatch(setTimerDisabled(true))
         !timerDisabled && handleResetErrorTime()
@@ -66,6 +82,21 @@ const Performers = () => {
 
     const handleResetErrorTime = () => {
         dispatch(setTimeError(false))
+    }
+
+    const handleSwitch = () => {
+        if (emailState) {
+            dispatch(setEmailState(false))
+            handleResetErrorEmail()
+            dispatch(setEmailPasport(''))
+        } else {
+            dispatch(setEmailState(true))
+        }
+    }
+
+    const handleResetErrorEmail = () => {
+        dispatch(setEmailError(false))
+        dispatch(setEmailErrorFormat(false))
     }
 
 
@@ -91,12 +122,12 @@ const Performers = () => {
                         errorText={'Выбери время'}
                     />
                 </div>
-                {/* <Switch
+                <Switch
                     text={SWITCH_NAME}
                     switchState={timerDisabled}
                     handleSwitch={handleTimerDisabled}
                     hidden={false}
-                /> */}
+                />
             </div>
             <div className={`${fromPartnership !== 0 && acceptStatus == 0 && s.container_disabled}`}>
                 {service !== 8 && service !== 9 && <TabsNumbers
@@ -110,24 +141,47 @@ const Performers = () => {
             </div>
 
 
+            <div className={s.block_bottom}>
+                <div className={`${s.container_sub} ${hiddenAddDates && s.hidden}`}>
+                    <span className={s.sub}>{SUB_DATES}</span>
+                    <div className={`${s.container_dates} ${scrollState && s.container_scroll}`}>
 
-            <div className={`${s.container_sub} ${hiddenAddDates && s.hidden}`}>
-                <span className={s.sub}>{SUB_DATES}</span>
-                <div className={`${s.container_dates} ${scrollState && s.container_scroll}`}>
+                        {additionalDates.map((el) => {
+                            return <AdditionalDate
+                                key={el.id}
+                                id={el.id}
+                                date={el.date}
+                                time={el.time}
+                                performers={el.performers}
+                                disabledDates={[date, ...disabledDates]}
+                                setProType={setProType}
+                                setHiddenAddDates={setHiddenAddDates}
+                                service={service}
+                            />
+                        })}
+                    </div>
+                </div>
 
-                    {additionalDates.map((el) => {
-                        return <AdditionalDate
-                            key={el.id}
-                            id={el.id}
-                            date={el.date}
-                            time={el.time}
-                            performers={el.performers}
-                            disabledDates={[date, ...disabledDates]}
-                            setProType={setProType}
-                            setHiddenAddDates={setHiddenAddDates}
-                            service={service}
-                        />
-                    })}
+                {service !== 8 && <Switch
+                    text={SUB_SWITCH}
+                    switchState={emailState}
+                    handleSwitch={handleSwitch}
+                />}
+
+                <div className={`${s.email} ${emailState && s.email_vis}`}>
+                    <InputEmail
+                        sub={SUB_EMAIL}
+                        value={emailPasport}
+                        setValue={(data) => dispatch(setEmailPasport(data))}
+                        error={!emailValidate(emailPasport) && emailPasport.length > 0}
+                        errorEmpity={emailError}
+                        errorText={ERR_EMAIL}
+                        errorTextEmpity={'заполни поле'}
+                        contacts={contacts.filter((el) => el.email !== '')}
+                        type={2}
+                        handleResetErrorEmail={handleResetErrorEmail}
+                    />
+
                 </div>
             </div>
 

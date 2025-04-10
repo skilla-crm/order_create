@@ -502,7 +502,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                                 onMouseLeave={handleCloseTooltipSms}
                                 className={s.sms_info}
                             >
-                                <IconInfo />
+                                {activePartnership !== '' &&<IconInfo />}
                                 {tooltipSms && activePartnership !== '' && <Tooltip text={!isBlackOur ? blackCreatorPartnership : ''}
                                     comment={`Заказ ${dayjs(data).format('DD.MM')} ${(timerDisabled || time == null) ? '' : `в ${dayjs(time).format('H:mm')}`} принят.`} type={2}
                                     comment2={activePartnership}

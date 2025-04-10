@@ -21,7 +21,7 @@ import dayjs from 'dayjs';
 import Overlay from '../Preview/Overlay';
 //utils
 import { addSpaceNumber } from '../../utils/addSpaceNumber';
-import { adressStringUtility2, adressStringUtility } from '../../utils/AdressUtility';
+import { adressStringUtility4, adressStringUtility5 } from '../../utils/AdressUtility';
 
 const PreviewPhone = ({ activeType }) => {
     const { partnerships, skilla_partnerships, requirements, city } = useContext(ParametrsContext);
@@ -132,8 +132,8 @@ const PreviewPhone = ({ activeType }) => {
                         <div className={`${s.block} ${noAddress && s.block_hidden}`}>
                             <div className={`${s.item} ${s.item_address}`}>
                                 <Overlay active={!address.city} />
-                                {city !== address.city && <p className={s.bold}>{adressStringUtility(address)}</p>}
-                                {city == address.city && <p className={s.bold}>{adressStringUtility2(address)}</p>}
+                                {city !== address.city && <p className={s.bold}>{adressStringUtility4(address)}</p>}
+                                {city == address.city && <p className={s.bold}>{adressStringUtility5(address)}</p>}
                             </div>
 
                         </div>
