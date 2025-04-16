@@ -147,7 +147,7 @@ const Details = () => {
             {service !== 8 && <Tags
                 sub={SUB_REQUIREMENTS}
                 value={tags}
-                maxVis={3}
+                maxVis={4}
                 tagList={requirements}
                 setValue={(data) => dispatch(addRequirements(data))}
                 deleteValue={(data) => dispatch(deleteRequirements(data))}

@@ -304,17 +304,18 @@ const App = () => {
         editOrder(data, id)
             .then(res => {
                 const data = res.data.data[0];
+                console.log(data.id)
                 setTimeout(() => {
                     setLoadSave(false)
                 }, 200)
 
-                /* setTimeout(() => {
+                setTimeout(() => {
                     if (orderStatus == 0) {
                         window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
                     } else {
-                        window.location.href = 'https://lk.skilla.ru/orders/'
+                        window.location.href = role === 'director' ? `https://lk.skilla.ru/orders/order_detail/${data.id}` :  'https://lk.skilla.ru/orders/'
                     }
-                }) */
+                })
 
             })
             .catch(err => console.log(err))
