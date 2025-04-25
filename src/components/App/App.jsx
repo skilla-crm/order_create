@@ -369,7 +369,7 @@ const App = () => {
                         </div>
                         }
 
-                        {<div className={`${s.buttons} ${s.buttons_2} ${existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 5)) && s.buttons_vis}`}>
+                        {<div className={`${s.buttons} ${s.buttons_2} ${existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 9)) && s.buttons_vis}`}>
                             <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />
                             {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
                         </div>
@@ -401,14 +401,14 @@ const App = () => {
                             {service !== 8 && <Rates />}
                             {<Manager/>}
 
-                            {(orderStatus < 4 || (role == 'director' && orderStatus < 5)) && acceptStatus == 1 && !fromLk && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
+                            {(orderStatus < 4 || (role == 'director' && orderStatus < 9)) && acceptStatus == 1 && !fromLk && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
                                 {!existOrder && !loadDetail && <div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>
                                     <Button disabled={loadCreate} id={'create'} handleClick={handleCreate} text={'Создать заказ'} Icon={IconDone} load={loadCreate} />
                                     <Button disabled={loadSave} id={'save'} handleClick={handleSave} text={'Черновик'} type={'second'} load={loadSave} />
                                 </div>
                                 }
 
-                                {existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 5)) && <div className={`${s.buttons} ${existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 5)) && s.buttons_vis}`}>
+                                {existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 9)) && <div className={`${s.buttons} ${existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 9)) && s.buttons_vis}`}>
                                     {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
                                     <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />
                                 </div>
