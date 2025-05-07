@@ -1,5 +1,5 @@
-@import './vendor/normalize.css';
-@import './vendor/fonts/fonts.css';
+/* @import './vendor/normalize.css';
+@import './vendor/fonts/fonts.css'; */
 @import './vendor/constants.scss';
 
 
@@ -39,7 +39,7 @@ button {
 p {
   margin: 0;
   padding: 0;
-  flex-shrink: 0;
+ /*  flex-shrink: 0; */
   font-size: 16px;
 }
 
@@ -109,12 +109,12 @@ input::-webkit-inner-spin-button {
   /* <-- Apparently some margin are still there even though it's hidden */
 }
 
-body::-webkit-scrollbar {
+/* body::-webkit-scrollbar {
   width: 8px;
 }
 
 body::-webkit-scrollbar-track {
-  background: #D4DFF32B/* var(--color-bg-card) */;
+  background: #D4DFF32B;
 }
 
 body::-webkit-scrollbar-thumb {
@@ -167,7 +167,7 @@ ul::-webkit-scrollbar-thumb {
 
 html {
   scroll-behavior: smooth;
-}
+} */
 
 
 /* ul::-webkit-scrollbar {
