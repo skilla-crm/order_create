@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useWriteOrderDataHook } from '../../hooks/useWriteOrderDataHook';
 import { useOrderDataForSend } from '../../hooks/useOrderDataForSend';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import moment from 'moment/moment';
 
@@ -89,14 +89,12 @@ const App = () => {
     const { emailPasport, emailState, fromPartnership, acceptStatus, fromLk } = useSelector(selectorManagers);
     const { phoneModal } = useSelector(selectorPreview);
     const appRef = useRef();
-
-
     const location = useLocation();
     const path = location.pathname + location.search;
     const dispatch = useDispatch();
     const { setData } = useWriteOrderDataHook();
     const { orderData } = useOrderDataForSend()
-
+    const navigate = useNavigate()
 
     //установка системной темы
     useEffect(() => {
@@ -153,7 +151,7 @@ const App = () => {
     }, [service, parametrs]);
 
     useEffect(() => {
-        if (path.includes('orders/edit/?order_id=')) {
+        if (path.includes('orders/edit/')) {
             document.title = fromPartnership !== 0 ? 'Заказ от партнера' : orderStatus === 5 ? 'Повторить заказ' : 'Редактировать заказ'
             fromPartnership === 0 && orderStatus !== 5 && setTitle('Редактировать заказ')
             fromPartnership !== 0 && setTitle('Заказ от партнера')
@@ -161,7 +159,7 @@ const App = () => {
 
             setExistOrder(true)
             setLoadDetail(true)
-            const idOrder = Number(path.split('order_id=').pop());
+            const idOrder = Number(path.split('edit/').pop());
             setId(idOrder)
             !loadParametrs && getDetails(idOrder)
                 .then(res => {
@@ -268,8 +266,10 @@ const App = () => {
             .then(res => {
                 setSuccessWindow(true)
                 setLoadCreate(false)
+                const dataOrder = res.data.data;
                 setTimeout(() => {
-                    window.location.href = 'https://lk.skilla.ru/orders/'
+                    /* window.location.href = 'https://lk.skilla.ru/orders/' */
+                    navigate(`/new/orders?date=${dataOrder.date}`)
                 })
             })
             .catch(err => console.log(err))
@@ -287,8 +287,10 @@ const App = () => {
             .then(res => {
                 setSuccessWindow(true)
                 setLoadSave(false)
+                const dataOrder = res.data.data;
                 setTimeout(() => {
-                    window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
+                    /* window.location.href = 'https://lk.skilla.ru/orders/?type=preorder' */
+                    navigate(`/new/orders?type=preorder&date=${dataOrder.date}`)
                 })
             })
             .catch(err => console.log(err))
@@ -303,7 +305,7 @@ const App = () => {
         const data = { preorder: orderStatus == 0 ? 1 : 0, ...orderData }
         editOrder(data, id)
             .then(res => {
-                const data = res.data.data[0];
+                const dataOrder = res.data.data[0];
                 console.log(data.id)
                 setTimeout(() => {
                     setLoadSave(false)
@@ -311,9 +313,12 @@ const App = () => {
 
                 setTimeout(() => {
                     if (orderStatus == 0) {
-                        window.location.href = 'https://lk.skilla.ru/orders/?type=preorder'
+                       /*  window.location.href = 'https://lk.skilla.ru/orders/?type=preorder' */
+                       navigate(`/new/orders?type=preorder&date=${dataOrder.date}`)
                     } else {
-                        window.location.href = role === 'director' ? `https://lk.skilla.ru/orders/order_detail/${data.id}` :  'https://lk.skilla.ru/orders/'
+                       /*  window.location.href = role === 'director' ? `https://lk.skilla.ru/orders/order_detail/${data.id}` : 'https://lk.skilla.ru/orders/'
+ */
+                        role === 'director' ? navigate(`/new/orders/order_detail/${dataOrder.id}`) : navigate(`https://lk.skilla.ru/orders/`)
                     }
                 })
 
@@ -330,11 +335,12 @@ const App = () => {
         const data = { preorder: 0, ...orderData }
         editOrder(data, id)
             .then(res => {
-                const data = res.data.data[0];
-                setOrderStatus(Number(data.order_status))
+                const dataOrder = res.data.data[0];
+                setOrderStatus(Number(dataOrder.order_status))
                 setLoadCreate(false)
                 setTimeout(() => {
-                    window.location.href = 'https://lk.skilla.ru/orders/'
+                    /* window.location.href = 'https://lk.skilla.ru/orders/' */
+                    navigate(`/new/orders?date=${dataOrder.date}`)
                 })
             })
             .catch(err => console.log(err))
@@ -346,9 +352,11 @@ const App = () => {
         rejectOrder(id)
             .then(res => {
                 console.log(res)
+                const dataOrder = res.data.data;
                 setLoadReject(false)
                 setTimeout(() => {
-                    window.location.href = 'https://lk.skilla.ru/orders/'
+                    /* window.location.href = 'https://lk.skilla.ru/orders/' */
+                    navigate(`/new/orders?date=${dataOrder.date}`)
                 })
             })
             .catch(err => { setLoadReject(false) })
@@ -399,7 +407,7 @@ const App = () => {
                             <Details />
                             {service == 8 && <OrderSum />}
                             {service !== 8 && <Rates />}
-                            {<Manager/>}
+                            {<Manager />}
 
                             {(orderStatus < 4 || (role == 'director' && orderStatus < 9)) && acceptStatus == 1 && !fromLk && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
                                 {!existOrder && !loadDetail && <div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>
