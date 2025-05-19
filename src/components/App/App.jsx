@@ -151,15 +151,13 @@ const App = () => {
     }, [service, parametrs]);
 
     useEffect(() => {
-        if (path.includes('orders/edit/')) {
-            document.title = fromPartnership !== 0 ? 'Заказ от партнера' : orderStatus === 5 ? 'Повторить заказ' : 'Редактировать заказ'
-            fromPartnership === 0 && orderStatus !== 5 && setTitle('Редактировать заказ')
-            fromPartnership !== 0 && setTitle('Заказ от партнера')
-            orderStatus === 5 && setTitle('Повторить заказ')
+        if (path.includes('orders/edit/') || path.includes('orders/repeat/')) {
+            fromPartnership === 0 && orderStatus !== 5 && path.includes('orders/edit/') && setTitle('Редактировать заказ')
+            fromPartnership !== 0 && path.includes('orders/edit/') && setTitle('Заказ от партнера')
 
             setExistOrder(true)
             setLoadDetail(true)
-            const idOrder = Number(path.split('edit/').pop());
+            const idOrder = path.includes('orders/edit/') ? Number(path.split('edit/').pop()) : Number(path.split('repeat/').pop());
             setId(idOrder)
             !loadParametrs && getDetails(idOrder)
                 .then(res => {
@@ -313,11 +311,11 @@ const App = () => {
 
                 setTimeout(() => {
                     if (orderStatus == 0) {
-                       /*  window.location.href = 'https://lk.skilla.ru/orders/?type=preorder' */
-                       navigate(`/new/orders?type=preorder&date=${dataOrder.date}`)
+                        /*  window.location.href = 'https://lk.skilla.ru/orders/?type=preorder' */
+                        navigate(`/new/orders?type=preorder&date=${dataOrder.date}`)
                     } else {
-                       /*  window.location.href = role === 'director' ? `https://lk.skilla.ru/orders/order_detail/${data.id}` : 'https://lk.skilla.ru/orders/'
- */
+                        /*  window.location.href = role === 'director' ? `https://lk.skilla.ru/orders/order_detail/${data.id}` : 'https://lk.skilla.ru/orders/'
+  */
                         role === 'director' ? navigate(`/new/orders/order_detail/${dataOrder.id}`) : navigate(`https://lk.skilla.ru/orders/`)
                     }
                 })
@@ -378,11 +376,12 @@ const App = () => {
                         }
 
                         {<div className={`${s.buttons} ${s.buttons_2} ${existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 9)) && s.buttons_vis}`}>
-                            <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />
+                            {path.includes('orders/edit/') && <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />}
+                            {path.includes('orders/repeat/') && <Button disabled={loadCreate} id={'create'} handleClick={handleCreate} text={'Повторить заказ'} Icon={IconDone} load={loadCreate} />}
                             {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
                         </div>
                         }
-                        {orderStatus === 5 && <Button disabled={loadCreate} id={'create'} handleClick={handleCreate} text={'Повторить заказ'} Icon={IconDone} load={loadCreate} />}
+         {/*                {orderStatus === 5 && <Button disabled={loadCreate} id={'create'} handleClick={handleCreate} text={'Повторить заказ'} Icon={IconDone} load={loadCreate} />} */}
                     </div>}
 
                     {((fromPartnership !== 0 && acceptStatus == 0) || fromLk) && <div className={s.header}>
@@ -418,7 +417,8 @@ const App = () => {
 
                                 {existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 9)) && <div className={`${s.buttons} ${existOrder && !loadDetail && (orderStatus < 4 || (role == 'director' && orderStatus < 9)) && s.buttons_vis}`}>
                                     {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
-                                    <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />
+                                    {path.includes('orders/edit/') && <Button disabled={loadSave} id={'save'} handleClick={handleEditOrder} text={'Сохранить изменения'} type={orderStatus == 0 ? 'second' : 'tr'} load={loadSave} />}
+                                    {path.includes('orders/repeat/') && <Button disabled={loadCreate} id={'create'} handleClick={handleCreate} text={'Повторить заказ'} Icon={IconDone} load={loadCreate} />}
                                 </div>
                                 }
                             </div>

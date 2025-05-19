@@ -19,7 +19,7 @@ export const adressStringUtility4 = (address) => {
 }
 
 export const adressStringUtility5 = (address) => {
-    const addressString = `${address?.street ? ', ' : ' '}${address?.street ?  address?.street : ''}${address?.house ? ', ' : ' '}${address?.house ? '' + address?.house : ''}${address?.k ? ' ' + address?.k : ''}${address?.apartment ? ', кв. ' : ' '}${address?.apartment ? '' + address?.apartment : ''}`
+    const addressString = `${address?.street ?  address?.street : ''}${address?.house ? ', ' : ' '}${address?.house ? '' + address?.house : ''}${address?.k ? ' ' + address?.k : ''}${address?.apartment ? ', кв. ' : ' '}${address?.apartment ? '' + address?.apartment : ''}`
     return addressString
 }
 
