@@ -14,8 +14,6 @@ const MultiDatePicker = ({ type, dates, setDates, setAllDatesRange }) => {
         type == 2 && setAllDatesRange(arr.slice(0, 31))
     }
 
-    console.log(dates)
-
     return (
         <Calendar
             multiple

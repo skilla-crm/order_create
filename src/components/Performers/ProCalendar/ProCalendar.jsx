@@ -19,7 +19,6 @@ const ProCalendar = ({ setProCalendar, date, dates, setDates, proType, setProTyp
         })
     }, [])
 
-    console.log(date, allDatesRange)
 
     const handleSwitch = (e) => {
         const id = Number(e.currentTarget.id);
@@ -33,7 +32,7 @@ const ProCalendar = ({ setProCalendar, date, dates, setDates, proType, setProTyp
         setPeriodDates(datesPrev)
         const result = allDatesRange.filter(el => dayjs(el).format('DD-MM-YYYY') !== date.format('DD-MM-YYYY'))
         const result2 = datesPrev.filter(el => dayjs(el).format('DD-MM-YYYY') !== date.format('DD-MM-YYYY'))
-        console.log(result)
+     
         calendarType == 1 ? setDates(result2) : setDates(result)
         handleClose()
     }

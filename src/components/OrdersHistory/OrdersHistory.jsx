@@ -61,7 +61,6 @@ const Item = ({ el }) => {
     const dispatch = useDispatch();
     const yearNow = dayjs().locale('ru').format('YYYY')
     const year = dayjs(el?.date).locale('ru').format('YYYY')
-    console.log(yearNow)
 
 
     const handleRetry = () => {

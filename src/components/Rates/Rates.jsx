@@ -27,7 +27,6 @@ import InputNum from '../General/Input/InputNum';
 const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership }) => {
     const dispatch = useDispatch();
     const [anim, setAnim] = useState(false);
-    console.log(fromPartnership)
 
     const handleChoseRate = () => {
         (fromPartnership == 0 || !fromPartnership) && dispatch(setRate(parseFloat(customerBit)))
@@ -159,8 +158,6 @@ const Rates = () => {
         document.addEventListener('mousedown', closeModal);
         return () => document.removeEventListener('mousedown', closeModal);
     }, []);
-
-    console.log(customer?.works)
 
     return (
         <div className={s.rates}>
