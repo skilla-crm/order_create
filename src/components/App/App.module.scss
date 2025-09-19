@@ -5,11 +5,11 @@
     position: relative;
     background-color: var(--color-bg);
     min-width: 870px;
-    /*   height: 100vh; */
-    height: 100vh;
-    overflow: overlay;
+    height: calc(100vh);
+    overflow: auto;
+   /*  overflow: overlay;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: hidden; */
     opacity: 0;
     transition: opacity 0.15s;
 

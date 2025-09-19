@@ -96,6 +96,8 @@ const App = () => {
     const { orderData } = useOrderDataForSend()
     const navigate = useNavigate()
 
+    console.log(address)
+
     //установка системной темы
     useEffect(() => {
         if (theme == '') {
@@ -151,13 +153,14 @@ const App = () => {
     }, [service, parametrs]);
 
     useEffect(() => {
-        if (path.includes('orders/edit/') || path.includes('orders/repeat/')) {
+        if (path.includes('orders/edit/') || path.includes('orders/repeat')) {
             fromPartnership === 0 && orderStatus !== 5 && path.includes('orders/edit/') && setTitle('Редактировать заказ')
             fromPartnership !== 0 && path.includes('orders/edit/') && setTitle('Заказ от партнера')
 
             setExistOrder(true)
             setLoadDetail(true)
             const idOrder = path.includes('orders/edit/') ? Number(path.split('edit/').pop()) : Number(path.split('repeat/').pop());
+            console.log(idOrder, path)
             setId(idOrder)
             !loadParametrs && getDetails(idOrder)
                 .then(res => {
@@ -185,7 +188,7 @@ const App = () => {
                     }, 100)
 
                 })
-                .catch(err => console.log(err))
+                .catch(err => { setLoadDetail(false) })
         }
 
     }, [path, loadParametrs, fromPartnership, orderStatus]);
@@ -200,13 +203,14 @@ const App = () => {
             })
     }, [parametrs.city])
 
+
     const handleValidation = () => {
         const companyError = payType == 1 && !customer?.id && acceptStatus == 1 ? true : false;
         const phoneError = !noContactPerson && phone == '' ? true : false;
         const phoneErrorFormat = phone?.length > 0 && phone?.length < 11 ? true : false;
         const nameError = !noContactPerson && name == '' ? true : false;
         const timeError = time == null && !timerDisabled ? true : false;
-        const adressError = !address.city && !noAddress ? true : false;
+        const adressError = !address.city && !address.street && !noAddress ? true : false;
         const rateError = service !== 8 && rate == '' ? true : false;
         const rateWorkerError = service !== 8 && rateWorker == '' ? true : false;
         const paySummError = service == 8 && orderSum == '' ? true : false;
@@ -266,7 +270,7 @@ const App = () => {
                 setLoadCreate(false)
                 const dataOrder = res.data.data;
                 setTimeout(() => {
-                    /* window.location.href = 'https://lk.skilla.ru/orders/' */
+                    /*    window.location.href = 'https://lk.skilla.ru/orders/' */
                     navigate(`/new/orders?date=${dataOrder.date}`)
                 })
             })
@@ -311,12 +315,13 @@ const App = () => {
 
                 setTimeout(() => {
                     if (orderStatus == 0) {
-                        /*  window.location.href = 'https://lk.skilla.ru/orders/?type=preorder' */
+                        /* window.location.href = 'https://lk.skilla.ru/orders/?type=preorder' */
                         navigate(`/new/orders?type=preorder&date=${dataOrder.date}`)
                     } else {
-                        /*  window.location.href = role === 'director' ? `https://lk.skilla.ru/orders/order_detail/${data.id}` : 'https://lk.skilla.ru/orders/'
-  */
-                        role === 'director' ? navigate(`/new/orders/order_detail/${dataOrder.id}`) : navigate(`https://lk.skilla.ru/orders/`)
+                        /*  window.location.href = role === 'director' ? `https://lk.skilla.ru/orders/order_detail/${data.id}` : 'https://lk.skilla.ru/orders/' */
+
+                        /*  role === 'director' ? navigate(`/new/orders/order_detail/${dataOrder.id}`) : *//*  navigate(`https://lk.skilla.ru/orders/`) */
+                        window.location.href = 'https://lk.skilla.ru/new/orders'
                     }
                 })
 
@@ -353,7 +358,7 @@ const App = () => {
                 const dataOrder = res.data.data;
                 setLoadReject(false)
                 setTimeout(() => {
-                    /* window.location.href = 'https://lk.skilla.ru/orders/' */
+                    /*  window.location.href = 'https://lk.skilla.ru/orders/' */
                     navigate(`/new/orders?date=${dataOrder.date}`)
                 })
             })
@@ -381,7 +386,7 @@ const App = () => {
                             {orderStatus == 0 && <Button disabled={loadCreate} id={'create'} handleClick={handlePublishOrder} text={'Опубликовать заказ'} Icon={IconDone} load={loadCreate} />}
                         </div>
                         }
-         {/*                {orderStatus === 5 && <Button disabled={loadCreate} id={'create'} handleClick={handleCreate} text={'Повторить заказ'} Icon={IconDone} load={loadCreate} />} */}
+                        {/*                {orderStatus === 5 && <Button disabled={loadCreate} id={'create'} handleClick={handleCreate} text={'Повторить заказ'} Icon={IconDone} load={loadCreate} />} */}
                     </div>}
 
                     {((fromPartnership !== 0 && acceptStatus == 0) || fromLk) && <div className={s.header}>

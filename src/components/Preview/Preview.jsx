@@ -97,7 +97,7 @@ const Preview = () => {
                 <div className={`${s.block} ${noAddress && s.block_hidden}`}>
                     <span>Адрес</span>
                     <div className={`${s.item} ${s.item_address}`}>
-                        <Overlay active={!address.city} />
+                        <Overlay active={!address.city && !address.street} />
                         {city !== address.city && <p className={s.bold}>{adressStringUtility4(address)}</p>}
                         {city == address.city && <p className={s.bold}>{adressStringUtility5(address)}</p>}
                     </div>

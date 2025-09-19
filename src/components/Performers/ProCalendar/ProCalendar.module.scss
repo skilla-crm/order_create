@@ -26,13 +26,19 @@
     display: flex;
     gap: 12px;
     min-height: 296px;
+
+    &_order {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
 }
 
 .switch {
-    padding: 12px;
+    padding: 80px 12px 12px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+/*     justify-content: center; */
     gap: 20px;
 }
 
@@ -104,4 +110,22 @@
             color: #0028E5;
         }
     }
+}
+
+.block {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    justify-content: space-between;
+}
+
+.orderspan {
+    font-size: 14px;
+}
+
+.order {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }

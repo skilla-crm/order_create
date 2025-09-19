@@ -74,7 +74,7 @@ const TabsNumbers = ({ sub, value, setValue, max, min, maxVis, forPro }) => {
 
     return (
         <div className={s.container}>
-            <span className={s.sub}>{sub}</span>
+            {sub && <span className={s.sub}>{sub}</span>}
             <ul className={s.list}>
                 {numbers.map(el => {
                     return <Tab key={el} id={el} tab={el} value={value} handleTab={handleTab} min={min} />

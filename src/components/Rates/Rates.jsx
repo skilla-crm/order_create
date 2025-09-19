@@ -27,7 +27,9 @@ import InputNum from '../General/Input/InputNum';
 const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership }) => {
     const dispatch = useDispatch();
     const [anim, setAnim] = useState(false);
-    console.log(fromPartnership)
+    console.log(parseFloat(customerBit))
+
+
 
     const handleChoseRate = () => {
         (fromPartnership == 0 || !fromPartnership) && dispatch(setRate(parseFloat(customerBit)))
@@ -91,13 +93,13 @@ const Rates = () => {
         }
 
         if (customer?.works == '' || !customer?.works) {
-            const result = rates?.find(el => parseFloat(el.client_bit) == parseFloat(rate) && parseFloat(el.worker_bit) == parseFloat(rateWorker))
+            const result = rates?.find(el => parseFloat(el?.client_bit) == parseFloat(rate) && parseFloat(el?.worker_bit) == parseFloat(rateWorker))
             result ? setWarning(false) : setWarning(true)
             return
         }
 
         if (customer?.works !== '') {
-            const result = customer?.works?.find(el => parseFloat(el.price) == parseFloat(rate) && parseFloat(el.bit) == parseFloat(rateWorker))
+            const result = customer?.works?.find(el => parseFloat(el?.price?.replace(',', '.')) == parseFloat(rate) && parseFloat(el?.bit?.replace(',', '.')) == parseFloat(rateWorker))
             result ? setWarning(false) : setWarning(true)
             return
         }
@@ -159,8 +161,6 @@ const Rates = () => {
         document.addEventListener('mousedown', closeModal);
         return () => document.removeEventListener('mousedown', closeModal);
     }, []);
-
-    console.log(customer?.works)
 
     return (
         <div className={s.rates}>
@@ -254,8 +254,8 @@ const Rates = () => {
                     {customer?.works?.map((el, i) => {
                         return <Rate
                             fromPartnership={fromPartnership}
-                            customerBit={el.price}
-                            workerBit={el.bit}
+                            customerBit={el.price.replace(',', '.')}
+                            workerBit={el.bit.replace(',', '.')}
                             name={el.work}
                             minTime={el?.min_time}
                             handleResetRatio={handleResetRatio} />

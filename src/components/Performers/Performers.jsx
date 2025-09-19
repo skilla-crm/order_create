@@ -57,7 +57,7 @@ const Performers = () => {
 
     useEffect(() => {
         additionalDates.length > 0 ? setHiddenAddDates(false) : setHiddenAddDates(true)
-        additionalDates.length > 15 ? setScrollState(true) : setScrollState(false)
+        additionalDates.length > 13 ? setScrollState(true) : setScrollState(false)
     }, [additionalDates])
 
     useEffect(() => {
@@ -68,6 +68,12 @@ const Performers = () => {
     useEffect(() => {
         emailPasport !== '' && dispatch(setEmailState(true))
     }, [emailPasport])
+
+    useEffect(() => {
+        if (time) {
+            dispatch(setTimerDisabled(false))
+        }
+    }, [time])
 
 
 
@@ -99,7 +105,7 @@ const Performers = () => {
         dispatch(setEmailErrorFormat(false))
     }
 
-
+    console.log(additionalDates)
     return (
         <div className={s.performers}>
             <Header
@@ -110,6 +116,9 @@ const Performers = () => {
                 forPro={!user.pro}
                 PromptText={PromptPerformers}
             />
+
+
+
             <div className={`${s.container} ${fromPartnership !== 0 && acceptStatus == 0 && s.container_disabled}`}>
                 <InputData sub={SUB_DATE} setDate={(data) => dispatch(setDate(data))} date={date} disabledDates={disabledDates} />
                 <div className={s.container_time}>
@@ -129,7 +138,8 @@ const Performers = () => {
                     hidden={false}
                 />
             </div>
-            <div className={`${fromPartnership !== 0 && acceptStatus == 0 && s.container_disabled}`}>
+
+            <div className={`${fromPartnership !== 0 && acceptStatus == 0 && s.container_disabled, (service === 8 || service === 9) && s.container_hidden}`}>
                 {service !== 8 && service !== 9 && <TabsNumbers
                     value={performersNum}
                     setValue={(data) => dispatch(setPerformersNum(data))}
@@ -139,6 +149,7 @@ const Performers = () => {
                     forPro={!user.pro}
                 />}
             </div>
+
 
 
             <div className={s.block_bottom}>
@@ -194,22 +205,33 @@ const Performers = () => {
                 setProCalendar={setProCalendar}
                 allDatesRange={allDatesRange}
                 setAllDatesRange={setAllDatesRange}
+                time={time}
+                user={user}
+                service={service}
+                performersNum={performersNum}
                 dates={proType == 1 ?
                     additionalDates.map((el) => { return el.date })
                     :
                     periodDates
                 }
-                setDates={(data) => dispatch(setAdditionalDates(
-                    data.map((el) => {
-                        return {
-                            id: uuid(),
-                            date: new Date(el),
-                            time: time,
-                            performers: performersNum
-                        }
-                    })
+                setDates={(data) => {
+                    const sortData = data.sort((a, b) => new Date(a.date) - new Date(b.date))
+                    dispatch(setAdditionalDates(
+                        sortData.slice(1).map((el) => {
+                            return {
+                                id: uuid(),
+                                date: new Date(el.date),
+                                time: el.time,
+                                performers: el.count
+                            }
+                        })
 
-                ))}
+                    ))
+
+                    sortData[0] && dispatch(setDate(data[0].date))
+                    sortData[0] && dispatch(setTime(data[0].time))
+                    sortData[0] && dispatch(setPerformersNum(data[0].count))
+                }}
 
 
             />}

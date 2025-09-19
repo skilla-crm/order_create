@@ -137,8 +137,8 @@ const Details = () => {
 
             {service !== 8 && <Comment
                 sub={SUB_DESCRIPTION}
-                maxLength={200}
-                rows={2}
+                maxLength={300}
+                rows={3}
                 value={commentSupervisor}
                 setValue={(data) => dispatch(setCommentSupervisor(data))}
             />

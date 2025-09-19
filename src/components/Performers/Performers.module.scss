@@ -10,6 +10,10 @@
    align-items: center;
    gap: 12px;
 
+   &_hidden {
+      margin-top: -20px;
+   }
+
    &_disabled {
       pointer-events: none;
    }
@@ -32,16 +36,16 @@
    &_dates {
       display: flex;
       flex-direction: column;
-      max-height: 1772px;
+      max-height: 672px;
  
       padding: 1px;
       margin-bottom: 20px;
 
    }
-/* 
+
    &_scroll {
       overflow: auto;
-   } */
+   }
 }
 
 .sub {

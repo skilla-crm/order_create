@@ -75,7 +75,7 @@ export const useWriteOrderDataHook = () => {
                 color: data?.metro3_color
             }))
 
-            data.city == '' && pro ? dispatch(setNoAddress(true)) : dispatch(setNoAddress(false))
+            address.city == '' && address.street == '' && pro ? dispatch(setNoAddress(true)) : dispatch(setNoAddress(false))
             dispatch(setManagerId(data.supervisor_id))
             dispatch(setPartnershipId(data.to_partnership_id))
             dispatch(setEmailPasport(data.email_passport))

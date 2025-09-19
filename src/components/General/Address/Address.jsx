@@ -55,8 +55,8 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
         const { city, street, house, apartment } = addressUtility(data.component);
         getAddressExact(`${city} ${street} ${house}`)
             .then(res => {
-                const data = res.data.response?.GeoObjectCollection?.featureMember?.[0].GeoObject?.Point;
-                const cordinate = data.pos.split(' ')
+                const data = res.data.response?.GeoObjectCollection?.featureMember?.[0]?.GeoObject?.Point;
+                const cordinate = data ? data.pos.split(' ') : null
                 setAddress({
                     city,
                     street,
@@ -66,7 +66,7 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
                     lng: cordinate?.[0]
                 })
                 setMetro(null)
-                getCordinateInfo(cordinate?.[1], cordinate?.[0])
+                cordinate && getCordinateInfo(cordinate?.[1], cordinate?.[0])
                     .then(res => {
                         const data = res.data.suggestions?.[0]?.data?.metro;
                         if (data) {
