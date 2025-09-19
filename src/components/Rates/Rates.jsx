@@ -27,9 +27,12 @@ import InputNum from '../General/Input/InputNum';
 const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership }) => {
     const dispatch = useDispatch();
     const [anim, setAnim] = useState(false);
+<<<<<<< HEAD
     console.log(parseFloat(customerBit))
 
 
+=======
+>>>>>>> b09f9ec97f57a02a51b732985f40104a29b0c625
 
     const handleChoseRate = () => {
         (fromPartnership == 0 || !fromPartnership) && dispatch(setRate(parseFloat(customerBit)))

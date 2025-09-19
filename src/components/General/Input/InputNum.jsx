@@ -8,7 +8,7 @@ const InputNum = ({ sub, disabled, value, setValue, error, errorEmpity, maxValue
     const [errorState, setErrorState] = useState(false);
     const [errorStateEmpity, setErrorStateEmpity] = useState(false);
     const [textValue, setTextValue] = useState(value || '')
-    console.log(value)
+  
     useEffect(() => {
         disabled && setValue('')
     }, [disabled])
