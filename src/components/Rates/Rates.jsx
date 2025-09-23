@@ -3,15 +3,12 @@ import { useRef, useState, useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ParametrsContext } from '../../contexts/UserContext';
 //constants
-import { TITLE, SUB_CUSTOMER, SUB_WORKER, SUB_PRICE, ratersChangeList } from '../../constants/rates';
+import { TITLE, SUB_PRICE } from '../../constants/rates';
 import { PromptRates } from '../../constants/prompts';
-import { ReactComponent as IconWarning } from '../../images/icons/iconWarning.svg';
-import { ReactComponent as IconPoints } from '../../images/icons/iconPoints16-16-blue.svg';
 import { ReactComponent as IconRate } from '../../images/icons/iconBackForward.svg';
 //selectors
 import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
-import { selectorValidation } from '../../store/reducer/Validation/selector';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
 //slice
 import { setRate, setRateWorker } from '../../store/reducer/Rates/slice';
@@ -22,17 +19,13 @@ import { addSpaceNumber2 } from '../../utils/addSpaceNumber';
 
 //components
 import Header from '../General/Header/Header';
-import InputNum from '../General/Input/InputNum';
+import Field from '../General/Field/Field';
+import SegmentButtons from '../General/SegmentButtons/SegmentButtons';
+import RateBlock from '../RateBlock/RateBlock';
 
 const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership }) => {
     const dispatch = useDispatch();
     const [anim, setAnim] = useState(false);
-<<<<<<< HEAD
-    console.log(parseFloat(customerBit))
-
-
-=======
->>>>>>> b09f9ec97f57a02a51b732985f40104a29b0c625
 
     const handleChoseRate = () => {
         (fromPartnership == 0 || !fromPartnership) && dispatch(setRate(parseFloat(customerBit)))
@@ -69,17 +62,16 @@ const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio, fromPar
 
 const Rates = () => {
     const { rates } = useContext(ParametrsContext)
-    const [ratioList, setRatioList] = useState(false);
     const [activeRatio, setActiveRatio] = useState(0)
     const [ratio, setRatio] = useState(1);
     const [warning, setWarning] = useState(false);
+    const [sameTarification, setSameTarification] = useState(true);
     const dispatch = useDispatch();
-    const { rate, rateWorker } = useSelector(selectorRates)
+    const { rate, rateWorker, unit } = useSelector(selectorRates)
     const { payType, customer } = useSelector(selectorCustomer)
-    const { rateError, rateWorkerError } = useSelector(selectorValidation)
-    const { partnershipId, partnerRate, fromPartnership } = useSelector(selectorManagers);
-    const listRef = useRef();
-    const buttonRef = useRef();
+
+    const { fromPartnership } = useSelector(selectorManagers);
+
 
     useEffect(() => {
         dispatch(setRateError(false))
@@ -111,59 +103,13 @@ const Rates = () => {
 
     }, [rate, rateWorker, customer])
 
-    const handleOpenRatioList = () => {
-        ratioList ? setRatioList(false) : setRatioList(true)
-    }
 
     const handleResetRatio = () => {
         setRatio(1)
         setActiveRatio(0)
     }
 
-    const handleChoseRatio = (e) => {
-        const id = Number(e.currentTarget.id);
-        activeRatio == id ? setActiveRatio(0) : setActiveRatio(id)
 
-        if (id > 0) {
-            const result = (Number(rate) * 100) / (100 + id)
-            const result2 = Number(rate) + (Number(rate) * id / 100)
-            const result3 = ((Number(rate) * 100) / (100 + activeRatio)) * (1 + id / 100)
-            const result4 = (Number(rate) * (100 - activeRatio)) / 100 + (((Number(rate) * (100 - activeRatio)) / 100) * id / 100)
-            activeRatio == id && dispatch(setRate(Number(result).toFixed(2)))
-            activeRatio == 0 && dispatch(setRate(Number(result2.toFixed(2))))
-            activeRatio !== 0 && activeRatio !== id && activeRatio > 0 && dispatch(setRate(Number(result3).toFixed(2)))
-            activeRatio !== 0 && activeRatio !== id && activeRatio < 0 && dispatch(setRate(Number(result4).toFixed(2)))
-            return
-        }
-
-        if (id < 0) {
-            const result = (Number(rate) * (100 - activeRatio)) / 100
-            const result2 = (Number(rate) * 100) / (100 - id)
-            const result3 = (result * 100) / (100 - id)
-            const result4 = ((Number(rate) * 100) / (100 + activeRatio)) * 100 / (100 - id)
-            activeRatio == id && dispatch(setRate(Number(result).toFixed(2)))
-            activeRatio == 0 && dispatch(setRate(Number(result2).toFixed(2)))
-            activeRatio !== 0 && activeRatio !== id && activeRatio < 0 && dispatch(setRate(Number(result3).toFixed(2)))
-            activeRatio !== 0 && activeRatio !== id && activeRatio > 0 && dispatch(setRate(Number(result4).toFixed(2)))
-            return
-        }
-
-        setRatioList(false)
-    }
-
-    const closeModal = (e) => {
-        e.stopPropagation()
-        if (listRef.current && !listRef.current.contains(e.target)
-            && buttonRef.current && !buttonRef.current.contains(e.target)) {
-            setRatioList(false)
-            return
-        }
-    }
-
-    useEffect(() => {
-        document.addEventListener('mousedown', closeModal);
-        return () => document.removeEventListener('mousedown', closeModal);
-    }, []);
 
     return (
         <div className={s.rates}>
@@ -173,67 +119,36 @@ const Rates = () => {
                 PromptText={PromptRates}
             />
 
-            <div className={s.block}>
-                <div className={s.inputs}>
-                    <div className={`${s.block_point} ${fromPartnership !== 0 && s.disabled}`}>
-                        <InputNum
-                            sub={fromPartnership == 0 ? SUB_CUSTOMER : 'Партнеру'}
-                            disabled={false}
-                            value={rate}
-                            setValue={(data) => {
-                                dispatch(setRate(data))
-                                handleResetRatio()
-                            }}
-                            error={false}
-                            errorEmpity={rateError}
-                            maxValue={14}
-                            errorText={'Укажи ставку'}
-                        />
-                        {fromPartnership == 0 && <button disabled={(rate == '' || payType !== 1)} ref={buttonRef} onClick={handleOpenRatioList} className={s.point}>
-                            <IconPoints />
-                        </button>
-                        }
+            <Field text={'Единицы тарификации заказчику и исполнителю'}>
+                <SegmentButtons
+                    style={2}
+                    callback={(val) => setSameTarification(val)}
+                    controlRef={useRef()}
+                    segments={[
+                        {
+                            label: "Совпадают",
+                            value: true,
+                            ref: useRef(),
+                        },
+                        {
+                            label: "Отличаются",
+                            value: false,
+                            ref: useRef(),
+                        },
+                    ]}
+                />
+            </Field>
 
-                        <ul ref={listRef} className={`${s.list} ${ratioList && s.list_open}`}>
-                            {ratersChangeList.map(el => {
-                                return (
-                                    <li
-                                        key={el.id}
-                                        id={el.id}
-                                        className={`${s.item} ${el.id == activeRatio && s.item_active}`}
-                                        onClick={handleChoseRatio}>
-                                        {el.name}
-                                    </li>
-                                )
-                            })}
-                        </ul>
-
-                    </div>
-
-                    <div className={s.field_rate}>
-                        {partnershipId == null && <InputNum
-                            sub={SUB_WORKER}
-                            disabled={false}
-                            value={rateWorker}
-                            setValue={(data) => dispatch(setRateWorker(data))}
-                            error={false}
-                            errorEmpity={rateWorkerError}
-                            maxValue={10}
-                            errorText={'Укажи ставку'}
-                        />
-                        }
-                    </div>
-
-                </div>
-
-
-                <div className={`${s.warning} ${warning && s.warning_vis}`}>
-                    <IconWarning />
-                    <p>
-                        Указанная ставка отсутствует в прайс-листе
-                    </p>
-                </div>
-            </div>
+            <RateBlock
+                fromPartnership={fromPartnership}
+                ratio={ratio}
+                setRatio={setRatio}
+                activeRatio={activeRatio}
+                setActiveRatio={setActiveRatio}
+                handleResetRatio={handleResetRatio}
+                warning={warning}
+                payType={payType}
+            />
 
             <div>
                 <span className={s.sub}>

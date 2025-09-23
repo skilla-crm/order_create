@@ -1,0 +1,27 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.block {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.text {
+    margin: 0;
+    padding: 0;
+    color: #71869D;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.info {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    position: relative;
+}

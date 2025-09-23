@@ -66,10 +66,6 @@ const ProCalendar = ({ setProCalendar, date, time, dates, setDates, proType, set
         })
     }, [])
 
-<<<<<<< HEAD
-=======
-
->>>>>>> b09f9ec97f57a02a51b732985f40104a29b0c625
     const handleSwitch = (e) => {
         const id = Number(e.currentTarget.id);
         setCalendarType(id)
@@ -80,19 +76,12 @@ const ProCalendar = ({ setProCalendar, date, time, dates, setDates, proType, set
     const handleConfirm = () => {
         setProType(calendarType)
         setPeriodDates(datesPrev)
-<<<<<<< HEAD
         /*  const result = allDatesRange.filter(el => dayjs(el).format('DD-MM-YYYY') !== date.format('DD-MM-YYYY'))
          const result2 = datesPrev.filter(el => dayjs(el).format('DD-MM-YYYY') !== date.format('DD-MM-YYYY')) */
         calendarType == 1 ?
             setDates(datesPrev.flatMap(el => ordersCount == 1 ? param1(el) : ordersCount == 2 ? param2(el) : param3(el)))
             :
             setDates(allDatesRange.flatMap(el => ordersCount == 1 ? param1(el) : ordersCount == 2 ? param2(el) : param3(el)))
-=======
-        const result = allDatesRange.filter(el => dayjs(el).format('DD-MM-YYYY') !== date.format('DD-MM-YYYY'))
-        const result2 = datesPrev.filter(el => dayjs(el).format('DD-MM-YYYY') !== date.format('DD-MM-YYYY'))
-     
-        calendarType == 1 ? setDates(result2) : setDates(result)
->>>>>>> b09f9ec97f57a02a51b732985f40104a29b0c625
         handleClose()
     }
 

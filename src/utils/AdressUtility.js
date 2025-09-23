@@ -1,9 +1,5 @@
 export const adressStringUtility = (address) => {
-<<<<<<< HEAD
     const addressString = `${address?.city ? address?.city : ''}${address?.street && address?.city ? ', ' : ''}${address?.street ? address?.street : ''}${address?.house ? ', ' : ' '}${address?.house ? '' + address?.house : ''}${address?.k ? ' ' + address?.k : ''}`
-=======
-    const addressString = `${address?.city ? address?.city : ''}${address?.street ? ', ' : ' '}${address?.street ? address?.street : ''}${address?.house ? ', ' : ' '}${address?.house ? '' + address?.house : ''}${address?.k ? ' ' + address?.k : ''}`
->>>>>>> b09f9ec97f57a02a51b732985f40104a29b0c625
     return addressString
 }
 
@@ -13,20 +9,12 @@ export const adressStringUtility2 = (address) => {
 }
 
 export const adressStringUtility3 = (address) => {
-<<<<<<< HEAD
     const addressString = `${address?.city ? address?.city : ''}${address?.street && address?.city ? ', ' : ''}${address?.street ? address?.street : ''}`
-=======
-    const addressString = `${address?.city ? address?.city : ''}${address?.street ? ', ' : ' '}${address?.street ? address?.street : ''}`
->>>>>>> b09f9ec97f57a02a51b732985f40104a29b0c625
     return addressString
 }
 
 export const adressStringUtility4 = (address) => {
-<<<<<<< HEAD
     const addressString = `${address?.city ? address?.city : ''}${address?.street && address?.city ? ', ' : ''}${address?.street ? address?.street : ''}${address?.house ? ', ' : ' '}${address?.house ? '' + address?.house : ''}${address?.k ? ' ' + address?.k : ''}${address?.apartment ? ', кв. ' : ' '}${address?.apartment ? '' + address?.apartment : ''}`
-=======
-    const addressString = `${address?.city ? address?.city : ''}${address?.street ? ', ' : ' '}${address?.street ? address?.street : ''}${address?.house ? ', ' : ' '}${address?.house ? '' + address?.house : ''}${address?.k ? ' ' + address?.k : ''}${address?.apartment ? ', кв. ' : ' '}${address?.apartment ? '' + address?.apartment : ''}`
->>>>>>> b09f9ec97f57a02a51b732985f40104a29b0c625
     return addressString
 }
 
@@ -69,18 +57,7 @@ export const addressUtility = (data) => {
     const isEntrance = data?.find(el => el.kind[0] == "ENTRANCE")?.name;
     const isApartment = data?.find(el => el.kind[0] == "APARTMENT")?.name;
 
-<<<<<<< HEAD
     const city = isCity ? `${isArea ? isArea + ', ' : ''}${isCity}` : `${isProvince ? isProvince : ''}${isArea && isProvince ? ' ' + isArea : isArea && !isProvince ? isArea : ''}`;
-=======
-    const city = isCity && !isArea ?
-        `${isCity}`
-        :
-        isCity && isArea ?
-            `${isCity}, ${isArea}`
-            :
-            `${isProvince ? isProvince : ''}${isArea && isProvince ? ' ' + isArea : isArea && !isProvince ? isArea : ''}`;
-
->>>>>>> b09f9ec97f57a02a51b732985f40104a29b0c625
     const cityFed = `${isProvince ? isProvince : ''}${isCity && isProvince ? ', ' + isCity + ', ' : isCity && !isProvince ? isCity : ''}`;
 
     const street = isStreet && !isDistrict ?

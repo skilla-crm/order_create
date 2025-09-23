@@ -1,4 +1,4 @@
-export const TITLE = 'Ставки за час';
+export const TITLE = 'Тарификация';
 export const SUB_CUSTOMER = 'Заказчику';
 export const SUB_WORKER = 'Исполнителю';
 export const SUB_PRICE = 'Прайс-лист';

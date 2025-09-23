@@ -30,7 +30,7 @@ import {
     setRateError, setRateWorkerError, setEmailError, setEmailErrorFormat, setIsBlackError, setIsDebtError,
     setPaySummError, setIsServiceError
 } from '../../store/reducer/Validation/slice';
-
+import { setUnitList } from '../../store/reducer/Parametrs/slice';
 import { setFromPartnership, setAcceptStatus, setFromLk } from '../../store/reducer/Managers/slice';
 //selector
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
@@ -142,6 +142,7 @@ const App = () => {
                 const companies = data.companies;
                 setParametrs(data)
                 dispatch(setCompaniesList(companies))
+                dispatch(setUnitList(data.order_units))
                 setLoadParametrs(false)
             })
             .catch(err => console.log(err))
