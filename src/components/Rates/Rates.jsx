@@ -22,6 +22,8 @@ import Header from '../General/Header/Header';
 import Field from '../General/Field/Field';
 import SegmentButtons from '../General/SegmentButtons/SegmentButtons';
 import RateBlock from '../RateBlock/RateBlock';
+import RateBlockTwice from '../RateBlockTwice/RateBlockTwice';
+import classNames from 'classnames';
 
 const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership }) => {
     const dispatch = useDispatch();
@@ -63,15 +65,12 @@ const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio, fromPar
 const Rates = () => {
     const { rates } = useContext(ParametrsContext)
     const [activeRatio, setActiveRatio] = useState(0)
-    const [ratio, setRatio] = useState(1);
     const [warning, setWarning] = useState(false);
     const [sameTarification, setSameTarification] = useState(true);
     const dispatch = useDispatch();
     const { rate, rateWorker, unit } = useSelector(selectorRates)
     const { payType, customer } = useSelector(selectorCustomer)
-
     const { fromPartnership } = useSelector(selectorManagers);
-
 
     useEffect(() => {
         dispatch(setRateError(false))
@@ -98,18 +97,12 @@ const Rates = () => {
             result ? setWarning(false) : setWarning(true)
             return
         }
-
-
-
     }, [rate, rateWorker, customer])
 
 
     const handleResetRatio = () => {
-        setRatio(1)
         setActiveRatio(0)
     }
-
-
 
     return (
         <div className={s.rates}>
@@ -139,16 +132,31 @@ const Rates = () => {
                 />
             </Field>
 
-            <RateBlock
-                fromPartnership={fromPartnership}
-                ratio={ratio}
-                setRatio={setRatio}
-                activeRatio={activeRatio}
-                setActiveRatio={setActiveRatio}
-                handleResetRatio={handleResetRatio}
-                warning={warning}
-                payType={payType}
-            />
+            <div style={{height: sameTarification ? '144px' : '220px' }} className={s.container}>
+                <div className={classNames(s.tarif, sameTarification && s.tarif_vis)}>
+                    <RateBlock
+                        fromPartnership={fromPartnership}
+                        activeRatio={activeRatio}
+                        setActiveRatio={setActiveRatio}
+                        handleResetRatio={handleResetRatio}
+                        warning={warning}
+                        payType={payType}
+                    />
+                </div>
+
+                <div className={classNames(s.tarif, !sameTarification && s.tarif_vis)}>
+                    <RateBlockTwice
+                        fromPartnership={fromPartnership}
+                        activeRatio={activeRatio}
+                        setActiveRatio={setActiveRatio}
+                        handleResetRatio={handleResetRatio}
+                        warning={warning}
+                        payType={payType}
+                    />
+                </div>
+            </div>
+
+
 
             <div>
                 <span className={s.sub}>

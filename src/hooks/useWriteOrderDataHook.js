@@ -30,10 +30,10 @@ export const useWriteOrderDataHook = () => {
                 lng: data.lng
             }
 
-                data.beznal == 1 && dispatch(setPayType(1))
-                data.beznal == 0 && data.to_card == 1 && dispatch(setPayType(2))
-                data.beznal == 0 && data.to_card == 0 && dispatch(setPayType(3))
-          
+            data.beznal == 1 && dispatch(setPayType(1))
+            data.beznal == 0 && data.to_card == 1 && dispatch(setPayType(2))
+            data.beznal == 0 && data.to_card == 0 && dispatch(setPayType(3))
+
 
             dispatch(setName(data.name))
             dispatch(setPhone(data.phone))
@@ -82,8 +82,8 @@ export const useWriteOrderDataHook = () => {
             data.partner_client_bit && dispatch(setPartnerRate(data.partner_client_bit))
 
             //единицы измерения
-            dispatch(setUnit(data.unit_id))
-            dispatch(setUnitWorker(data.unit_id))
+            dispatch(setUnit(data.work_unit_id ? data.work_unit_id : 1))
+            dispatch(setUnitWorker(data.work_unit_id_worker ? data.work_unit_id_worker : 1))
             return
         }
     }, [data])

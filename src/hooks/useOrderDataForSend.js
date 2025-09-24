@@ -16,7 +16,7 @@ export const useOrderDataForSend = () => {
     const { additionalDates } = useSelector(selectorAdditionalDates);
     const { service, tags, commentSupervisor, notes, payNotes, minDuration, duration } = useSelector(selectorDetails);
     const { address, metro, noAddress } = useSelector(selectorAddress);
-    const { rate, rateWorker, orderSum, unit } = useSelector(selectorRates);
+    const { rate, rateWorker, orderSum, unit, unitWorker } = useSelector(selectorRates);
     const { managerId, partnershipId, emailPasport, emailState, partnerRate } = useSelector(selectorManagers);
 
     const dopDates = additionalDates.length > 0 ?
@@ -75,7 +75,8 @@ export const useOrderDataForSend = () => {
         bill_sum: payType == 1 ? customer.billSum : 0,
         send_contract: (payType == 1 && customer?.contractState) ? customer?.contractState : false,
         send_sms: isSms,
-        unit_id: unit
+        work_unit_id: unit,
+        work_unit_id_worker: unitWorker
     }
 
     return { orderData };

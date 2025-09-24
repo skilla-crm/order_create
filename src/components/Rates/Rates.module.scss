@@ -11,7 +11,7 @@
 
 .inputs {
     display: flex;
-  
+
     gap: 12px;
     width: 348px;
 }
@@ -63,66 +63,6 @@
     }
 }
 
-.point {
-    position: absolute;
-    top: 29px;
-    right: 12px;
-    cursor: pointer;
-    transition: all 0.15s;
-
-    &:disabled {
-        opacity: 0;
-    }
-}
-
-.list {
-    list-style-type: none;
-    width: 100%;
-    position: absolute;
-    z-index: 4;
-    left: 0;
-    top: 68px;
-    padding: 0;
-    max-height: 0;
-    height: fit-content;
-    overflow: hidden;
-    border-radius: 4px;
-    background: var(--color-bg-card);
-    box-shadow: 0px 0px 10px 0px rgba(0, 32, 51, 0.10);
-    transition: all 0.25s;
-
-    &_open {
-        max-height: 620px;
-    }
-
-    li {
-        user-select: none;
-        padding: 8px 24px;
-        min-height: 40px;
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        flex-shrink: 0;
-        flex-direction: column;
-        cursor: pointer;
-        gap: 6px;
-        transition: all 0.15s;
-
-        &:hover {
-            background-color: #D4DFF32B;
-        }
-    }
-}
-
-.item {
-    &_active {
-        background-color: #d4dff389;
-
-        &:hover {
-            background-color: #d4dff389 !important;
-        }
-    }
-}
 
 .sub {
     color: var(--color-text-secondary);
@@ -170,4 +110,28 @@
 
 .disabled {
     pointer-events: none;
+}
+
+.container {
+    width: 100%;
+    position: relative;
+    transition: all 0.2s;
+}
+
+.tarif {
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s;
+    max-height: 144px;
+
+
+    &_vis {
+        opacity: 1;
+        max-height: 220px;
+        visibility: visible;
+    }
 }

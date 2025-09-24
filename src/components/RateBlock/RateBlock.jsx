@@ -14,6 +14,7 @@ import { setRate, setRateWorker, setUnit, setUnitWorker } from '../../store/redu
 import InputNum from '../General/Input/InputNum';
 import InputList from '../General/InputList/InputList';
 import Field from '../General/Field/Field';
+import RatePercent from '../RatePercent/RatePercent';
 //constants
 import { SUB_CUSTOMER, SUB_WORKER, ratersChangeList } from '../../constants/rates';
 
@@ -110,24 +111,11 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                             maxValue={14}
                             errorText={'Укажи ставку'}
                         />
-                        {fromPartnership == 0 && <button disabled={(rate == '' || payType !== 1)} ref={buttonRef} onClick={handleOpenRatioList} className={s.point}>
-                            <IconPoints />
-                        </button>
-                        }
-
-                        <ul ref={listRef} className={`${s.list} ${ratioList && s.list_open}`}>
-                            {ratersChangeList.map(el => {
-                                return (
-                                    <li
-                                        key={el.id}
-                                        id={el.id}
-                                        className={`${s.item} ${el.id == activeRatio && s.item_active}`}
-                                        onClick={handleChoseRatio}>
-                                        {el.name}
-                                    </li>
-                                )
-                            })}
-                        </ul>
+                        <RatePercent
+                            activeRatio={activeRatio}
+                            setActiveRatio={setActiveRatio}
+                            payType={payType}
+                        />
 
                     </div>
                     <div className={s.field_rate}>
@@ -148,13 +136,15 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
 
                 </div>
 
-{/* 
+
                 <div className={`${s.warning} ${warning && s.warning_vis}`}>
                     <IconWarning />
                     <p>
                         Указанная ставка отсутствует в прайс-листе
                     </p>
-                </div> */}
+                </div>
+
+
             </div>
         </div>
     )
