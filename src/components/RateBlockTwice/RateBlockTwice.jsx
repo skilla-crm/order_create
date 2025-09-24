@@ -32,7 +32,7 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
 
     return (
         <div className={s.root}>
-            <div className={s.container}>
+            <div style={{paddingBottom: warning ? '10px' : ''}} className={s.container}>
                 <h3>Заказчику</h3>
                 <Field text={'Единица тарификации'}>
                     <InputList
