@@ -5,12 +5,10 @@ import { setPayType, setName, setCustomer, setPhone, setNoContactPerson } from '
 import { setPerformersNum, setTime } from '../store/reducer/Performers/slice';
 import { setService, setRequirements, setMinDurqtion, setDuration, setCommentSupervisor, setNotes, setPayNotes } from '../store/reducer/Details/slice';
 import { setAddress, setMetro, deleteMetro, setNoAddress, setAddressForReturn } from '../store/reducer/Address/slice';
-import { setRate, setRateWorker, setOrderSum, setUnit, setUnitWorker } from '../store/reducer/Rates/slice';
+import { setRate, setRateWorker, setOrderSum, setUnit, setUnitWorker, setSameTarification } from '../store/reducer/Rates/slice';
 import { setManagerId, setPartnershipId, setFromPartnership, setAcceptStatus, setEmailPasport, setPartnerRate, setFromLk } from '../store/reducer/Managers/slice';
 //utils
 import { adressStringUtility } from '../utils/AdressUtility';
-
-
 
 export const useWriteOrderDataHook = () => {
 
@@ -84,6 +82,7 @@ export const useWriteOrderDataHook = () => {
             //единицы измерения
             dispatch(setUnit(data.work_unit_id ? data.work_unit_id : 1))
             dispatch(setUnitWorker(data.work_unit_id_worker ? data.work_unit_id_worker : 1))
+            dispatch(setSameTarification(data.work_unit_id === data.work_unit_id_worker ? true : false))
             return
         }
     }, [data])

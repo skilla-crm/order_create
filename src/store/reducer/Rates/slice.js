@@ -6,7 +6,8 @@ const initialState = {
     rateWorker: '',
     orderSum: '',
     unit: 1,
-    unitWorker: 1
+    unitWorker: 1,
+    sameTarification: true
 };
 
 const RatesSlice = createSlice({
@@ -33,6 +34,10 @@ const RatesSlice = createSlice({
          setUnitWorker(state, action) {
             state.unitWorker = action.payload;
         },
+
+         setSameTarification(state, action) {
+            state.sameTarification = action.payload;
+        }
     },
 });
 
@@ -41,7 +46,8 @@ export const {
     setRateWorker,
     setOrderSum,
     setUnit,
-    setUnitWorker
+    setUnitWorker,
+    setSameTarification
 } = RatesSlice.actions;
 
 export default RatesSlice.reducer;

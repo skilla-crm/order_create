@@ -18,6 +18,11 @@ const SegmentButtons = ({
     }, []);
 
     useEffect(() => {
+        const result = segments.findIndex(el => el.value === value)
+        setActiveIndex(result)
+    }, [value])
+
+    useEffect(() => {
         const activeSegmentRef = segments[activeIndex].ref;
         const { offsetWidth, offsetLeft } = activeSegmentRef.current;
         const { style } = controlRef.current;

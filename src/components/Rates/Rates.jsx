@@ -11,7 +11,7 @@ import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
 //slice
-import { setRate, setRateWorker } from '../../store/reducer/Rates/slice';
+import { setRate, setRateWorker, setSameTarification } from '../../store/reducer/Rates/slice';
 import { setMinDurqtion } from '../../store/reducer/Details/slice';
 import { setRateError, setRateWorkerError } from '../../store/reducer/Validation/slice';
 //utils
@@ -66,15 +66,15 @@ const Rates = () => {
     const { rates } = useContext(ParametrsContext)
     const [activeRatio, setActiveRatio] = useState(0)
     const [warning, setWarning] = useState(false);
-    const [sameTarification, setSameTarification] = useState(true);
     const dispatch = useDispatch();
-    const { rate, rateWorker, unit } = useSelector(selectorRates)
+    const { rate, rateWorker, sameTarification } = useSelector(selectorRates)
     const { payType, customer } = useSelector(selectorCustomer)
     const { fromPartnership } = useSelector(selectorManagers);
 
     useEffect(() => {
         dispatch(setRateError(false))
     }, [rate])
+
 
     useEffect(() => {
         dispatch(setRateWorkerError(false))
@@ -115,7 +115,8 @@ const Rates = () => {
             <Field text={'Единицы тарификации заказчику и исполнителю'}>
                 <SegmentButtons
                     style={2}
-                    callback={(val) => setSameTarification(val)}
+                    callback={(val) => dispatch(setSameTarification(val))}
+                    value={sameTarification}
                     controlRef={useRef()}
                     segments={[
                         {
@@ -132,7 +133,7 @@ const Rates = () => {
                 />
             </Field>
 
-            <div style={{height: sameTarification ? '144px' : '220px' }} className={s.container}>
+            <div style={{ height: sameTarification ? '144px' : '220px' }} className={s.container}>
                 <div className={classNames(s.tarif, sameTarification && s.tarif_vis)}>
                     <RateBlock
                         fromPartnership={fromPartnership}
