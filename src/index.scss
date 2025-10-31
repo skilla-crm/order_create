@@ -1,5 +1,5 @@
-@import './vendor/normalize.css';
-@import './vendor/fonts/fonts.css';
+/* @import './vendor/normalize.css';
+@import './vendor/fonts/fonts.css'; */
 @import './vendor/constants.scss';
 
 
@@ -109,7 +109,7 @@ input::-webkit-inner-spin-button {
   /* <-- Apparently some margin are still there even though it's hidden */
 }
 
-body::-webkit-scrollbar {
+/* body::-webkit-scrollbar {
   width: 8px;
 }
 
@@ -190,4 +190,4 @@ ul::-webkit-scrollbar-thumb {
   background-color: var(--color-button-disabled);
   border-radius: 4px;
 
-}
+} */

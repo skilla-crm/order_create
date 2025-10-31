@@ -112,7 +112,7 @@ const Rates = () => {
                 PromptText={PromptRates}
             />
 
-            <Field text={'Единицы тарификации заказчику и исполнителю'}>
+            {/*    <Field text={'Единицы тарификации заказчику и исполнителю'}>
                 <SegmentButtons
                     style={2}
                     callback={(val) => dispatch(setSameTarification(val))}
@@ -131,9 +131,9 @@ const Rates = () => {
                         },
                     ]}
                 />
-            </Field>
+            </Field> */}
 
-            <div style={{ height: sameTarification ? '144px' : '220px' }} className={s.container}>
+            <div style={{ height: sameTarification ? /* '144px' */ '66px' : '220px' }} className={s.container}>
                 <div className={classNames(s.tarif, sameTarification && s.tarif_vis)}>
                     <RateBlock
                         fromPartnership={fromPartnership}
@@ -145,7 +145,7 @@ const Rates = () => {
                     />
                 </div>
 
-                <div className={classNames(s.tarif, !sameTarification && s.tarif_vis)}>
+                {/*   <div className={classNames(s.tarif, !sameTarification && s.tarif_vis)}>
                     <RateBlockTwice
                         fromPartnership={fromPartnership}
                         activeRatio={activeRatio}
@@ -154,7 +154,7 @@ const Rates = () => {
                         warning={warning}
                         payType={payType}
                     />
-                </div>
+                </div> */}
             </div>
 
 

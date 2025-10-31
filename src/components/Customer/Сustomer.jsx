@@ -490,13 +490,13 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
 
                         {!historyDisabled && <div className={s.sms}>
-                            <Switch
+                           {/*  <Switch
                                 text={SWITCH_NAME_SMS}
                                 handleSwitch={handleSmsState}
                                 switchState={isSms}
                                 hidden={false}
                                 disabled={noContactPerson}
-                            />
+                            /> */}
                             <div
                                 onMouseEnter={handleOpenTooltipSms}
                                 onMouseLeave={handleCloseTooltipSms}
