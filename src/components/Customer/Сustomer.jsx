@@ -18,6 +18,7 @@ import { selectorManagers } from '../../store/reducer/Managers/selector';
 //slice
 import {
     setCustomer,
+    setContract,
     setPayType,
     setName,
     setPhone,
@@ -30,7 +31,7 @@ import {
     setContacts,
     setIsSms,
 } from '../../store/reducer/Customer/slice';
-import { setСompanyError, setPhoneError, setPhoneErrorFormat, setNameError, setIsBlackError, setIsDebtError } from '../../store/reducer/Validation/slice';
+import { setСompanyError, setСontractError, setPhoneError, setPhoneErrorFormat, setNameError, setIsBlackError, setIsDebtError } from '../../store/reducer/Validation/slice';
 //constants
 import { PromptCustomer } from '../../constants/prompts';
 import {
@@ -50,6 +51,8 @@ import Switch from '../General/Switch/Switch';
 import OrdersHistory from '../OrdersHistory/OrdersHistory';
 import Tooltip from '../General/Tooltip/Tooltip';
 import InputPartner from '../General/Input/InputPartner';
+import InputListContract from '../General/Input/InputListContract/InputListContract';
+import ButtonAdd from '../General/ButtonAdd/ButtonAdd';
 
 
 const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustomer }) => {
@@ -70,7 +73,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     const [blackComment, setBlackComment] = useState('')
     const [activePartnership, setActivePartnership] = useState('');
     const [historyDisabled, setHistoryDisabled] = useState(false);
-    const { companies, customer, payType, name, phone, isBlack, isBlackOur, blackCreatorPartnership, debt, debtThreshold, contacts, noContactPerson, isSms } = useSelector(selectorCustomer);
+    const { companies, customer, contract, payType, name, phone, isBlack, isBlackOur, blackCreatorPartnership, debt, debtThreshold, contacts, noContactPerson, isSms } = useSelector(selectorCustomer);
     const { companyError, phoneError, nameError } = useSelector(selectorValidation);
     const { data, time, timerDisabled } = useSelector(selectorPerformers);
     const { partnershipId, fromPartnership, acceptStatus } = useSelector(selectorManagers);
@@ -313,6 +316,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     //Функции сбрасывания ошибок
     const handleResetErrorCompany = () => {
         dispatch(setСompanyError(false))
+        dispatch(setСontractError(false))
     }
 
     const handleResetErrorPhone = () => {
@@ -343,6 +347,8 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     const handleSmsState = () => {
         isSms ? dispatch(setIsSms(false)) : dispatch(setIsSms(true))
     }
+
+    console.log(customer)
 
 
     return (
@@ -378,6 +384,19 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                                 error={companyError}
                                 errorText={'Выбери заказчика'}
                             />}
+
+                            <ButtonAdd
+                                vis={customer?.contracts?.length === 0 && customer?.id}
+                                counterpartyId={customer?.id}
+                            />
+
+                            <InputListContract
+                                list={customer?.contracts || []}
+                                value={contract}
+                                vis={customer?.contracts?.length > 0}
+                                setValue={(data) => dispatch(setContract(data))}
+                                width={500}
+                            />
                             {fromPartnership !== 0 &&
                                 <InputPartner
                                     sub={'Партнер'}
@@ -489,20 +508,20 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                         </div>
 
 
-                        {!historyDisabled && <div className={s.sms}>
-                           {/*  <Switch
+                       {/*  {!historyDisabled && <div className={s.sms}>
+                             <Switch
                                 text={SWITCH_NAME_SMS}
                                 handleSwitch={handleSmsState}
                                 switchState={isSms}
                                 hidden={false}
                                 disabled={noContactPerson}
-                            /> */}
+                            />
                             <div
                                 onMouseEnter={handleOpenTooltipSms}
                                 onMouseLeave={handleCloseTooltipSms}
                                 className={s.sms_info}
                             >
-                                {activePartnership !== '' &&<IconInfo />}
+                                {activePartnership !== '' && <IconInfo />}
                                 {tooltipSms && activePartnership !== '' && <Tooltip text={!isBlackOur ? blackCreatorPartnership : ''}
                                     comment={`Заказ ${dayjs(data).format('DD.MM')} ${(timerDisabled || time == null) ? '' : `в ${dayjs(time).format('H:mm')}`} принят.`} type={2}
                                     comment2={activePartnership}
@@ -512,7 +531,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                             </div>
 
                         </div>
-                        }
+                        } */}
 
 
 

@@ -7,32 +7,33 @@ import { selectorValidation } from '../../store/reducer/Validation/selector';
 
 const ErrorWindow = () => {
     const { companyError,
-            phoneError,
-            phoneErrorFormat,
-            nameError,
-            timeError,
-            adressError,
-            rateError,
-            rateWorkerError,
-            paySummError,
-            emailError,
-            emailErrorFormat,
-            isBlackError,
-            isDebtError } = useSelector(selectorValidation)
-            
-            const empity = companyError || 
-            phoneError ||  
-            phoneErrorFormat ||  
-            nameError ||  
-            timeError ||  
-            adressError ||
-            rateError ||
-            rateWorkerError ||
-            paySummError ||
-            emailError ||
-            emailErrorFormat
+        contractError,
+        phoneError,
+        phoneErrorFormat,
+        nameError,
+        timeError,
+        adressError,
+        rateError,
+        rateWorkerError,
+        paySummError,
+        emailError,
+        emailErrorFormat,
+        isBlackError,
+        isDebtError } = useSelector(selectorValidation)
+
+    const empity = companyError ||
+        phoneError ||
+        phoneErrorFormat ||
+        nameError ||
+        timeError ||
+        adressError ||
+        rateError ||
+        rateWorkerError ||
+        paySummError ||
+        emailError ||
+        emailErrorFormat
     return (
-        <div className={`${s.window} ${(empity || isDebtError || isBlackError) && s.window_vis}`}>
+        <div className={`${s.window} ${(empity || isDebtError || isBlackError || contractError) && s.window_vis}`}>
             <div className={s.container}>
                 <div className={s.header}>
                     <IconAlert />
@@ -43,6 +44,7 @@ const ErrorWindow = () => {
                     <li className={`${s.item} ${empity && s.item_vis}`}><div></div>Заполни все поля</li>
                     <li className={`${s.item} ${isDebtError && s.item_vis}`}><div></div>Превышен лимит по задолженности</li>
                     <li className={`${s.item} ${isBlackError && s.item_vis}`}><div></div>Заказчик в черном списке</li>
+                    <li className={`${s.item} ${contractError && s.item_vis}`}><div></div>Не выбран договор с заказчиком</li>
                 </ul>
 
             </div>

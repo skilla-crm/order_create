@@ -1,0 +1,21 @@
+.root {
+    height: 0;
+    opacity: 0;
+    margin-top: -12px;
+    transition: all 0.3s;
+    button {
+        height: 30px;
+        display: flex;
+        align-items: center;
+        font-weight: 400;
+        gap: 6px;
+        cursor: pointer;
+        color: var(--color-button-accent);
+    }
+
+    &_vis {
+        margin-top: 0;
+        height: 30px;
+        opacity: 1;
+    }
+}

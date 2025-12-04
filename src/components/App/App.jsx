@@ -26,7 +26,7 @@ import {
 import { setDate, setTime, setTimerDisabled } from '../../store/reducer/Performers/slice';
 import { setDefaultCordinate } from '../../store/reducer/Address/slice';
 import {
-    setСompanyError, setPhoneError, setPhoneErrorFormat, setNameError, setTimeError, setAdressError,
+    setСompanyError, setСontractError, setPhoneError, setPhoneErrorFormat, setNameError, setTimeError, setAdressError,
     setRateError, setRateWorkerError, setEmailError, setEmailErrorFormat, setIsBlackError, setIsDebtError,
     setPaySummError, setIsServiceError
 } from '../../store/reducer/Validation/slice';
@@ -81,7 +81,7 @@ const App = () => {
     const [hiddenCustomer, setHiddenCustomer] = useState(false);
     const [positionButtonBotom, setPositionButtonBotom] = useState(false);
     const [title, setTitle] = useState('Создание заказа')
-    const { customer, payType, name, phone, noContactPerson, isBlack, isBlackOur, debt, debtThreshold } = useSelector(selectorCustomer);
+    const { customer, contract, payType, name, phone, noContactPerson, isBlack, isBlackOur, debt, debtThreshold } = useSelector(selectorCustomer);
     const { time, timerDisabled } = useSelector(selectorPerformers);
     const { service } = useSelector(selectorDetails);
     const { address, noAddress } = useSelector(selectorAddress);
@@ -139,7 +139,7 @@ const App = () => {
         getParametrs()
             .then(res => {
                 const data = res.data.data;
-                const companies = data.companies;
+                const companies = data.companies_2;
                 setParametrs(data)
                 dispatch(setCompaniesList(companies))
                 dispatch(setUnitList(data.order_units))
@@ -207,6 +207,7 @@ const App = () => {
 
     const handleValidation = () => {
         const companyError = payType == 1 && !customer?.id && acceptStatus == 1 ? true : false;
+        const contractError = payType == 1 && !contract?.id ? true : false;
         const phoneError = !noContactPerson && phone == '' ? true : false;
         const phoneErrorFormat = phone?.length > 0 && phone?.length < 11 ? true : false;
         const nameError = !noContactPerson && name == '' ? true : false;
@@ -222,6 +223,7 @@ const App = () => {
         const isServiceError = service == 0 ? true : false;
 
         dispatch(setСompanyError(companyError))
+        dispatch(setСontractError(contractError))
         dispatch(setPhoneError(phoneError))
         dispatch(setPhoneErrorFormat(phoneErrorFormat))
         dispatch(setNameError(nameError))
@@ -237,6 +239,7 @@ const App = () => {
         dispatch(setIsServiceError(isServiceError))
 
         if (!companyError &&
+            !contractError &&
             !phoneError &&
             !phoneErrorFormat &&
             !nameError &&

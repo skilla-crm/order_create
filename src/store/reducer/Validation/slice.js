@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
     companyError: false,
+    contractError: false,
     phoneError: false,
     phoneErrorFormat: false,
     nameError: false,
@@ -26,6 +27,10 @@ const ValidtionSlice = createSlice({
     reducers: {
         setСompanyError(state, action) {
             state.companyError = action.payload;
+        },
+
+        setСontractError(state, action) {
+            state.contractError = action.payload;
         },
 
         setPhoneError(state, action) {
@@ -88,6 +93,7 @@ const ValidtionSlice = createSlice({
 
 export const {
     setСompanyError,
+    setСontractError,
     setPhoneError,
     setPhoneErrorFormat,
     setNameError,

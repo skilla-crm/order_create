@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
     companies: [],
     customer: {},
+    contract: {},
     payType: 1,
     name: '',
     phone: '',
@@ -31,6 +32,10 @@ const CustomerSlice = createSlice({
 
         setCustomer(state, action) {
             state.customer = action.payload;
+        },
+
+        setContract(state, action) {
+            state.contract = action.payload;
         },
 
         setPayType(state, action) {
@@ -83,6 +88,7 @@ export const {
     setCompaniesList,
     setAddCompanies,
     setCustomer,
+    setContract,
     setPayType,
     setName,
     setPhone,

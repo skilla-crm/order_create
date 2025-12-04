@@ -11,7 +11,7 @@ import { selectorManagers } from "../store/reducer/Managers/selector";
 import { useState } from "react";
 
 export const useOrderDataForSend = () => {
-    const { customer, payType, name, phone, isSms, noContactPerson, isBlack, debt, debtThreshold } = useSelector(selectorCustomer);
+    const { customer, contract, payType, name, phone, isSms, noContactPerson, isBlack, debt, debtThreshold } = useSelector(selectorCustomer);
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
     const { additionalDates } = useSelector(selectorAdditionalDates);
     const { service, tags, commentSupervisor, notes, payNotes, minDuration, duration } = useSelector(selectorDetails);
@@ -35,6 +35,7 @@ export const useOrderDataForSend = () => {
         beznal: payType == 1,
         to_card: payType == 2,
         company_id: payType == 1 && customer?.id ? customer?.id : null,
+        contract_id: contract?.id ? contract?.id : null,
         phone,
         name,
         date: dayjs(date).format('YYYY-MM-DD'),

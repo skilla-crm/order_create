@@ -52,12 +52,14 @@
     transition: all 0.2s;
     overflow: hidden;
     display: flex;
+    flex-direction: column;
+    gap: 12px;
 
     &_vis {
         visibility: visible;
         overflow: visible;
         opacity: 1;
-        max-height: 86px;
+        max-height: 174px;
         margin-bottom: 12px;
     }
 }
