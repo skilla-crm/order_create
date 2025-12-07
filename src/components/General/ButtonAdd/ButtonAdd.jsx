@@ -8,7 +8,7 @@ const ButtonAdd = ({ vis, counterpartyId }) => {
     const navigate = useNavigate();
 
     const handleOpenAdd = () => {
-        window.open(`https://lk.skilla.ru/new/counterpartiesnew/details/contract/create?counterparty_id=${counterpartyId}`, '_blank')
+        window.open(`https://lk.skilla.ru/new/counterpartiesnew/details/contract/create?counterparty_id=${counterpartyId}&order=1`, '_blank')
     }
 
     return (

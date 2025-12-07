@@ -20,6 +20,7 @@ import {
     setCompaniesList,
     setPayType,
     setCustomer,
+    setContract,
     setName,
     setPhone
 } from '../../store/reducer/Customer/slice';
@@ -61,6 +62,7 @@ import PreviewPhone from '../PreviewPhone/PreviewPhone';
 import OrderSum from '../OrderSum/OrderSum';
 const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
 const role = document.getElementById(`root_order-create`).getAttribute('role');
+const TEST = process.env.REACT_APP_TEST;
 
 const App = () => {
     const [theme, setTheme] = useState('light');
@@ -161,7 +163,7 @@ const App = () => {
             setExistOrder(true)
             setLoadDetail(true)
             const idOrder = path.includes('orders/edit/') ? Number(path.split('edit/').pop()) : Number(path.split('repeat/').pop());
-            console.log(idOrder, path)
+
             setId(idOrder)
             !loadParametrs && getDetails(idOrder)
                 .then(res => {
@@ -181,8 +183,11 @@ const App = () => {
                     setOrderStatus(Number(data.order_status))
                     setData(data)
 
-                    const company = parametrs?.companies?.find(el => el.id == data.company_id)
+                    const company = parametrs?.companies_2?.find(el => el.id == data.company_id)
+                    const contract = company?.contracts?.find(el => el.id === data.contract_id)
                     data.beznal == 1 && company && dispatch(setCustomer(company))
+                    data.beznal == 1 && contract && dispatch(setContract(contract))
+                    data.beznal == 1 && !contract && company?.contracts?.length > 0 && dispatch(setContract(company?.contracts?.[0]))
 
                     setTimeout(() => {
                         setLoadDetail(false)
@@ -275,7 +280,7 @@ const App = () => {
                 const dataOrder = res.data.data;
                 setTimeout(() => {
                     /*    window.location.href = 'https://lk.skilla.ru/orders/' */
-                    navigate(`/new/orders?date=${dataOrder.date}`)
+                    navigate(`/new/${TEST}orders?date=${dataOrder.date}`)
                 })
             })
             .catch(err => console.log(err))
@@ -296,7 +301,7 @@ const App = () => {
                 const dataOrder = res.data.data;
                 setTimeout(() => {
                     /* window.location.href = 'https://lk.skilla.ru/orders/?type=preorder' */
-                    navigate(`/new/orders?type=preorder&date=${dataOrder.date}`)
+                    navigate(`/new/${TEST}orders?type=preorder&date=${dataOrder.date}`)
                 })
             })
             .catch(err => console.log(err))
@@ -320,12 +325,12 @@ const App = () => {
                 setTimeout(() => {
                     if (orderStatus == 0) {
                         /* window.location.href = 'https://lk.skilla.ru/orders/?type=preorder' */
-                        navigate(`/new/orders?type=preorder&date=${dataOrder.date}`)
+                        navigate(`/new/${TEST}orders?type=preorder&date=${dataOrder.date}`)
                     } else {
                         /*  window.location.href = role === 'director' ? `https://lk.skilla.ru/orders/order_detail/${data.id}` : 'https://lk.skilla.ru/orders/' */
 
                         /*  role === 'director' ? navigate(`/new/orders/order_detail/${dataOrder.id}`) : *//*  navigate(`https://lk.skilla.ru/orders/`) */
-                        window.location.href = 'https://lk.skilla.ru/new/orders'
+                        window.location.href = `https://lk.skilla.ru/new/${TEST}orders`
                     }
                 })
 
@@ -347,7 +352,7 @@ const App = () => {
                 setLoadCreate(false)
                 setTimeout(() => {
                     /* window.location.href = 'https://lk.skilla.ru/orders/' */
-                    navigate(`/new/orders?date=${dataOrder.date}`)
+                    navigate(`/new/${TEST}orders?date=${dataOrder.date}`)
                 })
             })
             .catch(err => console.log(err))
