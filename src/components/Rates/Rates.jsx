@@ -181,8 +181,8 @@ const Rates = () => {
                     {customer?.works?.map((el, i) => {
                         return <Rate
                             fromPartnership={fromPartnership}
-                            customerBit={el.price.replace(',', '.')}
-                            workerBit={el.bit.replace(',', '.')}
+                            customerBit={el.price?.replace(',', '.')}
+                            workerBit={el.bit?.replace(',', '.')}
                             name={el.work}
                             minTime={el?.min_time}
                             handleResetRatio={handleResetRatio} />
