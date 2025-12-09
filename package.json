@@ -10,7 +10,7 @@
     "@mui/x-date-pickers": "^7.24.1",
     "@pbe/react-yandex-maps": "^1.2.5",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
-    "@reduxjs/toolkit": "^2.11.0",
+    "@reduxjs/toolkit": "^2.11.1",
     "@svgr/webpack": "^5.5.0",
     "axios": "^1.7.9",
     "babel-jest": "^27.4.2",
