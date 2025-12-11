@@ -98,8 +98,6 @@ const App = () => {
     const { orderData } = useOrderDataForSend()
     const navigate = useNavigate()
 
-    console.log(address)
-
     //установка системной темы
     useEffect(() => {
         if (theme == '') {
@@ -317,7 +315,6 @@ const App = () => {
         editOrder(data, id)
             .then(res => {
                 const dataOrder = res.data.data[0];
-                console.log(data.id)
                 setTimeout(() => {
                     setLoadSave(false)
                 }, 200)
@@ -363,7 +360,6 @@ const App = () => {
         setLoadReject(true)
         rejectOrder(id)
             .then(res => {
-                console.log(res)
                 const dataOrder = res.data.data;
                 setLoadReject(false)
                 setTimeout(() => {

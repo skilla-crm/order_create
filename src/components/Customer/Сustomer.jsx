@@ -176,7 +176,6 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
         customer?.id && contactCompany(customer.id)
             .then(res => {
                 const data = res.data.data;
-                console.log(data)
                 Array.isArray(data) ? dispatch(setContacts(data)) : dispatch(setContacts([]))
             })
             .catch(err => console.log(err))
@@ -274,7 +273,6 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
     const handleHistoryPhone = () => {
         setHistoryList([])
-        console.log(phoneWithMask)
         setHistoryLoad(true)
         setLoadBage(true)
         getHistoryOrders(2, phone)
@@ -347,9 +345,6 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     const handleSmsState = () => {
         isSms ? dispatch(setIsSms(false)) : dispatch(setIsSms(true))
     }
-
-    console.log(customer)
-
 
     return (
         <div className={`${s.window} ${hiddenCustomer && s.window_hidden}`}>

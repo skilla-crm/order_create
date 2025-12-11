@@ -105,7 +105,6 @@ const Performers = () => {
         dispatch(setEmailErrorFormat(false))
     }
 
-    console.log(additionalDates)
     return (
         <div className={s.performers}>
             <Header

@@ -37,7 +37,6 @@ export const cityStringUtility = (data) => {
             "HOUSE" - дом вместе с корпусом */
 
 export const addressUtility = (data) => {
-    console.log(data)
     const isCity = data?.find(el => el.kind[0] == "LOCALITY")?.name;
     const isProvince = data?.find(el => el.kind[0] == "PROVINCE")?.name;
     const isArea = data?.find(el => el.kind[0] == "AREA")?.name;

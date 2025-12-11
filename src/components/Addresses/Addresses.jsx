@@ -48,7 +48,7 @@ const Addresses = () => {
     }
 
     const handleAdd = () => {
-        console.log('добавить адрес')
+    
     }
 
     const handleMap = () => {

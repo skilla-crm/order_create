@@ -48,7 +48,10 @@ const InputListContract = ({ vis, list, value, setValue, width }) => {
 
             <div ref={fieldRef} onClick={handleOpenList} className={s.field}>
                 <div className={s.contract}>
-                    <p>{`${value?.template_name ? value?.template_name : 'Договор'} №${value?.prefix ? ' ' + value?.prefix : ''} ${value?.number}`} {value?.date ? ` от ${dayjs(value?.date).format('DD.MM.YYYY')}` : ''}</p>
+                    <p>
+                        {`${value?.template_name ? value?.template_name : 'Договор'} №${value?.prefix ? ' ' + value?.prefix : ''} ${value?.number}`} {value?.date ? ` от ${dayjs(value?.date).format('DD.MM.YYYY')}` : ''}
+                        {value?.label && <span className={s.label}>{value.label}</span>}
+                    </p>
                     <span>{`${value?.partnership_name} ${value?.partnership_details?.bank ? value?.partnership_details?.bank : ''} ${value?.partnership_details?.rs ? `*${value?.partnership_details?.rs.slice(-4)}` : ''}`}</span>
                 </div>
                 <IconChewron className={classNames(s.chewron, openList && s.chewron_up)} />
@@ -61,7 +64,13 @@ const InputListContract = ({ vis, list, value, setValue, width }) => {
                     key={el.id}
                     id={el.id}
                 >
-                    <p>{`${el?.template_name ? el?.template_name : 'Договор'} №${el?.prefix ? ' ' + el?.prefix : ''} ${el?.number}`} {el?.date ? ` от ${dayjs(el?.date).format('DD.MM.YYYY')}` : ''}</p>
+
+                    <p>
+                        {`${el?.template_name ? el?.template_name : 'Договор'} №${el?.prefix ? ' ' + el?.prefix : ''} ${el?.number}`} {el?.date ? ` от ${dayjs(el?.date).format('DD.MM.YYYY')}` : ''}
+                        {el?.label && <span className={s.label}>{el.label}</span>}
+                    </p>
+
+
                     <span>{`${el?.partnership_name} ${el?.partnership_details?.bank ? el?.partnership_details?.bank : ''} ${el?.partnership_details?.rs ? `*${el?.partnership_details?.rs.slice(-4)}` : ''}`}</span>
                 </li>)}
             </ul>

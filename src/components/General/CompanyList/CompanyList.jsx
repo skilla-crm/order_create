@@ -50,7 +50,6 @@ const Item = ({ el, value, handleChose}) => {
     const [partnerships, setPartnerships] = useState([]);
 
     useEffect(() => {
-        console.log(el.contracts)
         const unique = el.contracts.reduce((acc, cur) => {
             if (acc.findIndex(el => el?.partnership_id === cur?.partnership_id) === -1) {
                 acc.push(cur);

@@ -162,7 +162,7 @@ const AddCustomer = ({ setAddCustomer, setHiddenCustomer }) => {
     }
 
     const handleChose = (data) => {
-        console.log(data)
+
         dispatch(setKpp(data?.kpp ? data.kpp : ''))
         dispatch(setName(data?.name?.short_with_opf))
         dispatch(setOgrn(data?.ogrn))
