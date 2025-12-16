@@ -47,13 +47,15 @@ const InputListContract = ({ vis, list, value, setValue, width }) => {
             <span className={s.sub}>Договор</span>
 
             <div ref={fieldRef} onClick={handleOpenList} className={s.field}>
-                <div className={s.contract}>
+                {value?.id && <div className={s.contract}>
                     <p>
                         {`${value?.template_name ? value?.template_name : 'Договор'} №${value?.prefix ? ' ' + value?.prefix : ''} ${value?.number}`} {value?.date ? ` от ${dayjs(value?.date).format('DD.MM.YYYY')}` : ''}
                         {value?.label && <span className={s.label}>{value.label}</span>}
                     </p>
                     <span>{`${value?.partnership_name} ${value?.partnership_details?.bank ? value?.partnership_details?.bank : ''} ${value?.partnership_details?.rs ? `*${value?.partnership_details?.rs.slice(-4)}` : ''}`}</span>
-                </div>
+                </div>}
+
+                {!value?.id && <div className={s.contract}><p>Договор не выбран</p></div>}
                 <IconChewron className={classNames(s.chewron, openList && s.chewron_up)} />
             </div>
 
