@@ -98,6 +98,7 @@ const App = () => {
     const { orderData } = useOrderDataForSend()
     const navigate = useNavigate()
 
+
     //установка системной темы
     useEffect(() => {
         if (theme == '') {
@@ -163,7 +164,7 @@ const App = () => {
             const idOrder = path.includes('orders/edit/') ? Number(path.split('edit/').pop()) : Number(path.split('repeat/').pop());
 
             setId(idOrder)
-            !loadParametrs && getDetails(idOrder)
+           /*  !loadParametrs && */ getDetails(idOrder)
                 .then(res => {
 
                     const data = res.data.data;
@@ -183,9 +184,18 @@ const App = () => {
 
                     const company = parametrs?.companies_2?.find(el => el.id == data.company_id)
                     const contract = company?.contracts?.find(el => el.id === data.contract_id)
-                    data.beznal == 1 && company && dispatch(setCustomer(company))
-                    data.beznal == 1 && contract && dispatch(setContract(contract))
-                   /*  data.beznal == 1 && !contract && company?.contracts?.length > 0 && dispatch(setContract(company?.contracts?.[0])) */
+        
+
+                    if (company) {
+                        data.beznal == 1 && company && dispatch(setCustomer(company))
+                        data.beznal == 1 && contract && dispatch(setContract(contract))
+                    } {
+                        
+                        const companyOld = parametrs?.companies?.find(el => el.id == data.company_id)
+                        companyOld && dispatch(setCustomer(companyOld))
+                    }
+
+                    /*  data.beznal == 1 && !contract && company?.contracts?.length > 0 && dispatch(setContract(company?.contracts?.[0])) */
 
                     setTimeout(() => {
                         setLoadDetail(false)
@@ -210,7 +220,7 @@ const App = () => {
 
     const handleValidation = () => {
         const companyError = payType == 1 && !customer?.id && acceptStatus == 1 ? true : false;
-    /*     const contractError = payType == 1 && !contract?.id ? true : false; */
+        /*     const contractError = payType == 1 && !contract?.id ? true : false; */
         const phoneError = !noContactPerson && phone == '' ? true : false;
         const phoneErrorFormat = phone?.length > 0 && phone?.length < 11 ? true : false;
         const nameError = !noContactPerson && name == '' ? true : false;
@@ -226,7 +236,7 @@ const App = () => {
         const isServiceError = service == 0 ? true : false;
 
         dispatch(setСompanyError(companyError))
-       /*  dispatch(setСontractError(contractError)) */
+        /*  dispatch(setСontractError(contractError)) */
         dispatch(setPhoneError(phoneError))
         dispatch(setPhoneErrorFormat(phoneErrorFormat))
         dispatch(setNameError(nameError))
@@ -375,7 +385,7 @@ const App = () => {
     return (
         <UserContext.Provider value={{ pro, role }}>
             <ParametrsContext.Provider value={parametrs}>
-                <div ref={appRef} className={`${s.app} ${anim && !loadDetail && s.app_anim} ${loadParametrs && !loadDetail && s.app_disabled}`}>
+                <div ref={appRef} className={`${s.app} ${anim/*  && !loadDetail */ && s.app_anim} ${loadParametrs && loadDetail && s.app_disabled}`}>
                     {acceptStatus == 1 && !fromLk && <div className={s.header}>
                         <h2 className={s.title}>{title}</h2>
                         {<div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>
@@ -409,7 +419,7 @@ const App = () => {
                                 <ErrorWindow />
                             </div>
                             {addCustomer && <AddCustomer setAddCustomer={setAddCustomer} setHiddenCustomer={setHiddenCustomer} />}
-                            {<Customer setAddCustomer={setAddCustomer} addCustomer={addCustomer} hiddenCustomer={hiddenCustomer} setHiddenCustomer={setHiddenCustomer} />}
+                            {<Customer setAddCustomer={setAddCustomer} addCustomer={addCustomer} hiddenCustomer={hiddenCustomer} setHiddenCustomer={setHiddenCustomer} loadParametrs={loadParametrs}/>}
 
                             <Performers />
                             <Addresses />

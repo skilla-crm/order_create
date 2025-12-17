@@ -4,11 +4,13 @@ import { ReactComponent as IconInfo } from '../../../images/icons/header/iconInf
 import { useRef, useState, useEffect } from 'react';
 //components
 import CompanyList from '../CompanyList/CompanyList';
+import LoaderButton from '../LoaderButton/LoaderButton';
 //utils
 import { addSpaceNumber } from '../../../utils/addSpaceNumber';
 import { handleSearchCompany } from '../../../utils/SearchCompany';
+import classNames from 'classnames';
 
-const InputCompany = ({ sub, list, value, setValue, handleAdd, payType, error, errorText }) => {
+const InputCompany = ({ sub, customer, list, value, setValue, handleAdd, payType, error, errorText, loadParametrs }) => {
     const [openList, setOpenList] = useState(false);
     const [fieldFocus, setFieldFocus] = useState(false);
     const [valueText, setValueText] = useState('');
@@ -18,10 +20,12 @@ const InputCompany = ({ sub, list, value, setValue, handleAdd, payType, error, e
     const [notFound, setNotFound] = useState(false);
     const listRef = useRef();
 
+
+
     useEffect(() => {
         const result = list.find(el => el.id == value)
-        setCompanyInfo(result)
-        result && setValueText(result?.name)
+        setCompanyInfo(result ? result : customer)
+     /*    result &&  */setValueText(result?.name ? result.name : customer.name)
     }, [value])
 
     useEffect(() => {
@@ -30,9 +34,10 @@ const InputCompany = ({ sub, list, value, setValue, handleAdd, payType, error, e
     }, [payType])
 
     useEffect(() => {
+        console.log(list, valueText)
         const search = handleSearchCompany(valueText, list);
         valueText !== '' && setSearchResult(search)
-        valueText == '' && setSearchResult(list);
+        valueText == '' || !valueText && setSearchResult(list);
         valueText == '' && fieldFocus && setOpenList(true);
         if (search?.length == 0) {
             setNotFound(true)
@@ -94,8 +99,12 @@ const InputCompany = ({ sub, list, value, setValue, handleAdd, payType, error, e
         <div className={`${s.container}`}>
             <span className={s.sub}>{sub}</span>
             <div ref={listRef} className={`${s.field} ${s.field_company} ${fieldFocus && s.field_focus}`}>
-                <input onChange={handleChangeValue} value={valueText || ''} onFocus={handleFocus} onBlur={handleBlur} type='text'></input>
+                <input disabled={loadParametrs} onChange={handleChangeValue} value={valueText || ''} onFocus={handleFocus} onBlur={handleBlur} type='text'></input>
                 <div onClick={handleOpenList} className={`${s.chewron} ${openList && s.chewron_open}`}>
+                    <div className={classNames(s.loader, loadParametrs && s.loader_vis)}>
+                        <LoaderButton color={'#002CFB'} />
+                    </div>
+
                     <IconChewron />
                 </div>
 

@@ -68,7 +68,7 @@ const Item = ({ el }) => {
             .then(res => {
                 const data = res.data.data;
                 const company = companies?.find(el => el.id == data.company_id)
-                data.beznal == 1 && company && dispatch(setCustomer(company))
+        /*         data.beznal == 1 && company && dispatch(setCustomer(company)) */
                 setData(data)
             })
             .catch(err => console.log(err))

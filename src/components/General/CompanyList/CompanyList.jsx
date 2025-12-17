@@ -66,7 +66,7 @@ const Item = ({ el, value, handleChose}) => {
                 {el?.label?.replaceAll(' ', '') !== '' && <span className={s.label}><p>{el.label}</p></span>}
             </div>
 
-            <span>ИНН {el.inn} {el.kpp && `КПП ${el.kpp}`} {partnerships.length === 0 ? el.partnership_name : `${partnerships[0]?.partnership_name} ${partnerships.length > 1 ? `+${partnerships.length - 1}` : ''}`}{/* {el.} */}</span>
+            <span>ИНН {el.inn} {el.kpp && `КПП ${el.kpp}`}{/*  {partnerships.length === 0 ? el.partnership_name : `${partnerships[0]?.partnership_name} ${partnerships.length > 1 ? `+${partnerships.length - 1}` : ''}`} */}</span>
         </li>
     )
 }

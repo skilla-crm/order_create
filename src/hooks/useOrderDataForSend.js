@@ -48,7 +48,7 @@ export const useOrderDataForSend = () => {
         supervisor_comment: commentSupervisor,
         requirements: service == 8 ? [] : tags,
         min_time: minDuration,
-        order_duration: duration,
+        order_duration: duration === 0 ? 1 : duration,
         load_address: address.street,
         city: address.city,
         home: address.house,

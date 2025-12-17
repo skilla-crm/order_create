@@ -55,7 +55,7 @@ import InputListContract from '../General/Input/InputListContract/InputListContr
 import ButtonAdd from '../General/ButtonAdd/ButtonAdd';
 
 
-const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustomer }) => {
+const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustomer, loadParametrs }) => {
     const location = useLocation();
     const path = location.pathname + location.search;
     const [historyLoad, setHistoryLoad] = useState(false);
@@ -77,7 +77,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     const { companyError, phoneError, nameError } = useSelector(selectorValidation);
     const { data, time, timerDisabled } = useSelector(selectorPerformers);
     const { partnershipId, fromPartnership, acceptStatus } = useSelector(selectorManagers);
-    const { partnerships, skilla_partnerships } = useContext(ParametrsContext);
+    const { partnerships, skilla_partnerships, companies: companiesParam } = useContext(ParametrsContext);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -242,14 +242,16 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
             handleHistory()
             return
         }
-    }, [customer])
+    }, [customer, contract])
 
     const handleHistory = () => {
+        const oldCompanies = companiesParam?.filter(el => `${el?.inn}${el?.kpp}` === `${customer?.inn}${customer?.kpp}`);
+        const companyForHistory = oldCompanies?.find(el => el.partnership_id == contract?.partnership_id)
 
         setHistoryList([])
         setHistoryLoad(true)
         setLoadBage(true)
-        getHistoryOrders(1, customer?.id)
+        getHistoryOrders(1, companyForHistory ? companyForHistory.id : customer?.id)
             .then(res => {
                 const data = res.data.data;
                 setHistoryName(customer?.name)
@@ -372,12 +374,14 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                             {fromPartnership == 0 && <InputCompany
                                 sub={SUB_COMPANY}
                                 list={companies}
+                                customer={customer}
                                 value={customer?.id}
                                 setValue={(data) => dispatch(setCustomer(data))}
                                 handleAdd={handleAdd}
                                 payType={payType}
                                 error={companyError}
                                 errorText={'Выбери заказчика'}
+                                loadParametrs={loadParametrs}
                             />}
 
                             <ButtonAdd
@@ -503,7 +507,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                         </div>
 
 
-                       {/*  {!historyDisabled && <div className={s.sms}>
+                        {/*  {!historyDisabled && <div className={s.sms}>
                              <Switch
                                 text={SWITCH_NAME_SMS}
                                 handleSwitch={handleSmsState}

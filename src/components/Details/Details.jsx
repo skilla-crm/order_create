@@ -90,6 +90,8 @@ const Details = () => {
         }
     }
 
+    console.log(minDuration)
+
     return (
         <div className={s.details}>
             <Header

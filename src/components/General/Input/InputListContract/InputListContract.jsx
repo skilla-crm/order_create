@@ -10,7 +10,6 @@ const InputListContract = ({ vis, list, value, setValue, width }) => {
     const [openList, setOpenList] = useState(false);
     const listRef = useRef();
     const fieldRef = useRef();
-    console.log(value)
 
     const handleOpenList = () => {
         openList ? setOpenList(false) : setOpenList(true)

@@ -49,7 +49,6 @@ const ProCalendar = ({ setProCalendar, date, time, dates, setDates, proType, set
 
     useEffect(() => {
         const datesArr = [new Date(date), ...dates]
-        console.log(datesArr)
         const unique = datesArr.reduce((accumulator, current) => {
             if (accumulator.findIndex(el => dayjs(el).format('YYYY-MM-DD') === dayjs(current).format('YYYY-MM-DD')) === -1) {
                 accumulator.push(current);
