@@ -39,7 +39,7 @@ const Header = ({ title, buttonState, buttonText, handleButton, forPro, PromptTe
 
     return (
         <div className={s.container}>
-            <Prompt openPrompt={openPrompt} setOpenPrompt={setOpenPrompt} PromptText={PromptText} />
+            {!hiddenPrompt && <Prompt openPrompt={openPrompt} setOpenPrompt={setOpenPrompt} PromptText={PromptText || null} />}
             <div className={s.title}>
                 <h3>{title}</h3>
                 {!hiddenPrompt && <div onClick={handleOpenPrompt} className={s.info}>

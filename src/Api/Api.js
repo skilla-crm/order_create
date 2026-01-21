@@ -68,6 +68,10 @@ export const getDetails = (id) => {
   return instanceWithToken.get(`${baseURL}api/orders/detail/${id}`)
 }
 
+export const getPartnershipCompanies = (id) => {
+  return instanceWithToken.get(`${baseURL}api/orders/companies/${id}`)
+}
+
 export const editOrder = (data, id) => {
   return instanceWithToken({
     method: 'post',

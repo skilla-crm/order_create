@@ -61,9 +61,9 @@ const InputListContract = ({ vis, list, value, setValue, width }) => {
             <ul ref={listRef} className={classNames(s.list, openList && s.list_open)}>
                 {list.map(el => <li
                     onClick={() => handleValue(el)}
-                    className={classNames(s.item, el.id === value.id && s.item_active)}
-                    key={el.id}
-                    id={el.id}
+                    className={classNames(s.item, el?.id === value?.id && s.item_active)}
+                    key={el?.id}
+                    id={el?.id}
                 >
 
                     <p>

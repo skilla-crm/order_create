@@ -1,4 +1,5 @@
 import s from './Rates.module.scss';
+import classNames from 'classnames';
 import { useRef, useState, useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ParametrsContext } from '../../contexts/UserContext';
@@ -16,14 +17,13 @@ import { setMinDurqtion } from '../../store/reducer/Details/slice';
 import { setRateError, setRateWorkerError } from '../../store/reducer/Validation/slice';
 //utils
 import { addSpaceNumber2 } from '../../utils/addSpaceNumber';
-
 //components
 import Header from '../General/Header/Header';
 import Field from '../General/Field/Field';
 import SegmentButtons from '../General/SegmentButtons/SegmentButtons';
 import RateBlock from '../RateBlock/RateBlock';
 import RateBlockTwice from '../RateBlockTwice/RateBlockTwice';
-import classNames from 'classnames';
+const role = document.getElementById(`root_order-create`).getAttribute('role');
 
 const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership }) => {
     const dispatch = useDispatch();
@@ -67,7 +67,7 @@ const Rates = () => {
     const [activeRatio, setActiveRatio] = useState(0)
     const [warning, setWarning] = useState(false);
     const dispatch = useDispatch();
-    const { rate, rateWorker, sameTarification } = useSelector(selectorRates)
+    const { rate, rateWorker, sameTarification, ratesPartnership } = useSelector(selectorRates)
     const { payType, customer } = useSelector(selectorCustomer)
     const { fromPartnership } = useSelector(selectorManagers);
 
@@ -164,12 +164,12 @@ const Rates = () => {
                     {SUB_PRICE}
                 </span>
                 {(payType !== 1 || customer?.works?.length == 0 || !customer?.works) && <ul className={`${s.block_list} ${s.block_list_2}`}>
-                    {rates?.map((el, i) => {
+                    {(role === 'mainoperator' ? ratesPartnership : rates)?.map((el, i) => {
                         return <Rate
                             key={el.id}
                             customerBit={el.client_bit}
                             workerBit={el.worker_bit}
-                            name={`Тариф ${i + 1}`}
+                            name={`${el.label ? el.label : `Тариф ${i + 1}`}`}
                             handleResetRatio={handleResetRatio}
                             fromPartnership={fromPartnership}
                         />

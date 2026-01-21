@@ -1,16 +1,14 @@
-import s from './Input.module.scss';
-import { ReactComponent as IconChewron } from '../../../images/icons/iconChewron.svg';
-import { ReactComponent as IconInfo } from '../../../images/icons/header/iconInfo.svg';
-import { useRef, useState, useEffect } from 'react';
-//components
-import CompanyList from '../CompanyList/CompanyList';
-import LoaderButton from '../LoaderButton/LoaderButton';
-//utils
-import { addSpaceNumber } from '../../../utils/addSpaceNumber';
-import { handleSearchCompany } from '../../../utils/SearchCompany';
+import s from '../../General/Input/Input.module.scss';
 import classNames from 'classnames';
+import { useState, useEffect, useRef } from 'react';
+import { ReactComponent as IconChewron } from '../../../images/icons/iconChewron.svg';
+//components
+import LoaderButton from '../LoaderButton/LoaderButton';
+import PartnershipsList from '../PartnershipsList/PartnershipsList';
+//utils
+import { handleSearchCompany } from '../../../utils/SearchCompany';
 
-const InputCompany = ({ sub, customer, list, value, setValue, handleAdd, payType, error, errorText, loadParametrs }) => {
+const PartnershipInput = ({ list, value, setValue, error, errorText, loadParametrs, sub }) => {
     const [openList, setOpenList] = useState(false);
     const [fieldFocus, setFieldFocus] = useState(false);
     const [valueText, setValueText] = useState('');
@@ -24,22 +22,17 @@ const InputCompany = ({ sub, customer, list, value, setValue, handleAdd, payType
 
     useEffect(() => {
         const result = list?.find(el => el.id == value)
-        setCompanyInfo(result ? result : customer)
-     /*    result &&  */setValueText(result?.name ? result.name : customer.name)
+        setValueText(result?.name)
     }, [value])
 
-    useEffect(() => {
-        payType !== 1 && setValueText('')
-        payType !== 1 && setValue('')
-    }, [payType])
+
 
     useEffect(() => {
-        console.log(list, valueText)
         const search = handleSearchCompany(valueText, list);
         valueText !== '' && setSearchResult(search)
         valueText == '' || !valueText && setSearchResult(list);
         valueText == '' && fieldFocus && setOpenList(true);
-        if (search?.length == 0) {
+        if (search?.length == 0 && valueText?.length > 0) {
             setNotFound(true)
         } else {
             setNotFound(false)
@@ -66,6 +59,7 @@ const InputCompany = ({ sub, customer, list, value, setValue, handleAdd, payType
 
     const handleFocus = () => {
         setOpenList(true)
+        setSearchResult(list)
         setTimeout(() => {
             setListScroll(true)
         }, 100)
@@ -108,7 +102,7 @@ const InputCompany = ({ sub, customer, list, value, setValue, handleAdd, payType
                     <IconChewron />
                 </div>
 
-                <CompanyList
+                <PartnershipsList
                     list={searchResult}
                     value={value}
                     setValue={setValue}
@@ -118,8 +112,9 @@ const InputCompany = ({ sub, customer, list, value, setValue, handleAdd, payType
                     setValueText={setValueText}
                     notFound={notFound}
                     valueText={valueText}
-                    handleAdd={handleAdd}
                 />
+
+
             </div>
 
             <div className={`${s.error} ${error && s.error_vis}`}>
@@ -128,16 +123,10 @@ const InputCompany = ({ sub, customer, list, value, setValue, handleAdd, payType
                 </p>
             </div>
 
-            <div className={`${s.bill} ${(companyInfo?.billState || companyInfo?.contractState) && s.bill_vis}`}>
-                <IconInfo />
-                <p>
-                    {companyInfo?.billState && `Будет отправлен договор и счет на сумму ${addSpaceNumber(companyInfo?.billSum)} руб. Почта: ${companyInfo?.email}`}
-                    {companyInfo?.contractState && `Будет отправлен договор на почту ${companyInfo?.email}`}
-                </p>
-            </div>
+
 
         </div>
     )
 };
 
-export default InputCompany;
+export default PartnershipInput;

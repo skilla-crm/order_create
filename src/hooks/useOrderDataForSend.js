@@ -8,6 +8,7 @@ import { selectorDetails } from "../store/reducer/Details/selector";
 import { selectorAddress } from "../store/reducer/Address/selector";
 import { selectorRates } from "../store/reducer/Rates/selector";
 import { selectorManagers } from "../store/reducer/Managers/selector";
+import { selectorPartnership } from "../store/reducer/Partnership/selector";
 import { useState } from "react";
 
 export const useOrderDataForSend = () => {
@@ -18,6 +19,7 @@ export const useOrderDataForSend = () => {
     const { address, metro, noAddress } = useSelector(selectorAddress);
     const { rate, rateWorker, orderSum, unit, unitWorker, sameTarification } = useSelector(selectorRates);
     const { managerId, partnershipId, emailPasport, emailState, partnerRate } = useSelector(selectorManagers);
+    const { partnership } = useSelector(selectorPartnership);
 
     const dopDates = additionalDates.length > 0 ?
         additionalDates.map(el => {
@@ -32,6 +34,7 @@ export const useOrderDataForSend = () => {
 
     const orderData = {
         /*        preorder: type, */
+        parnership_id: partnership?.id || null,
         beznal: payType == 1,
         to_card: payType == 2,
         company_id: payType == 1 && customer?.id ? customer?.id : null,

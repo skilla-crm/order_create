@@ -33,6 +33,7 @@ import { selectorManagers } from '../../store/reducer/Managers/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 //utils
 import { emailValidate } from '../../utils/EmailValidate';
+const role = document.getElementById(`root_order-create`).getAttribute('role');
 
 const Performers = () => {
     const [proCalendar, setProCalendar] = useState(false);
@@ -109,7 +110,7 @@ const Performers = () => {
         <div className={s.performers}>
             <Header
                 title={TITLE}
-                buttonState={fromPartnership !== 0 && acceptStatus == 0 ? false : true}
+                buttonState={((fromPartnership !== 0 && acceptStatus == 0) || role === 'mainoperator') ? false : true}
                 buttonText={BUTTON_TEXT}
                 handleButton={handleAdd}
                 forPro={!user.pro}

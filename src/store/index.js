@@ -10,6 +10,7 @@ import ManagersSlice from './reducer/Managers/slice';
 import ValidtionSlice from './reducer/Validation/slice';
 import PreviewSlice from './reducer/Preview/slice';
 import ParametrsSlice from './reducer/Parametrs/slice';
+import PartnershipSlice from './reducer/Partnership/slice';
 
 export const rootReducer = combineReducers({
   AdditionalDatesSlice,
@@ -22,7 +23,8 @@ export const rootReducer = combineReducers({
   ManagersSlice,
   ValidtionSlice,
   PreviewSlice,
-  ParametrsSlice
+  ParametrsSlice,
+  PartnershipSlice
 });
 
 export const store = configureStore({

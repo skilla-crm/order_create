@@ -21,6 +21,7 @@ import Header from '../General/Header/Header';
 import SegmentControl from '../General/SegmentControl/SegmentControl';
 import InputSelect from '../General/Input/InputSelect';
 import InputSelectPartner from '../General/Input/InputSelectPartner';
+const role = document.getElementById(`root_order-create`).getAttribute('role');
 
 
 const Manager = () => {
@@ -88,18 +89,18 @@ const Manager = () => {
 
     return (
         <div className={s.manager}>
-            <Header
+            {role !== 'mainoperator' && <Header
                 title={TITLE}
                 buttonState={false}
                 PromptText={PromptManager}
-            />
+            />}
             {skilla_partnerships?.length > 0 && service !== 8 && fromPartnership == 0 && <SegmentControl
                 segments={segments}
                 setActive={(data) => handleActive(data)}
                 active={activeSegment}
             />
             }
-            {activeSegment == 1 && <div>
+            {activeSegment == 1 && role !== 'mainoperator' && <div>
                 <InputSelect
                     list={sortManager(supervisors)}
                     value={managerId}

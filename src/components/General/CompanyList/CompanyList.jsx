@@ -35,7 +35,7 @@ const CompanyList = ({ list, openList, setOpenList, value, setValue, listScroll,
             {list?.map(el => {
                 return <Item el={el} value={value} handleChose={handleChose} />
             })}
-            {notFound && <li className={s.nofound}>
+            {notFound && value?.length > 0 && <li className={s.nofound}>
                 <p>Не найдено по запросу "{valueText}"</p>
                 <button onClick={handleOpenAdd}><IconAdd /> Добавить нового заказчика</button>
             </li>

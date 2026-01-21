@@ -53,9 +53,10 @@ import Tooltip from '../General/Tooltip/Tooltip';
 import InputPartner from '../General/Input/InputPartner';
 import InputListContract from '../General/Input/InputListContract/InputListContract';
 import ButtonAdd from '../General/ButtonAdd/ButtonAdd';
+const role = document.getElementById(`root_order-create`).getAttribute('role');
 
 
-const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustomer, loadParametrs }) => {
+const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustomer, loadParametrs, partnershipCompanies }) => {
     const location = useLocation();
     const path = location.pathname + location.search;
     const [historyLoad, setHistoryLoad] = useState(false);
@@ -353,7 +354,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
             <div className={s.customer}>
                 <Header
                     title={TITLE}
-                    buttonState={(addCustomer || historyDisabled) ? false : true}
+                    buttonState={(addCustomer || historyDisabled || role === 'mainoperator') ? false : true}
                     buttonText={BUTTON_TEXT}
                     handleButton={handleAdd}
                     forPro={false}
@@ -370,10 +371,10 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                 <div className={s.container}>
                     <div className={s.block}>
 
-                        <div className={`${s.company} ${(payType == 1 || fromPartnership !== 0) && s.company_vis}`}>
+                        <div className={`${s.company} ${(((payType == 1 || fromPartnership !== 0) && role !== 'mainoperator') || (role === 'mainoperator' && partnershipCompanies.length > 0 && payType == 1)) && s.company_vis}`}>
                             {fromPartnership == 0 && <InputCompany
                                 sub={SUB_COMPANY}
-                                list={companies}
+                                list={role === 'mainoperator' ? partnershipCompanies : companies}
                                 customer={customer}
                                 value={customer?.id}
                                 setValue={(data) => dispatch(setCustomer(data))}
@@ -384,10 +385,10 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                                 loadParametrs={loadParametrs}
                             />}
 
-                            <ButtonAdd
+                            {role !== 'mainoperator' && <ButtonAdd
                                 vis={customer?.contracts?.length === 0 && customer?.id}
                                 counterpartyId={customer?.id}
-                            />
+                            />}
 
                             <InputListContract
                                 list={customer?.contracts || []}
@@ -534,13 +535,14 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
 
 
-                        <div className={`${s.loader} ${s.loader_history} ${loadBage && !historyDisabled && s.loader_vis}`}>
+                        {role !== 'mainoperator' && <div className={`${s.loader} ${s.loader_history} ${loadBage && !historyDisabled && s.loader_vis}`}>
                             {historyLoad && <div className={s.loader_anim}><IconLoader /></div>}
                             {historyLoad && <p>Проверяем историю заказов</p>}
                             {!historyLoad && historyList?.length == 0 && <IconInfo />}
                             {!historyLoad && historyList?.length == 0 && <p>Заказы не найдены</p>}
                             {!historyLoad && historyList?.length == 0 && <p></p>}
                         </div>
+                        }
                     </div>
 
 
@@ -548,7 +550,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
             </div>
 
-            <OrdersHistory vis={(historyList?.length > 0 && !historyDisabled)} client={historyName} historyList={historyList} />
+            {role !== 'mainoperator' && <OrdersHistory vis={(historyList?.length > 0 && !historyDisabled)} client={historyName} historyList={historyList} />}
         </div>
 
     )

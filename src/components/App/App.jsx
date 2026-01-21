@@ -60,6 +60,7 @@ import SuccessModal from '../SuccessModal/SuccessModal';
 import ErrorWindow from '../ErrorWindow/ErrorWindow';
 import PreviewPhone from '../PreviewPhone/PreviewPhone';
 import OrderSum from '../OrderSum/OrderSum';
+import Partnership from '../Partnership/Partnership';
 const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
 const role = document.getElementById(`root_order-create`).getAttribute('role');
 const TEST = process.env.REACT_APP_TEST;
@@ -83,6 +84,8 @@ const App = () => {
     const [hiddenCustomer, setHiddenCustomer] = useState(false);
     const [positionButtonBotom, setPositionButtonBotom] = useState(false);
     const [title, setTitle] = useState('Создание заказа')
+    const [partnershipCompanies, setPartnershipCompanies] = useState([]);
+    const [loadPartnershipCompanies, setLoadPartnershipCompanies] = useState(false);
     const { customer, contract, payType, name, phone, noContactPerson, isBlack, isBlackOur, debt, debtThreshold } = useSelector(selectorCustomer);
     const { time, timerDisabled } = useSelector(selectorPerformers);
     const { service } = useSelector(selectorDetails);
@@ -184,13 +187,13 @@ const App = () => {
 
                     const company = parametrs?.companies_2?.find(el => el.id == data.company_id)
                     const contract = company?.contracts?.find(el => el.id === data.contract_id)
-        
+
 
                     if (company) {
                         data.beznal == 1 && company && dispatch(setCustomer(company))
                         data.beznal == 1 && contract && dispatch(setContract(contract))
                     } {
-                        
+
                         const companyOld = parametrs?.companies?.find(el => el.id == data.company_id)
                         companyOld && dispatch(setCustomer(companyOld))
                     }
@@ -418,15 +421,23 @@ const App = () => {
                             <div className={s.errors}>
                                 <ErrorWindow />
                             </div>
+                            {role === 'mainoperator' && <Partnership loadParametrs={loadParametrs} setPartnershipCompanies={setPartnershipCompanies} setLoadPartnershipCompanies={setLoadPartnershipCompanies} />}
                             {addCustomer && <AddCustomer setAddCustomer={setAddCustomer} setHiddenCustomer={setHiddenCustomer} />}
-                            {<Customer setAddCustomer={setAddCustomer} addCustomer={addCustomer} hiddenCustomer={hiddenCustomer} setHiddenCustomer={setHiddenCustomer} loadParametrs={loadParametrs}/>}
+                            {<Customer
+                                setAddCustomer={setAddCustomer}
+                                addCustomer={addCustomer}
+                                hiddenCustomer={hiddenCustomer}
+                                setHiddenCustomer={setHiddenCustomer}
+                                loadParametrs={loadParametrs || (role === 'mainoperator' && loadPartnershipCompanies)}
+                                partnershipCompanies={partnershipCompanies}
+                            />}
 
                             <Performers />
                             <Addresses />
                             <Details />
                             {service == 8 && <OrderSum />}
                             {service !== 8 && <Rates />}
-                            {<Manager />}
+                            { <Manager />}
 
                             {(orderStatus < 4 || (/* role == 'director' && */ orderStatus < 9)) && acceptStatus == 1 && !fromLk && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
                                 {!existOrder && !loadDetail && <div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>
