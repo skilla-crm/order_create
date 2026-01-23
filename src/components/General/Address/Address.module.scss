@@ -38,6 +38,10 @@
     &_disabled {
         background-color: var(--color-bg-switch-off);
     }
+
+    &_first {
+        margin-right: 0;
+    }
 }
 
 .button {
@@ -178,7 +182,7 @@
 
 .info {
     display: flex;
-   flex-direction: column;
+    flex-direction: column;
     height: 0;
     transition: all 0.2s ease-in-out;
     overflow: hidden;
@@ -223,4 +227,14 @@
     padding-left: 12px;
     width: 60px;
 
+}
+
+.delete {
+    margin-right: 112px;
+    cursor: pointer;
+    transition: all 0.15s;
+
+    &:hover {
+        opacity: 0.8;
+    }
 }

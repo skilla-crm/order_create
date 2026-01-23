@@ -1,5 +1,6 @@
 import s from './App.module.scss';
 import { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 //hooks
 import { useWriteOrderDataHook } from '../../hooks/useWriteOrderDataHook';
 import { useOrderDataForSend } from '../../hooks/useOrderDataForSend';
@@ -24,6 +25,7 @@ import {
     setName,
     setPhone
 } from '../../store/reducer/Customer/slice';
+import { setPartnership } from '../../store/reducer/Partnership/slice';
 import { setDate, setTime, setTimerDisabled } from '../../store/reducer/Performers/slice';
 import { setDefaultCordinate } from '../../store/reducer/Address/slice';
 import {
@@ -66,6 +68,7 @@ const role = document.getElementById(`root_order-create`).getAttribute('role');
 const TEST = process.env.REACT_APP_TEST;
 
 const App = () => {
+    const [searchParams] = useSearchParams();
     const [theme, setTheme] = useState('light');
     const [anim, setAnim] = useState(false);
     const [addCustomer, setAddCustomer] = useState(false);
@@ -99,7 +102,26 @@ const App = () => {
     const dispatch = useDispatch();
     const { setData } = useWriteOrderDataHook();
     const { orderData } = useOrderDataForSend()
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+
+    const partnershipId = searchParams.get('partnershipId');
+    const companyId = searchParams.get('companyId');
+    const phoneClient = searchParams.get('phone');
+    const nameClient = searchParams.get('name')
+
+    useEffect(() => {
+        phoneClient && dispatch(setPhone(phoneClient))
+        nameClient && dispatch(setName(nameClient))
+
+    }, [phoneClient, nameClient])
+
+    useEffect(() => {
+
+        if (partnershipId && parametrs?.partnerships) {
+            const result = parametrs?.partnerships?.find(el => el.id == partnershipId)
+            dispatch(setPartnership(result))
+        }
+    }, [parametrs, partnershipId])
 
 
     //установка системной темы
@@ -421,7 +443,7 @@ const App = () => {
                             <div className={s.errors}>
                                 <ErrorWindow />
                             </div>
-                            {role === 'mainoperator' && <Partnership loadParametrs={loadParametrs} setPartnershipCompanies={setPartnershipCompanies} setLoadPartnershipCompanies={setLoadPartnershipCompanies} />}
+                            {role === 'mainoperator' && <Partnership loadParametrs={loadParametrs} companyId={companyId} setPartnershipCompanies={setPartnershipCompanies} setLoadPartnershipCompanies={setLoadPartnershipCompanies} />}
                             {addCustomer && <AddCustomer setAddCustomer={setAddCustomer} setHiddenCustomer={setHiddenCustomer} />}
                             {<Customer
                                 setAddCustomer={setAddCustomer}
@@ -437,7 +459,7 @@ const App = () => {
                             <Details />
                             {service == 8 && <OrderSum />}
                             {service !== 8 && <Rates />}
-                            { <Manager />}
+                            {<Manager />}
 
                             {(orderStatus < 4 || (/* role == 'director' && */ orderStatus < 9)) && acceptStatus == 1 && !fromLk && <div className={`${s.buttons_bottom} ${positionButtonBotom && s.buttons_vis}`}>
                                 {!existOrder && !loadDetail && <div className={`${s.buttons} ${!existOrder && !loadDetail && s.buttons_vis}`}>

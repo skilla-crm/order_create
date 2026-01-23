@@ -17,3 +17,18 @@
    display: flex;
    align-items: center;
 }
+
+.sub {
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    color: var(--color-text-secondary);
+    user-select: none;
+    margin-bottom: 6px;
+}
+
+.dop {
+   display: flex;
+   flex-direction: column;
+   gap: 4px;
+}

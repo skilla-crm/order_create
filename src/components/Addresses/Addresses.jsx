@@ -8,7 +8,7 @@ import { selectorAddress } from '../../store/reducer/Address/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
 
 //slice
-import { setAddress, setMetro, setNoAddress, deleteMetro } from '../../store/reducer/Address/slice';
+import { setAddress, addDopAdresses, deleteDopAddress, addDopAdressesMetro, setMetro, setDopMetro, setNoAddress, deleteMetro } from '../../store/reducer/Address/slice';
 
 import { setAdressError, } from '../../store/reducer/Validation/slice';
 //constants
@@ -22,10 +22,12 @@ import Address from '../General/Address/Address';
 
 const Addresses = () => {
     const user = useContext(UserContext);
-    const { address, metro, defaultCordinate, noAddress, addressForReturn } = useSelector(selectorAddress);
+    const { address, dopAdresses, metro, defaultCordinate, noAddress, addressForReturn } = useSelector(selectorAddress);
     const { adressError } = useSelector(selectorValidation)
     const [openMap, setOpenMap] = useState(false);
     const dispatch = useDispatch();
+
+    console.log(dopAdresses)
 
     useEffect(() => {
         address.city && handleResetErrorAddress()
@@ -48,7 +50,13 @@ const Addresses = () => {
     }
 
     const handleAdd = () => {
-    
+        const maxValue = dopAdresses.length > 0 ? Math.max(...dopAdresses.map(obj => obj.id)) : 0;
+        console.log(maxValue)
+        dispatch(addDopAdresses({ id: maxValue + 1 }))
+    }
+
+    const handleDelete = (id) => {
+        dispatch(deleteDopAddress(id))
     }
 
     const handleMap = () => {
@@ -59,7 +67,7 @@ const Addresses = () => {
         <div className={s.details}>
             <HeaderAddreses
                 title={'Адрес заказа'}
-                buttonState={false}
+                buttonState={true}
                 forPro={!user.pro}
                 PromptText={PromptDetails}
                 hiddenPrompt={true}
@@ -83,9 +91,36 @@ const Addresses = () => {
                 addressForReturn={addressForReturn}
                 error={adressError}
                 errorText={'Укажи адрес'}
-                openMap={openMap} 
+                openMap={openMap}
                 setOpenMap={setOpenMap}
             />
+
+            <div className={s.dop}>
+                {dopAdresses?.length > 0 && <span className={s.sub}>Дополнительные адреса</span>}
+
+                {dopAdresses?.map((item) => <Address
+                    address={dopAdresses?.find(el => el.id === item.id)}
+                    metro={metro}
+                    sub={SUB_ADDRESS}
+                    user={user}
+                    defaultCordinate={defaultCordinate}
+                    setAddress={(data) => dispatch(addDopAdresses({ id: item.id, ...data }))}
+                   /*  setMetro={(data) => dispatch(addDopAdressesMetro({ id: item.id, ...data }))} */
+                    handleDelete={() => handleDelete(item.id)}
+                    first={false}
+                    handleNoAdress={handleNoAdress}
+                    noAddress={noAddress}
+                    addressForReturn={addressForReturn}
+                    error={false}
+                    errorText={'Укажи адрес'}
+                    openMap={false}
+                    setOpenMap={setOpenMap}
+                />)}
+            </div>
+
+
+
+
 
         </div>
     )

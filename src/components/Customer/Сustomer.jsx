@@ -535,7 +535,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
 
 
-                        {role !== 'mainoperator' && <div className={`${s.loader} ${s.loader_history} ${loadBage && !historyDisabled && s.loader_vis}`}>
+                        {<div className={`${s.loader} ${s.loader_history} ${loadBage && !historyDisabled && s.loader_vis}`}>
                             {historyLoad && <div className={s.loader_anim}><IconLoader /></div>}
                             {historyLoad && <p>Проверяем историю заказов</p>}
                             {!historyLoad && historyList?.length == 0 && <IconInfo />}
@@ -550,7 +550,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
             </div>
 
-            {role !== 'mainoperator' && <OrdersHistory vis={(historyList?.length > 0 && !historyDisabled)} client={historyName} historyList={historyList} />}
+        <OrdersHistory vis={(historyList?.length > 0 && !historyDisabled)} client={historyName} historyList={historyList} />
         </div>
 
     )

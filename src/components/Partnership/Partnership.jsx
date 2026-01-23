@@ -3,6 +3,7 @@ import { useState, useContext, useEffect } from 'react';
 import { ParametrsContext } from '../../contexts/UserContext';
 //redux
 import { useDispatch, useSelector } from 'react-redux';
+import { useSearchParams } from 'react-router-dom';
 //Api
 import { getPartnershipCompanies } from '../../Api/Api';
 import { getAddressExact } from '../../Api/ApiYandex';
@@ -13,13 +14,15 @@ import { setDefaultCordinate } from '../../store/reducer/Address/slice';
 import { setMinDurqtion } from '../../store/reducer/Details/slice';
 import { setPartnership } from '../../store/reducer/Partnership/slice';
 import { setRatesPartnership } from '../../store/reducer/Rates/slice';
+import { setCustomer } from '../../store/reducer/Customer/slice';
 //components
 import PartnershipInput from '../General/PartnershipInput/PartnershipInput';
 import Header from '../General/Header/Header';
 
 
 
-const Partnership = ({ loadParametrs, setPartnershipCompanies, setLoadPartnershipCompanies }) => {
+const Partnership = ({ loadParametrs, companyId, setPartnershipCompanies, setLoadPartnershipCompanies }) => {
+    const [searchParams, setSearchParams] = useSearchParams();
     const { partnerships } = useContext(ParametrsContext);
     const { partnership } = useSelector(selectorPartnership);
     const dispatch = useDispatch();
@@ -35,7 +38,9 @@ const Partnership = ({ loadParametrs, setPartnershipCompanies, setLoadPartnershi
                     const data = res.data.data;
                     setPartnershipCompanies(data)
                     setLoadPartnershipCompanies(false)
-
+                    const company = data?.find(el => el.id == companyId);
+                    company && dispatch(setCustomer(company))
+                    company && setSearchParams('')
                 }
                 )
 

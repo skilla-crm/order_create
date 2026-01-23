@@ -19,7 +19,7 @@ const InputCompany = ({ sub, customer, list, value, setValue, handleAdd, payType
     const [listScroll, setListScroll] = useState(false);
     const [notFound, setNotFound] = useState(false);
     const listRef = useRef();
-
+console.log(list.find(el => el.id === 182986))
 
 
     useEffect(() => {

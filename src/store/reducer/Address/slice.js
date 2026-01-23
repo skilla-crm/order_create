@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+
 const initialState = {
     address: {},
     metro: [],
     defaultCordinate: [59.9342802, 30.3350986],
     noAddress: false,
-    addressForReturn: ''
+    addressForReturn: '',
+    dopAdresses: []
 };
 
 const AddressSlice = createSlice({
@@ -40,34 +42,39 @@ const AddressSlice = createSlice({
 
         setAddressForReturn(state, action) {
             state.addressForReturn = action.payload
-        }
+        },
+
+        setDopAdresses(state, action) {
+            state.dopAdresses = action.payload
+        },
+
+        addDopAdresses(state, action) {
+
+            const { id } = action.payload;
+            const index = state.dopAdresses.findIndex(el => el.id === id);
+            if (index !== -1) {
+                state.dopAdresses.splice(index, 1, action.payload);
+            } else {
+                state.dopAdresses = [...state.dopAdresses, action.payload]
+            }
+        },
+
+        deleteDopAddress(state, action) {
+            state.dopAdresses = [...state.dopAdresses].filter(el => el.id !== action.payload)
+        },
+
+        addDopAdressesMetro(state, action) {
+            const { id, ...metro } = action.payload;
+            const index = state.dopAdresses.findIndex(el => el.id === id);
+            const adress = [...state.dopAdresses].find(el => el.id === id);
+
+            console.log(adress, index, metro, [...state.dopAdresses])
+
+            state.dopAdresses.splice(index, 1, { ...adress, ...metro });
+        },
 
 
 
-        /*  setAdditionalDates(state, action) {
-             state.additionalDates = action.payload.sort((a, b) => new Date(a.date) - new Date(b.date));
-             state.disabledDates = action.payload.map((el) => dayjs(el.date))
-         },
- 
-         deleteAdditionalDates(state, action) {
-             state.additionalDates = [...state.additionalDates.filter(el => el.id !== action.payload)];
-             state.disabledDates = state.additionalDates.map((el) => dayjs(el.date))
-         },
- 
-         editAdditionalDates(state, action) {
-             state.additionalDates = state.additionalDates.map(item => item.id == action.payload.id
-                 ? {
-                     ...item,
-                     date: action.payload.date,
-                     time: action.payload.time,
-                     performers: Number(action.payload.performers)
-                 }
-                 :
-                 item
-             )
-             state.disabledDates = state.additionalDates.map((el) => dayjs(el.date))
-                state.additionalDates.sort((a, b) => new Date(a.date) - new Date(b.date))
-         }, */
     },
 });
 
@@ -75,9 +82,14 @@ export const {
     setAddress,
     deleteMetro,
     setMetro,
+    setDopMetro,
     setDefaultCordinate,
     setNoAddress,
-    setAddressForReturn
+    setAddressForReturn,
+    setDopAdresses,
+    addDopAdresses,
+    deleteDopAddress,
+    addDopAdressesMetro
 } = AddressSlice.actions;
 
 export default AddressSlice.reducer;

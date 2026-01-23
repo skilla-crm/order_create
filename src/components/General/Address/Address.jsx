@@ -1,6 +1,7 @@
 import s from './Address.module.scss';
 import { useEffect, useState, useRef } from 'react';
-import { ReactComponent as IconLocation } from '../../../images/icons/iconLocation.svg';
+//icons
+import { ReactComponent as IconClose } from '../../../images/icons/iconClose.svg';
 //API
 import { getCordinateInfo, getMetro } from '../../../Api/ApiDadata';
 import { getAddressExact, getAddressSuggest } from '../../../Api/ApiYandex';
@@ -12,7 +13,7 @@ import InputText from '../Input/InputText';
 //utils
 import { adressStringUtility, addressUtility, adressStringUtility3 } from '../../../utils/AdressUtility';
 
-const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordinate, first, handleNoAdress, noAddress, addressForReturn, errorText, error, openMap, setOpenMap }) => {
+const Address = ({  sub, address, setAddress, metro, setMetro, user, defaultCordinate, first, handleNoAdress, noAddress, addressForReturn, errorText, error, openMap, setOpenMap, handleDelete }) => {
     const [query, setQuery] = useState(adressStringUtility(address) || '');
     const [openList, setOpenList] = useState(false)
     const [suggestions, setSuggestions] = useState([]);
@@ -20,7 +21,11 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
     const listRef = useRef();
 
     useEffect(() => {
-        address.city == '' && setOpenMap(false)
+        address.city && setQuery(adressStringUtility(address))
+    }, [address])
+
+    useEffect(() => {
+        address?.city == '' && setOpenMap(false)
     }, [address])
 
     useEffect(() => {
@@ -73,6 +78,17 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
                                     .then(res => {
                                         const color = res.data.suggestions?.[0]?.data?.color;
                                         setMetro({ ...el, color })
+
+                                         setAddress({
+                                            city,
+                                            street,
+                                            house,
+                                            apartment,
+                                            lat: cordinate?.[1],
+                                            lng: cordinate?.[0],
+                                            ...el, 
+                                            color
+                                        })
                                     })
                             })
                         }
@@ -95,7 +111,7 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
         setOnFocus(false)
     }
 
-   
+
 
     const openModalPro = () => {
         document?.getElementById('pro-open')?.click();
@@ -116,9 +132,9 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
 
     return (
         <div className={s.container}>
-            <span className={s.sub}>{sub}</span>
+            {first && <span className={s.sub}>{sub}</span>}
             <div className={s.block}>
-                <div ref={listRef} className={`${s.field} ${noAddress && s.field_disabled} ${onFocus && s.field_focus}`}>
+                <div ref={listRef} className={`${s.field} ${noAddress && s.field_disabled} ${first && s.field_first}  ${onFocus && s.field_focus}`}>
                     <input disabled={noAddress} onFocus={handleFocus} onBlur={handleBlur} value={query || ''} onChange={handleAdress}></input>
                     {/*    <button onClick={handleMap} className={`${s.button} ${(onFocus || ((!address.lat || address.city == '') && !openMap)) && s.button_hidden}`}>
                         <IconLocation />
@@ -140,6 +156,9 @@ const Address = ({ sub, address, setAddress, metro, setMetro, user, defaultCordi
                     hidden={false}
                     forPro={!user.pro}
                 />
+                }
+
+                {!first && <div onClick={handleDelete} className={s.delete}><IconClose /></div>
                 }
             </div>
             <div className={`${s.info} ${address?.city && s.info_open}`}>
