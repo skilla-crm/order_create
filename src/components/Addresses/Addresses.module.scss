@@ -18,17 +18,35 @@
    align-items: center;
 }
 
+.container {
+   display: flex;
+   flex-direction: column;
+   gap: 6px;
+   margin-top: 12px;
+}
+
 .sub {
     font-size: 16px;
     font-weight: 400;
     line-height: 16px;
     color: var(--color-text-secondary);
     user-select: none;
-    margin-bottom: 6px;
 }
 
 .dop {
    display: flex;
    flex-direction: column;
-   gap: 4px;
+   gap: 32px;
+}
+
+.map {
+   overflow: hidden;
+   height: 480px;
+   width: 100%;
+   transition: all 0.2s ease-in-out;
+
+   &_hidden {
+       height: 0;
+       opacity: 0;
+   }
 }

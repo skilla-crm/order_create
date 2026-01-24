@@ -13,19 +13,16 @@ import InputText from '../Input/InputText';
 //utils
 import { adressStringUtility, addressUtility, adressStringUtility3 } from '../../../utils/AdressUtility';
 
-const Address = ({  sub, address, setAddress, metro, setMetro, user, defaultCordinate, first, handleNoAdress, noAddress, addressForReturn, errorText, error, openMap, setOpenMap, handleDelete }) => {
+const Address = ({ sub, address, setAddress, user, defaultCordinate, first, handleNoAdress, noAddress, addressForReturn, errorText, error, handleDelete }) => {
     const [query, setQuery] = useState(adressStringUtility(address) || '');
     const [openList, setOpenList] = useState(false)
     const [suggestions, setSuggestions] = useState([]);
     const [onFocus, setOnFocus] = useState(false);
     const listRef = useRef();
 
-    useEffect(() => {
-        address.city && setQuery(adressStringUtility(address))
-    }, [address])
 
     useEffect(() => {
-        address?.city == '' && setOpenMap(false)
+        address.city && setQuery(adressStringUtility(address))
     }, [address])
 
     useEffect(() => {
@@ -36,13 +33,11 @@ const Address = ({  sub, address, setAddress, metro, setMetro, user, defaultCord
         noAddress && setQuery('')
         if (noAddress) {
             setQuery('')
-            setOpenMap(false)
         }
     }, [noAddress])
 
     const handleAdress = (e) => {
         const value = e.currentTarget.value;
-        value == '' && setMetro(null)
         setAddress({})
         setQuery(value)
         getAddressSuggest(value, defaultCordinate)
@@ -66,33 +61,46 @@ const Address = ({  sub, address, setAddress, metro, setMetro, user, defaultCord
                     house,
                     apartment,
                     lat: cordinate?.[1],
-                    lng: cordinate?.[0]
+                    lng: cordinate?.[0],
+                    stations: []
                 })
-                setMetro(null)
+
+
                 cordinate && getCordinateInfo(cordinate?.[1], cordinate?.[0])
                     .then(res => {
                         const data = res.data.suggestions?.[0]?.data?.metro;
                         if (data) {
+
+                            let stations = []
                             data.forEach(el => {
                                 getMetro(`${el.name} ${city}`)
                                     .then(res => {
                                         const color = res.data.suggestions?.[0]?.data?.color;
-                                        setMetro({ ...el, color })
+                                        const station = {
+                                            ...el,
+                                            color
+                                        }
+                                        stations = [...stations, station]
+                                        console.log(stations, station)
 
-                                         setAddress({
+                                        setAddress({
                                             city,
                                             street,
                                             house,
                                             apartment,
                                             lat: cordinate?.[1],
                                             lng: cordinate?.[0],
-                                            ...el, 
-                                            color
+                                            stations
+
                                         })
+
+
                                     })
                             })
                         }
                     })
+
+
             })
             .catch(err => console.log(err))
 
@@ -136,11 +144,7 @@ const Address = ({  sub, address, setAddress, metro, setMetro, user, defaultCord
             <div className={s.block}>
                 <div ref={listRef} className={`${s.field} ${noAddress && s.field_disabled} ${first && s.field_first}  ${onFocus && s.field_focus}`}>
                     <input disabled={noAddress} onFocus={handleFocus} onBlur={handleBlur} value={query || ''} onChange={handleAdress}></input>
-                    {/*    <button onClick={handleMap} className={`${s.button} ${(onFocus || ((!address.lat || address.city == '') && !openMap)) && s.button_hidden}`}>
-                        <IconLocation />
-                        {!openMap && <p>На карте</p>}
-                        {openMap && <p>Скрыть</p>}
-                    </button> */}
+
 
                     <ul className={`${s.list} ${openList && s.list_open}`}>
                         {suggestions?.map((el) => {
@@ -187,9 +191,11 @@ const Address = ({  sub, address, setAddress, metro, setMetro, user, defaultCord
                     </div>
 
                 </div>
-                <div className={`${s.metro} ${metro.length >= 2 && s.metro_open}`}>
-                    <Metro station={metro} />
-                </div>
+
+            </div>
+
+            <div className={`${s.metro} ${address?.stations?.length > 0 && s.metro_open}`}>
+                <Metro stations={address?.stations} />
             </div>
 
 
@@ -198,9 +204,7 @@ const Address = ({  sub, address, setAddress, metro, setMetro, user, defaultCord
                     {errorText}
                 </p>
             </div>
-            <div className={`${s.map} ${!openMap && s.map_hidden}`}>
-                <MapAddress openMap={openMap} lat={address?.lat} lng={address?.lng} defaultCordinate={defaultCordinate} width={'100%'} height={392} />
-            </div>
+
 
         </div>
     )

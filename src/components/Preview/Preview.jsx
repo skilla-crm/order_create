@@ -25,7 +25,7 @@ const Preview = () => {
     const { performersNum, date, time } = useSelector(selectorPerformers);
     const { customer, payType, name, phone, noContactPerson } = useSelector(selectorCustomer);
     const { tags, notes, minDuration, duration } = useSelector(selectorDetails);
-    const { address, defaultCordinate, noAddress } = useSelector(selectorAddress);
+    const { address, dopAdresses, defaultCordinate, noAddress } = useSelector(selectorAddress);
     const { rate, rateWorker } = useSelector(selectorRates);
     const [total, setTotal] = useState(0);
     const [totalMin, setTotalMin] = useState(0);
@@ -102,7 +102,14 @@ const Preview = () => {
                         {city == address.city && <p className={s.bold}>{adressStringUtility5(address)}</p>}
                     </div>
                     <div className={s.map}>
-                        <MapAddress lat={address.lat} lng={address.lng} defaultCordinate={defaultCordinate} width={'100%'} height={160} />
+                        <MapAddress
+                            addresses={[address, ...dopAdresses]}
+                            lat={[address, ...dopAdresses]?.pop()?.lat}
+                            lng={[address, ...dopAdresses]?.pop()?.lng}
+                            defaultCordinate={defaultCordinate}
+                            width={'100%'}
+                            height={160}
+                        />
                     </div>
 
                 </div>

@@ -16,9 +16,8 @@ import { TITLE, SUB_ADDRESS } from '../../constants/details';
 import { PromptDetails } from '../../constants/prompts';
 //components
 import HeaderAddreses from '../General/HeaderAddreses/HeaderAddreses';
-
 import Address from '../General/Address/Address';
-
+import MapAddress from '../General/MapAddress/MapAddress';
 
 const Addresses = () => {
     const user = useContext(UserContext);
@@ -67,7 +66,7 @@ const Addresses = () => {
         <div className={s.details}>
             <HeaderAddreses
                 title={'Адрес заказа'}
-                buttonState={true}
+                buttonState={false}
                 forPro={!user.pro}
                 PromptText={PromptDetails}
                 hiddenPrompt={true}
@@ -84,44 +83,47 @@ const Addresses = () => {
                 user={user}
                 defaultCordinate={defaultCordinate}
                 setAddress={(data) => dispatch(setAddress(data))}
-                setMetro={(data) => dispatch(setMetro(data))}
                 first={true}
                 handleNoAdress={handleNoAdress}
                 noAddress={noAddress}
                 addressForReturn={addressForReturn}
                 error={adressError}
                 errorText={'Укажи адрес'}
-                openMap={openMap}
-                setOpenMap={setOpenMap}
             />
 
-            <div className={s.dop}>
-                {dopAdresses?.length > 0 && <span className={s.sub}>Дополнительные адреса</span>}
 
-                {dopAdresses?.map((item) => <Address
-                    address={dopAdresses?.find(el => el.id === item.id)}
-                    metro={metro}
-                    sub={SUB_ADDRESS}
-                    user={user}
+            {dopAdresses?.length > 0 && <div className={s.container}>
+                <span className={s.sub}>Дополнительные адреса</span>
+                <div className={s.dop}>
+                    {dopAdresses?.map((item) => <Address
+                        address={dopAdresses?.find(el => el.id === item.id)}
+                        metro={metro}
+                        sub={SUB_ADDRESS}
+                        user={user}
+                        defaultCordinate={defaultCordinate}
+                        setAddress={(data) => dispatch(addDopAdresses({ id: item.id, ...data }))}
+                        handleDelete={() => handleDelete(item.id)}
+                        first={false}
+                        handleNoAdress={handleNoAdress}
+                        noAddress={noAddress}
+                        addressForReturn={addressForReturn}
+                        error={false}
+                        errorText={'Укажи адрес'}
+                    />)}
+                </div>
+            </div>}
+
+            <div className={`${s.map} ${!openMap && s.map_hidden}`}>
+                <MapAddress
+                    openMap={openMap}
+                    addresses={[address, ...dopAdresses]}
+                    lat={[address, ...dopAdresses]?.pop()?.lat}
+                    lng={[address, ...dopAdresses]?.pop()?.lng}
                     defaultCordinate={defaultCordinate}
-                    setAddress={(data) => dispatch(addDopAdresses({ id: item.id, ...data }))}
-                   /*  setMetro={(data) => dispatch(addDopAdressesMetro({ id: item.id, ...data }))} */
-                    handleDelete={() => handleDelete(item.id)}
-                    first={false}
-                    handleNoAdress={handleNoAdress}
-                    noAddress={noAddress}
-                    addressForReturn={addressForReturn}
-                    error={false}
-                    errorText={'Укажи адрес'}
-                    openMap={false}
-                    setOpenMap={setOpenMap}
-                />)}
+                    width={'100%'}
+                    height={460}
+                />
             </div>
-
-
-
-
-
         </div>
     )
 };

@@ -134,18 +134,7 @@
     width: 100%;
 }
 
-.map {
-    overflow: hidden;
-    height: 380px;
-    width: 100%;
-    padding-top: 12px;
-    transition: all 0.2s ease-in-out;
 
-    &_hidden {
-        height: 0;
-        opacity: 0;
-    }
-}
 
 .metro {
     visibility: hidden;
@@ -192,7 +181,7 @@
     &_open {
         visibility: visible;
         opacity: 1;
-        height: 74px;
+        height: 54px;
     }
 }
 

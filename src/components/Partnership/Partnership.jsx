@@ -14,7 +14,7 @@ import { setDefaultCordinate } from '../../store/reducer/Address/slice';
 import { setMinDurqtion } from '../../store/reducer/Details/slice';
 import { setPartnership } from '../../store/reducer/Partnership/slice';
 import { setRatesPartnership } from '../../store/reducer/Rates/slice';
-import { setCustomer } from '../../store/reducer/Customer/slice';
+import { setCustomer, setPayType } from '../../store/reducer/Customer/slice';
 //components
 import PartnershipInput from '../General/PartnershipInput/PartnershipInput';
 import Header from '../General/Header/Header';
@@ -30,6 +30,7 @@ const Partnership = ({ loadParametrs, companyId, setPartnershipCompanies, setLoa
     const uniquePartnerships = partnerships?.filter((obj, index, self) =>
         index === self.findIndex((t) => t.id === obj.id)
     );
+
     useEffect(() => {
         if (partnership?.id) {
             setLoadPartnershipCompanies(true)
@@ -40,7 +41,8 @@ const Partnership = ({ loadParametrs, companyId, setPartnershipCompanies, setLoa
                     setLoadPartnershipCompanies(false)
                     const company = data?.find(el => el.id == companyId);
                     company && dispatch(setCustomer(company))
-                    company && setSearchParams('')
+
+                    setSearchParams('')
                 }
                 )
 

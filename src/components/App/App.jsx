@@ -116,6 +116,12 @@ const App = () => {
     }, [phoneClient, nameClient])
 
     useEffect(() => {
+        if (companyId == 0 && partnershipId) {
+            dispatch(setPayType(3))
+        }
+    }, [companyId, partnershipId])
+
+    useEffect(() => {
 
         if (partnershipId && parametrs?.partnerships) {
             const result = parametrs?.partnerships?.find(el => el.id == partnershipId)

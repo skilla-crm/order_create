@@ -354,7 +354,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
             <div className={s.customer}>
                 <Header
                     title={TITLE}
-                    buttonState={(addCustomer || historyDisabled || role === 'mainoperator') ? false : true}
+                    buttonState={/* (addCustomer || historyDisabled || role === 'mainoperator') */ false}
                     buttonText={BUTTON_TEXT}
                     handleButton={handleAdd}
                     forPro={false}
@@ -371,7 +371,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                 <div className={s.container}>
                     <div className={s.block}>
 
-                        <div className={`${s.company} ${(((payType == 1 || fromPartnership !== 0) && role !== 'mainoperator') || (role === 'mainoperator' && partnershipCompanies.length > 0 && payType == 1 && !loadParametrs)) && s.company_vis}`}>
+                        <div className={`${s.company} ${(((payType == 1 || fromPartnership !== 0) && role !== 'mainoperator') || (role === 'mainoperator' && partnershipCompanies.length > 0 && payType == 1)) && s.company_vis}`}>
                             {fromPartnership == 0 && <InputCompany
                                 sub={SUB_COMPANY}
                                 list={role === 'mainoperator' ? partnershipCompanies : companies}

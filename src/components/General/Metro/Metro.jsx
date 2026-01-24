@@ -1,10 +1,10 @@
 import s from './Metro.module.scss';
 
-const Metro = ({ station }) => {
+const Metro = ({ stations }) => {
     return (
         <div className={s.container}>
             
-            {station.map(el => {
+            {stations?.map(el => {
                 return <div className={s.station}>
                     <div style={{backgroundColor: `#${el.color}`}} className={s.point}></div>
                     <p>
