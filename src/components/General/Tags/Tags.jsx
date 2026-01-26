@@ -43,7 +43,7 @@ const Tags = ({ tagList, sub, value, maxVis, setValue, deleteValue }) => {
             <span className={s.sub}>{sub}</span>
             <ul className={s.list}>
                 {tagList?.slice(0, openAll ? tagList?.length : maxVis).map(el => {
-                    return <Tab key={el} id={el.id} tab={el.description} value={value} setValue={setValue} deleteValue={deleteValue} />
+                    return <Tab key={el.id} id={el.id} tab={el.description} value={value} setValue={setValue} deleteValue={deleteValue} />
                 })}
 
                 <li onClick={handleOpenAll} className={`${s.tab} ${s.tab_optional} ${(openAll || (maxVis >= tagList?.length)) && s.tab_hidden}`}>

@@ -114,6 +114,7 @@
 
 .container {
     width: 100%;
+
     position: relative;
     transition: all 0.2s;
 }
@@ -126,12 +127,14 @@
     opacity: 0;
     visibility: hidden;
     transition: all 0.2s;
+    height: fit-content;
+    flex-shrink: 0;
     max-height: 144px;
 
 
     &_vis {
         opacity: 1;
-        max-height: 220px;
+        max-height: 230px;
         visibility: visible;
     }
 }

@@ -20,14 +20,13 @@ const Address = ({ sub, address, setAddress, user, defaultCordinate, first, hand
     const [onFocus, setOnFocus] = useState(false);
     const listRef = useRef();
 
-
     useEffect(() => {
         address.city && setQuery(adressStringUtility(address))
     }, [address])
 
-    useEffect(() => {
+ /*    useEffect(() => {
         setQuery(addressForReturn)
-    }, [addressForReturn])
+    }, [addressForReturn]) */
 
     useEffect(() => {
         noAddress && setQuery('')
@@ -81,7 +80,6 @@ const Address = ({ sub, address, setAddress, user, defaultCordinate, first, hand
                                             color
                                         }
                                         stations = [...stations, station]
-                                        console.log(stations, station)
 
                                         setAddress({
                                             city,

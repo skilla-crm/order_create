@@ -1,5 +1,5 @@
 import s from './Addresses.module.scss';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, memo } from 'react';
 import { UserContext } from '../../contexts/UserContext';
 import { useSelector, useDispatch } from 'react-redux';
 //selectors
@@ -50,7 +50,6 @@ const Addresses = () => {
 
     const handleAdd = () => {
         const maxValue = dopAdresses.length > 0 ? Math.max(...dopAdresses.map(obj => obj.id)) : 0;
-        console.log(maxValue)
         dispatch(addDopAdresses({ id: maxValue + 1 }))
     }
 
@@ -66,7 +65,7 @@ const Addresses = () => {
         <div className={s.details}>
             <HeaderAddreses
                 title={'Адрес заказа'}
-                buttonState={false}
+                buttonState={true}
                 forPro={!user.pro}
                 PromptText={PromptDetails}
                 hiddenPrompt={true}
@@ -95,7 +94,8 @@ const Addresses = () => {
             {dopAdresses?.length > 0 && <div className={s.container}>
                 <span className={s.sub}>Дополнительные адреса</span>
                 <div className={s.dop}>
-                    {dopAdresses?.map((item) => <Address
+                    {dopAdresses?.map((item, i) => <Address
+                        key={i + 1}
                         address={dopAdresses?.find(el => el.id === item.id)}
                         metro={metro}
                         sub={SUB_ADDRESS}
@@ -128,4 +128,4 @@ const Addresses = () => {
     )
 };
 
-export default Addresses;
+export default memo(Addresses);

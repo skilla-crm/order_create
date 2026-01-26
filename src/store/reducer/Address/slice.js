@@ -67,9 +67,6 @@ const AddressSlice = createSlice({
             const { id, ...metro } = action.payload;
             const index = state.dopAdresses.findIndex(el => el.id === id);
             const adress = [...state.dopAdresses].find(el => el.id === id);
-
-            console.log(adress, index, metro, [...state.dopAdresses])
-
             state.dopAdresses.splice(index, 1, { ...adress, ...metro });
         },
 

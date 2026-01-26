@@ -43,9 +43,9 @@ const MapAddress = ({ addresses, defaultCordinate, lat, lng, width, height }) =>
 
                 >
 
-                    {addresses?.map((el) => {
+                    {addresses?.map((el, i) => {
                         if (el?.lat) {
-                            return <Placemark geometry={[el?.lat, el?.lng]}
+                            return <Placemark key={i + 1} geometry={[el?.lat, el?.lng]}
                                 options={{
                                     iconLayout: "default#image",
                                     iconImageSize: [42, 42],

@@ -363,12 +363,12 @@ const App = () => {
                 setTimeout(() => {
                     if (orderStatus == 0) {
                         /* window.location.href = 'https://lk.skilla.ru/orders/?type=preorder' */
-                        navigate(`/new/${TEST}orders?type=preorder&date=${dataOrder.date}`)
+                       /*  navigate(`/new/${TEST}orders?type=preorder&date=${dataOrder.date}`) */
                     } else {
                         /*  window.location.href = role === 'director' ? `https://lk.skilla.ru/orders/order_detail/${data.id}` : 'https://lk.skilla.ru/orders/' */
 
                         /*  role === 'director' ? navigate(`/new/orders/order_detail/${dataOrder.id}`) : *//*  navigate(`https://lk.skilla.ru/orders/`) */
-                        window.location.href = `https://lk.skilla.ru/new/${TEST}orders`
+                      /*   window.location.href = `https://lk.skilla.ru/new/${TEST}orders` */
                     }
                 })
 

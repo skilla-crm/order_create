@@ -26,6 +26,7 @@ const Partnership = ({ loadParametrs, companyId, setPartnershipCompanies, setLoa
     const { partnerships } = useContext(ParametrsContext);
     const { partnership } = useSelector(selectorPartnership);
     const dispatch = useDispatch();
+    console.log(partnership)
 
     const uniquePartnerships = partnerships?.filter((obj, index, self) =>
         index === self.findIndex((t) => t.id === obj.id)
@@ -47,7 +48,7 @@ const Partnership = ({ loadParametrs, companyId, setPartnershipCompanies, setLoa
                 )
 
         }
-    }, [partnership])
+    }, [partnership?.id])
 
     useEffect(() => {
         partnership?.city && getAddressExact(partnership?.city)
@@ -78,8 +79,8 @@ const Partnership = ({ loadParametrs, companyId, setPartnershipCompanies, setLoa
             <PartnershipInput
                 sub={'ИНН или название'}
                 list={uniquePartnerships}
-                customer={partnership}
-                value={partnership?.id}
+                partnership={partnership}
+                value={partnership}
                 setValue={(data) => dispatch(setPartnership(data))}
                 handleAdd={null}
                 payType={1}

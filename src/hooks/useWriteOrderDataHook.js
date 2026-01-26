@@ -1,23 +1,55 @@
 
 import { useEffect, useState, useContext } from "react";
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { setPayType, setName, setCustomer, setPhone, setNoContactPerson } from '../store/reducer/Customer/slice';
 import { setPerformersNum, setTime } from '../store/reducer/Performers/slice';
 import { setService, setRequirements, setMinDurqtion, setDuration, setCommentSupervisor, setNotes, setPayNotes } from '../store/reducer/Details/slice';
-import { setAddress, setMetro, deleteMetro, setNoAddress, setAddressForReturn } from '../store/reducer/Address/slice';
+import { setAddress, setDopAdresses, setMetro, deleteMetro, setNoAddress, setAddressForReturn } from '../store/reducer/Address/slice';
 import { setRate, setRateWorker, setOrderSum, setUnit, setUnitWorker, setSameTarification } from '../store/reducer/Rates/slice';
 import { setManagerId, setPartnershipId, setFromPartnership, setAcceptStatus, setEmailPasport, setPartnerRate, setFromLk } from '../store/reducer/Managers/slice';
+import { setPartnership } from "../store/reducer/Partnership/slice";
+import { selectorPartnership } from "../store/reducer/Partnership/selector";
 //utils
 import { adressStringUtility } from '../utils/AdressUtility';
 
 export const useWriteOrderDataHook = () => {
+    const { partnership } = useSelector(selectorPartnership);
 
     const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
     const [data, setData] = useState({})
     const dispatch = useDispatch();
 
+    if (data?.partnership_id && data?.partnerships?.length > 0 && !partnership?.id) {
+        console.log('перезапись хука')
+
+        const partnership = data?.partnerships.find(el => el.id == data?.partnership_id)
+        console.log(data, data?.partnerships?.length, partnership)
+        dispatch(setPartnership(partnership))
+    }
+
     useEffect(() => {
         if (data.id) {
+
+            const stations = []
+
+
+            data?.metro !== '' && stations.push({
+                name: data?.metro,
+                distance: Number(data?.metro_km),
+                color: data?.metro_color
+            })
+
+            data?.metr2 !== '' && stations.push({
+                name: data?.metro2,
+                distance: Number(data?.metro2_km),
+                color: data?.metro2_color
+            })
+
+            data?.metro3 !== '' && stations.push({
+                name: data?.metro3,
+                distance: Number(data?.metro3_km),
+                color: data?.metro3_color
+            })
 
             const address = {
                 city: data.city,
@@ -25,8 +57,52 @@ export const useWriteOrderDataHook = () => {
                 house: data.home,
                 apartment: data.apartment,
                 lat: data.lat,
-                lng: data.lng
+                lng: data.lng,
+                stations
             }
+
+            const dopAddresess = data?.dop_addesess?.map((el, index) => {
+
+                const stations = []
+
+                el?.metro !== '' && stations.push({
+                    name: el?.metro,
+                    distance: Number(el?.metro_km),
+                    color: el?.metro_color
+                })
+
+                el?.metr2 !== '' && stations.push({
+                    name: el?.metro2,
+                    distance: Number(el?.metro2_km),
+                    color: el?.metro2_color
+                })
+
+                el?.metro3 !== '' && stations.push({
+                    name: el?.metro3,
+                    distance: Number(el?.metro3_km),
+                    color: el?.metro3_color
+                })
+
+
+                return {
+                    id: index + 1,
+                    city: el.city,
+                    street: el.load_address,
+                    house: el.home,
+                    apartment: el.apartment,
+                    lat: el.lat,
+                    lng: el.lng,
+                    stations
+                }
+            })
+
+            console.log(dopAddresess)
+
+            dopAddresess?.length > 0 && dispatch(setDopAdresses(dopAddresess))
+
+            dispatch(setAddress(address))
+            dispatch(setAddressForReturn(adressStringUtility(address)))
+
 
             data.beznal == 1 && dispatch(setPayType(1))
             data.beznal == 0 && data.to_card == 1 && dispatch(setPayType(2))
@@ -49,29 +125,11 @@ export const useWriteOrderDataHook = () => {
             dispatch(setCommentSupervisor(data.supervisor_comment))
             data.passport_required == 1 && data.requirements?.length == 0 ? dispatch(setRequirements([1])) : dispatch(setRequirements([]))
             data.requirements?.length > 0 && dispatch(setRequirements(data.requirements.map(el => { return el.id })))
-            dispatch(setAddress(address))
-            dispatch(setAddressForReturn(adressStringUtility(address)))
+
             dispatch(setRate(data.client_bit))
             dispatch(setRateWorker(data.worker_bit))
             data.order_type == 8 && dispatch(setOrderSum(data.pay_summ))
-            dispatch(deleteMetro())
-            data?.metro !== '' && dispatch(setMetro({
-                name: data?.metro,
-                distance: Number(data?.metro_km),
-                color: data?.metro_color
-            }))
 
-            data?.metro2 !== '' && dispatch(setMetro({
-                name: data?.metro2,
-                distance: Number(data?.metro2_km),
-                color: data?.metro2_color
-            }))
-
-            data?.metro3 !== '' && dispatch(setMetro({
-                name: data?.metro3,
-                distance: Number(data?.metro3_km),
-                color: data?.metro3_color
-            }))
 
             address.city == '' && address.street == '' && pro ? dispatch(setNoAddress(true)) : dispatch(setNoAddress(false))
             dispatch(setManagerId(data.supervisor_id))

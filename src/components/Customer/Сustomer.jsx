@@ -15,6 +15,7 @@ import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
 import { selectorPerformers } from '../../store/reducer/Performers/selector';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
+import { selectorPartnership } from '../../store/reducer/Partnership/selector';
 //slice
 import {
     setCustomer,
@@ -78,6 +79,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
     const { companyError, phoneError, nameError } = useSelector(selectorValidation);
     const { data, time, timerDisabled } = useSelector(selectorPerformers);
     const { partnershipId, fromPartnership, acceptStatus } = useSelector(selectorManagers);
+    const { partnership } = useSelector(selectorPartnership)
     const { partnerships, skilla_partnerships, companies: companiesParam } = useContext(ParametrsContext);
     const dispatch = useDispatch();
 
@@ -371,7 +373,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
                 <div className={s.container}>
                     <div className={s.block}>
 
-                        <div className={`${s.company} ${(((payType == 1 || fromPartnership !== 0) && role !== 'mainoperator') || (role === 'mainoperator' && partnershipCompanies.length > 0 && payType == 1)) && s.company_vis}`}>
+                        <div className={`${s.company} ${(((payType == 1 || fromPartnership !== 0) && role !== 'mainoperator') || (role === 'mainoperator' && partnership?.id && payType == 1)) && s.company_vis}`}>
                             {fromPartnership == 0 && <InputCompany
                                 sub={SUB_COMPANY}
                                 list={role === 'mainoperator' ? partnershipCompanies : companies}
@@ -550,7 +552,7 @@ const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustom
 
             </div>
 
-        <OrdersHistory vis={(historyList?.length > 0 && !historyDisabled)} client={historyName} historyList={historyList} />
+            <OrdersHistory vis={(historyList?.length > 0 && !historyDisabled)} client={historyName} historyList={historyList} />
         </div>
 
     )

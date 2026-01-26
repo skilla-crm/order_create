@@ -8,7 +8,7 @@ import PartnershipsList from '../PartnershipsList/PartnershipsList';
 //utils
 import { handleSearchCompany } from '../../../utils/SearchCompany';
 
-const PartnershipInput = ({ list, value, setValue, error, errorText, loadParametrs, sub }) => {
+const PartnershipInput = ({ list, value, setValue, partnership, error, errorText, loadParametrs, sub }) => {
     const [openList, setOpenList] = useState(false);
     const [fieldFocus, setFieldFocus] = useState(false);
     const [valueText, setValueText] = useState('');
@@ -20,11 +20,15 @@ const PartnershipInput = ({ list, value, setValue, error, errorText, loadParamet
 
 
 
-    useEffect(() => {
+/*     useEffect(() => {
         const result = list?.find(el => el.id == value)
         setValueText(result?.name)
-    }, [value])
+    }, [value]) */
 
+    useEffect(() => {
+        const result = list?.find(el => el.id == value)
+        setValueText(result?.name ? result.name : partnership?.name)
+    }, [value])
 
 
     useEffect(() => {
