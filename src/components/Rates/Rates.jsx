@@ -12,7 +12,7 @@ import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
 //slice
-import { setRate, setRateWorker, setSameTarification } from '../../store/reducer/Rates/slice';
+import { setRate, setRateWorker, setSameTarification, setTariffId, setContractTariffId } from '../../store/reducer/Rates/slice';
 import { setMinDurqtion } from '../../store/reducer/Details/slice';
 import { setRateError, setRateWorkerError } from '../../store/reducer/Validation/slice';
 //utils
@@ -25,22 +25,43 @@ import RateBlock from '../RateBlock/RateBlock';
 import RateBlockTwice from '../RateBlockTwice/RateBlockTwice';
 const role = document.getElementById(`root_order-create`).getAttribute('role');
 
-const Rate = ({ name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership }) => {
+const Rate = ({ id, name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership, contractWork }) => {
+    const { tariffId, contractTariffId } = useSelector(selectorRates);
     const dispatch = useDispatch();
     const [anim, setAnim] = useState(false);
 
+
     const handleChoseRate = () => {
-        (fromPartnership == 0 || !fromPartnership) && dispatch(setRate(parseFloat(customerBit)))
-        dispatch(setRateWorker(parseFloat(workerBit)))
-        minTime && Number(minTime) > 0 && dispatch(setMinDurqtion(Number(minTime)))
-        handleResetRatio()
+
+        if ((tariffId == id || contractTariffId == id) && id) {
+            dispatch(setTariffId(null))
+            dispatch(setContractTariffId(null))
+        } else {
+            if (contractWork) {
+                dispatch(setContractTariffId(id))
+                dispatch(setTariffId(null))
+            } else {
+                dispatch(setContractTariffId(null))
+                dispatch(setTariffId(id))
+            }
+
+            (fromPartnership == 0 || !fromPartnership) && dispatch(setRate(parseFloat(customerBit)))
+            dispatch(setRateWorker(parseFloat(workerBit)))
+            minTime && Number(minTime) > 0 && dispatch(setMinDurqtion(Number(minTime)))
+            handleResetRatio()
+        }
+
+
+
+
+
     }
 
     return (
         <div onClick={handleChoseRate}
             onMouseEnter={() => setAnim(true)}
             onMouseLeave={() => setAnim(false)}
-            className={s.rate}
+            className={classNames(s.rate/* , (tariffId == id || contractTariffId == id) && id && s.rate_active */)}
         >
             <div className={`${s.arrow} ${anim && s.arrow_anim}`}>
                 <IconRate />
@@ -67,13 +88,19 @@ const Rates = () => {
     const [activeRatio, setActiveRatio] = useState(0)
     const [warning, setWarning] = useState(false);
     const dispatch = useDispatch();
-    const { rate, rateWorker, sameTarification, ratesPartnership } = useSelector(selectorRates)
-    const { payType, customer } = useSelector(selectorCustomer)
+    const { rate, rateWorker, sameTarification, ratesPartnership, tariffId, contractTariffId } = useSelector(selectorRates)
+    const { payType, customer, contract } = useSelector(selectorCustomer)
     const { fromPartnership } = useSelector(selectorManagers);
+    const customerWorks = contract?.works ? contract?.works : customer?.works;
+    console.log(customerWorks)
+
 
     useEffect(() => {
-        dispatch(setRateError(false))
-    }, [rate])
+        if (customerWorks?.find(el => el.id != tariffId & el.id != contractTariffId) || !customerWorks) {
+            dispatch(setTariffId(null))
+            dispatch(setContractTariffId(null))
+        }
+    }, [customerWorks, customer])
 
 
     useEffect(() => {
@@ -112,7 +139,7 @@ const Rates = () => {
                 PromptText={PromptRates}
             />
 
-               <Field text={'Единицы тарификации заказчику и исполнителю'}>
+            {/*  <Field text={'Единицы тарификации заказчику и исполнителю'}>
                 <SegmentButtons
                     style={2}
                     callback={(val) => dispatch(setSameTarification(val))}
@@ -131,9 +158,9 @@ const Rates = () => {
                         },
                     ]}
                 />
-            </Field>
+            </Field> */}
 
-            <div style={{ height: sameTarification ? '154px' /* '66px' */ : '220px' }} className={s.container}>
+            <div style={{ height: sameTarification ? /* '154px'  */'66px' : '220px' }} className={s.container}>
                 <div className={classNames(s.tarif, sameTarification && s.tarif_vis)}>
                     <RateBlock
                         fromPartnership={fromPartnership}
@@ -145,7 +172,7 @@ const Rates = () => {
                     />
                 </div>
 
-                  <div className={classNames(s.tarif, !sameTarification && s.tarif_vis)}>
+                <div className={classNames(s.tarif, !sameTarification && s.tarif_vis)}>
                     <RateBlockTwice
                         fromPartnership={fromPartnership}
                         activeRatio={activeRatio}
@@ -163,7 +190,7 @@ const Rates = () => {
                 <span className={s.sub}>
                     {SUB_PRICE}
                 </span>
-                {(payType !== 1 || customer?.works?.length == 0 || !customer?.works) && <ul className={`${s.block_list} ${s.block_list_2}`}>
+                {(payType !== 1 || customerWorks?.length == 0 || !customerWorks) && <ul className={`${s.block_list} ${s.block_list_2}`}>
                     {(role === 'mainoperator' ? ratesPartnership : rates)?.map((el, i) => {
                         return <Rate
                             key={el.id}
@@ -177,10 +204,12 @@ const Rates = () => {
                 </ul>
                 }
 
-                {(payType == 1 && customer?.works?.length > 0) && < ul className={`${s.block_list}`}>
-                    {customer?.works?.map((el, i) => {
+                {(payType == 1 && customerWorks?.length > 0) && < ul className={`${s.block_list}`}>
+                    {customerWorks?.map((el, i) => {
                         return <Rate
-                         key={el.id}
+                            contractWork={contract?.works}
+                            key={el.id}
+                            id={el.id}
                             fromPartnership={fromPartnership}
                             customerBit={el.price?.replace(',', '.')}
                             workerBit={el.bit?.replace(',', '.')}

@@ -83,7 +83,7 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
 
     return (
         <div className={s.root}>
-            <Field text={'Единица тарификации'}>
+           {/*  <Field text={'Единица тарификации'}>
                 <InputList
                     list={unitList}
                     value={unit}
@@ -93,7 +93,7 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                     }}
                     width={300}
                 />
-            </Field>
+            </Field> */}
 
             <div className={s.block}>
                 <div className={s.inputs}>

@@ -83,6 +83,14 @@
     &:hover {
         background-color: #D4DFF32B;
     }
+
+    &_active {
+        background-color: #e6efff;
+
+          &:hover {
+        background-color: #e6efff;
+    }
+    }
 }
 
 .bit {

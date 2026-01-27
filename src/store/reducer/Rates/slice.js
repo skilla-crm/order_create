@@ -8,7 +8,9 @@ const initialState = {
     unit: 1,
     unitWorker: 1,
     sameTarification: true,
-    ratesPartnership: []
+    ratesPartnership: [],
+    tariffId: null,
+    contractTariffId: null
 };
 
 const RatesSlice = createSlice({
@@ -42,7 +44,15 @@ const RatesSlice = createSlice({
 
         setRatesPartnership(state, action) {
             state.ratesPartnership = action.payload;
-        }
+        },
+
+        setTariffId(state, action) {
+            state.tariffId = action.payload;
+        },
+
+         setContractTariffId(state, action) {
+            state.contractTariffId = action.payload;
+        },
     },
 });
 
@@ -53,7 +63,9 @@ export const {
     setUnit,
     setUnitWorker,
     setSameTarification,
-    setRatesPartnership
+    setRatesPartnership,
+    setTariffId, 
+    setContractTariffId
 } = RatesSlice.actions;
 
 export default RatesSlice.reducer;
