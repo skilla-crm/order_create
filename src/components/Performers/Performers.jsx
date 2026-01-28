@@ -110,7 +110,7 @@ const Performers = () => {
         <div className={s.performers}>
             <Header
                 title={TITLE}
-                buttonState={((fromPartnership !== 0 && acceptStatus == 0) || role === 'mainoperator') ? false : true}
+                buttonState={fromPartnership !== 0 && acceptStatus == 0 ? false : true}
                 buttonText={BUTTON_TEXT}
                 handleButton={handleAdd}
                 forPro={!user.pro}

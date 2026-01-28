@@ -13,19 +13,13 @@ import { selectorPartnership } from "../store/reducer/Partnership/selector";
 import { adressStringUtility } from '../utils/AdressUtility';
 
 export const useWriteOrderDataHook = () => {
-    const { partnership } = useSelector(selectorPartnership);
+
 
     const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
     const [data, setData] = useState({})
     const dispatch = useDispatch();
 
-    if (data?.partnership_id && data?.partnerships?.length > 0 && !partnership?.id) {
-        console.log('перезапись хука')
-
-        const partnership = data?.partnerships.find(el => el.id == data?.partnership_id)
-        console.log(data, data?.partnerships?.length, partnership)
-        dispatch(setPartnership(partnership))
-    }
+    
 
     useEffect(() => {
         if (data.id) {
