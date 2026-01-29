@@ -26,8 +26,6 @@ const Addresses = () => {
     const [openMap, setOpenMap] = useState(false);
     const dispatch = useDispatch();
 
-    console.log(dopAdresses)
-
     useEffect(() => {
         address.city && handleResetErrorAddress()
     }, [address])

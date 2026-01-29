@@ -92,8 +92,6 @@ const Rates = () => {
     const { payType, customer, contract } = useSelector(selectorCustomer)
     const { fromPartnership } = useSelector(selectorManagers);
     const customerWorks = contract?.works ? contract?.works : customer?.works;
-    console.log(customerWorks)
-
 
     useEffect(() => {
         if (customerWorks?.find(el => el.id != tariffId & el.id != contractTariffId) || !customerWorks) {

@@ -35,7 +35,6 @@ const Manager = () => {
     const { service } = useSelector(selectorDetails);
     const { payType } = useSelector(selectorCustomer);
     const dispatch = useDispatch();
-    console.log(partnership)
 
     useEffect(() => {
         service == 8 && dispatch(setEmailState(false))

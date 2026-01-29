@@ -26,7 +26,6 @@ const Partnership = ({ loadParametrs, companyId, setPartnershipCompanies, setLoa
     const { partnerships } = useContext(ParametrsContext);
     const { partnership } = useSelector(selectorPartnership);
     const dispatch = useDispatch();
-    console.log(partnership)
 
     const uniquePartnerships = partnerships?.filter((obj, index, self) =>
         index === self.findIndex((t) => t.id === obj.id)

@@ -4,7 +4,7 @@ export const handleSearchCompany = (query, list) => {
     const result3 = list?.filter(el => el.label?.toLowerCase().indexOf(query?.toLowerCase()) !== -1);
 
     if (result?.length >= 1 || result3?.length >= 1) {
-        return [...result, ...result3]
+        return  [...result, ...result3]
     }
 
     if (result2?.length >= 1) {

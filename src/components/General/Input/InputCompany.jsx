@@ -40,6 +40,7 @@ const InputCompany = ({ sub, customer, list, value, setValue, handleAdd, payType
             setSearchResult(list)
         }
         const search = handleSearchCompany(valueText, list);
+        console.log(search)
         valueText !== '' && valueText && setSearchResult(search)
 
         valueText == '' && fieldFocus && setOpenList(true);

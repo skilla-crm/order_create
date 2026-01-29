@@ -90,8 +90,6 @@ export const useWriteOrderDataHook = () => {
                 }
             })
 
-            console.log(dopAddresess)
-
             dopAddresess?.length > 0 && dispatch(setDopAdresses(dopAddresess))
 
             dispatch(setAddress(address))

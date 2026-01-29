@@ -8,7 +8,6 @@ const PartnershipsList = ({ list, openList, setOpenList, value, setValue, listSc
     const dispatch = useDispatch()
 
     const handleChose = (data) => {
-        console.log(data)
         setValueText(data.name)
         setValue(data)
         setOpenList(false)
