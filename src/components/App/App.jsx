@@ -226,7 +226,6 @@ const App = () => {
                         companyOld && dispatch(setCustomer(companyOld))
                     }
 
-                    /*  data.beznal == 1 && !contract && company?.contracts?.length > 0 && dispatch(setContract(company?.contracts?.[0])) */
 
                     setTimeout(() => {
                         setLoadDetail(false)

@@ -1,13 +1,17 @@
 import s from './CompanyList.module.scss';
 import { useEffect, useRef, useState } from 'react';
 import { ReactComponent as IconAdd } from '../../../images/icons/iconAdd.svg';
+import { useSelector } from 'react-redux';
+//selector
+import { selectorPartnership } from '../../../store/reducer/Partnership/selector';
 //slice
 import { setContract } from '../../../store/reducer/Customer/slice';
 import { useDispatch } from 'react-redux';
 
 const CompanyList = ({ list, openList, setOpenList, value, setValue, listScroll, setValueText, notFound, valueText, handleAdd }) => {
     const activeRef = useRef();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const { partnership } = useSelector(selectorPartnership);
 
 
     /* useEffect(() => {
@@ -18,7 +22,11 @@ const CompanyList = ({ list, openList, setOpenList, value, setValue, listScroll,
         setValueText(data.name)
         setValue(data)
         setOpenList(false)
-        dispatch(setContract(data?.contracts?.[0]))
+        if (partnership?.id) {
+            dispatch(setContract(data?.contracts?.find(el => el.partnership_id == partnership?.id)))
+        } else {
+            dispatch(setContract(data?.contracts?.[0]))
+        }
     }
 
     const handleOpenAdd = () => {
@@ -46,7 +54,7 @@ const CompanyList = ({ list, openList, setOpenList, value, setValue, listScroll,
 
 export default CompanyList;
 
-const Item = ({ el, value, handleChose}) => {
+const Item = ({ el, value, handleChose }) => {
     const [partnerships, setPartnerships] = useState([]);
 
     useEffect(() => {
