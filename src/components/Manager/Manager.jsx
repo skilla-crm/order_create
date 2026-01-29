@@ -14,6 +14,7 @@ import { sortManager } from '../../utils/sortManager';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorDetails } from '../../store/reducer/Details/selector';
+import { selectorPartnership } from '../../store/reducer/Partnership/selector';
 //slice
 import { setManagerId, setPartnershipId, setPartnerRates, setPartnerRate, setEmailState } from '../../store/reducer/Managers/slice';
 //components 
@@ -30,18 +31,27 @@ const Manager = () => {
     const [activeRate, setActiveRate] = useState(1);
     const [defaultManagerId, setDefaultManagerId] = useState(null)
     const { managerId, partnershipId, emailPasport, partnerRates, partnerRate, emailState, fromPartnership, acceptStatus } = useSelector(selectorManagers);
+    const { partnership } = useSelector(selectorPartnership);
     const { service } = useSelector(selectorDetails);
     const { payType } = useSelector(selectorCustomer);
     const dispatch = useDispatch();
+    console.log(partnership)
 
     useEffect(() => {
         service == 8 && dispatch(setEmailState(false))
     }, [service])
 
     useEffect(() => {
-        const result = supervisors?.find(el => el.default == 1)
-        result && dispatch(setManagerId(result.id))
-    }, [supervisors])
+        if (role === 'mainoperator') {
+            const result = partnership?.superviosrs?.find(el => el.default == 1)
+            result ? dispatch(setManagerId(result.id)) : dispatch(setManagerId(0)) 
+        } else {
+            const result = supervisors?.find(el => el.default == 1)
+            result && dispatch(setManagerId(result.id))
+        }
+
+
+    }, [supervisors, partnership])
 
     useEffect(() => {
         if (partnershipId !== 0 && partnershipId !== null) {
@@ -89,20 +99,20 @@ const Manager = () => {
 
     return (
         <div className={s.manager}>
-            {role !== 'mainoperator' && <Header
+            <Header
                 title={TITLE}
                 buttonState={false}
                 PromptText={PromptManager}
-            />}
+            />
             {skilla_partnerships?.length > 0 && service !== 8 && fromPartnership == 0 && <SegmentControl
                 segments={segments}
                 setActive={(data) => handleActive(data)}
                 active={activeSegment}
             />
             }
-            {activeSegment == 1 && role !== 'mainoperator' && <div>
+            {activeSegment == 1 && <div>
                 <InputSelect
-                    list={sortManager(supervisors)}
+                    list={role === 'mainoperator' ? partnership?.superviosrs : sortManager(supervisors)}
                     value={managerId}
                     setValue={(data) => dispatch(setManagerId(Number(data)))}
                     defaultRow={defaultRow}

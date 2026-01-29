@@ -44,6 +44,7 @@ import { selectorAddress } from '../../store/reducer/Address/selector';
 import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
 import { selectorPreview } from '../../store/reducer/Preview/selector';
+import { selectorPartnership } from '../../store/reducer/Partnership/selector';
 //utils
 import { emailValidate } from '../../utils/EmailValidate';
 
@@ -96,6 +97,7 @@ const App = () => {
     const { rate, rateWorker, orderSum } = useSelector(selectorRates);
     const { emailPasport, emailState, fromPartnership, acceptStatus, fromLk } = useSelector(selectorManagers);
     const { phoneModal } = useSelector(selectorPreview);
+    const { partnership } = useSelector(selectorPartnership);
     const appRef = useRef();
     const location = useLocation();
     const path = location.pathname + location.search;
@@ -212,6 +214,12 @@ const App = () => {
                     timeA == null && dispatch(setTimerDisabled(true))
                     setOrderStatus(Number(data.order_status))
                     setData(data)
+
+                    if (data?.partnership_id && parametrs?.partnerships?.length > 0 && !partnership?.id) {
+
+                        const partnership = parametrs?.partnerships.find(el => el.id == data?.partnership_id)
+                        dispatch(setPartnership(partnership))
+                    }
 
                     const company = parametrs?.companies_2?.find(el => el.id == data.company_id)
                     const contract = company?.contracts?.find(el => el.id === data.contract_id)
