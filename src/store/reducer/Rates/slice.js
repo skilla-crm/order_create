@@ -9,8 +9,15 @@ const initialState = {
     unitWorker: 1,
     sameTarification: true,
     ratesPartnership: [],
-    tariffId: null,
-    contractTariffId: null
+    tariffId: '',
+    contractTariffId: '',
+    expectedAmount: '',
+    expectedAmountWorker: '',
+    minAmount: '',
+    minAmountWorker: '',
+    minSum: '',
+    minSumWorker: ''
+
 };
 
 const RatesSlice = createSlice({
@@ -50,8 +57,32 @@ const RatesSlice = createSlice({
             state.tariffId = action.payload;
         },
 
-         setContractTariffId(state, action) {
+        setContractTariffId(state, action) {
             state.contractTariffId = action.payload;
+        },
+
+        setExpectedAmount(state, action) {
+            state.expectedAmount = action.payload;
+        },
+
+        setExpectedAmountWorker(state, action) {
+            state.expectedAmountWorker = action.payload;
+        },
+
+        setMinAmount(state, action) {
+            state.minAmount = action.payload;
+        },
+
+        setMinAmountWorker(state, action) {
+            state.minAmountWorker = action.payload;
+        },
+
+        setMinSum(state, action) {
+            state.minSum = action.payload;
+        },
+
+        setMinSumWorker(state, action) {
+            state.minSumWorker = action.payload;
         },
     },
 });
@@ -64,8 +95,15 @@ export const {
     setUnitWorker,
     setSameTarification,
     setRatesPartnership,
-    setTariffId, 
-    setContractTariffId
+    setTariffId,
+    setContractTariffId,
+
+    setExpectedAmount,
+    setExpectedAmountWorker,
+    setMinAmount,
+    setMinAmountWorker,
+    setMinSum,
+    setMinSumWorker
 } = RatesSlice.actions;
 
 export default RatesSlice.reducer;

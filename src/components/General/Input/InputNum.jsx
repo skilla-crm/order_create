@@ -4,11 +4,11 @@ import { useState } from 'react';
 import { handleNumbers } from '../../../utils/HandleNumbers';
 import { useEffect } from 'react';
 
-const InputNum = ({ sub, disabled, value, setValue, error, errorEmpity, maxValue, errorText }) => {
+const InputNum = ({ sub, disabled, value, setValue, error, errorEmpity, maxValue, errorText, width }) => {
     const [errorState, setErrorState] = useState(false);
     const [errorStateEmpity, setErrorStateEmpity] = useState(false);
     const [textValue, setTextValue] = useState(value || '')
-  
+
     useEffect(() => {
         disabled && setValue('')
     }, [disabled])
@@ -36,9 +36,10 @@ const InputNum = ({ sub, disabled, value, setValue, error, errorEmpity, maxValue
     }
 
     return (
-        <div className={s.container}>
+        <div      style={{ width: width ? `fit-content` : '' }} className={s.container}>
             <span className={`${s.sub} ${errorState && s.sub_err}`}>{sub}</span>
             <input
+                style={{ width: width ? `${width}px` : '' }}
                 onBlur={handleError}
                 onFocus={handleResetError}
                 onChange={handleValue}

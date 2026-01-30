@@ -4,37 +4,65 @@ import { useSelector, useDispatch } from 'react-redux';
 //icons
 import { ReactComponent as IconWarning } from '../../images/icons/iconWarning.svg';
 import { ReactComponent as IconPoints } from '../../images/icons/iconPoints16-16-blue.svg';
+import { ReactComponent as IconRuble } from '../../images/icons/IconRuble.svg';
 //selector
 import { selectorParametrs } from '../../store/reducer/Parametrs/selector';
 import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
 //slice
-import { setRate, setRateWorker, setUnit, setUnitWorker } from '../../store/reducer/Rates/slice';
+import {
+    setRate,
+    setRateWorker,
+    setUnit,
+    setUnitWorker,
+    setExpectedAmount,
+    setExpectedAmountWorker,
+    setMinAmount,
+    setMinAmountWorker,
+    setMinSum,
+    setMinSumWorker
+} from '../../store/reducer/Rates/slice';
 //components
 import InputNum from '../General/Input/InputNum';
+import InputFinancial from '../General/InputFinancial/InputFinancial';
 import InputList from '../General/InputList/InputList';
 import Field from '../General/Field/Field';
 import RatePercent from '../RatePercent/RatePercent';
+import Switch from '../General/Switch/Switch';
+import Tabs from '../General/Tabs/Tabs';
 //constants
 import { SUB_CUSTOMER, SUB_WORKER, ratersChangeList } from '../../constants/rates';
+import classNames from 'classnames';
 
-const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRatio, warning, payType }) => {
+const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRatio, warning, payType, minValueStateWorker, setMinValueStateWorker }) => {
     const [ratioList, setRatioList] = useState(false);
     const { unitList } = useSelector(selectorParametrs);
-    const { rate, rateWorker, unit } = useSelector(selectorRates);
+    const {
+        rate,
+        rateWorker,
+        unit,
+        expectedAmount,
+        expectedAmountWorker,
+        minAmount,
+        minAmountWorker,
+        minSum,
+        minSumWorker } = useSelector(selectorRates);
     const { rateError, rateWorkerError } = useSelector(selectorValidation);
-
+    const [minValueType, setMinValueType] = useState('Руб');
     const dispatch = useDispatch();
-
     const listRef = useRef();
     const buttonRef = useRef();
+
+
+    useEffect(() => {
+        if (unit == 1 || unit == 7) {
+            dispatch(setExpectedAmountWorker(''))
+        }
+    }, [unit])
 
     const handleOpenRatioList = () => {
         ratioList ? setRatioList(false) : setRatioList(true)
     }
-
-
-
 
     const handleChoseRatio = (e) => {
         const id = Number(e.currentTarget.id);
@@ -83,7 +111,7 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
 
     return (
         <div className={s.root}>
-           {/*  <Field text={'Единица тарификации'}>
+            <Field text={'Единица тарификации'}>
                 <InputList
                     list={unitList}
                     value={unit}
@@ -93,7 +121,7 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                     }}
                     width={300}
                 />
-            </Field> */}
+            </Field>
 
             <div className={s.block}>
                 <div className={s.inputs}>
@@ -131,10 +159,10 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                         />
                         }
                     </div>
-
-
-
                 </div>
+
+
+
 
 
                 <div className={`${s.warning} ${warning && s.warning_vis}`}>
@@ -146,6 +174,73 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
 
 
             </div>
+
+
+            <div className={classNames(s.expected, unit !== 1 && unit !== 7 && s.expected_vis)}>
+                <InputNum
+                    sub={'Предполагаемое количество исполнителю'}
+                    width={180}
+                    disabled={false}
+                    value={expectedAmountWorker}
+                    setValue={(data) => {
+                        dispatch(setExpectedAmount(data))
+                        dispatch(setExpectedAmountWorker(data))
+                    }}
+                    error={false}
+                    errorEmpity={rateWorkerError}
+                    maxValue={10}
+                    errorText={'Укажи ставку'}
+                />
+            </div>
+
+            <Switch
+                text={'Минимальная сумма исполнителю'}
+                switchState={minValueStateWorker}
+                handleSwitch={() => {
+                    setMinValueStateWorker(!minValueStateWorker)
+                    dispatch(setMinAmount(''))
+                    dispatch(setMinAmountWorker(''))
+                    dispatch(setMinSumWorker(''))
+
+                }}
+            />
+
+            <div className={classNames(s.min, minValueStateWorker && s.min_vis)}>
+                {minValueType !== 'Руб' && <InputNum
+                    sub={'Минимальное значение'}
+                    width={180}
+                    disabled={false}
+                    value={minAmountWorker}
+                    setValue={(data) => {
+                        dispatch(setMinAmountWorker(data))
+                    }}
+                    error={false}
+                    maxValue={10}
+                    errorText={'Укажи ставку'}
+                />}
+                {minValueType === 'Руб' &&
+                    <InputFinancial
+                        width={180}
+                        amount={minSumWorker}
+                        setAmount={(data) => {
+                                console.log(data)
+                            dispatch(setMinSumWorker(data))
+
+                        }}
+                        Icon={IconRuble}
+                    />
+                }
+
+                {/*  <Tabs
+                    value={minValueType}
+                    setValue={setMinValueType}
+                    tabList={['Шт', 'Руб']}
+                /> */}
+
+
+            </div>
+
+
         </div>
     )
 };

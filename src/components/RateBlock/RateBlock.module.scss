@@ -117,3 +117,39 @@
 .disabled {
     pointer-events: none;
 }
+
+.min {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 0;
+    overflow: hidden;
+    margin-top: -12px;
+    opacity: 0;
+    padding: 1px;
+    transition: all 0.2s;
+
+    &_vis {
+        opacity: 1;
+        margin-top: 0;
+        height: 42px;
+    }
+}
+
+.expected {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    height: 0;
+    overflow: hidden;
+    margin-top: -12px;
+    opacity: 0;
+    padding: 1px;
+    transition: all 0.2s;
+
+    &_vis {
+        opacity: 1;
+        margin-top: 0;
+        height: 63px;
+    }
+}

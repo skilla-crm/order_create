@@ -25,7 +25,7 @@ import RateBlock from '../RateBlock/RateBlock';
 import RateBlockTwice from '../RateBlockTwice/RateBlockTwice';
 const role = document.getElementById(`root_order-create`).getAttribute('role');
 
-const Rate = ({ id, name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership, contractWork }) => {
+const Rate = ({ id, name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership, contractWork, width }) => {
     const { tariffId, contractTariffId } = useSelector(selectorRates);
     const dispatch = useDispatch();
     const [anim, setAnim] = useState(false);
@@ -51,17 +51,13 @@ const Rate = ({ id, name, customerBit, workerBit, minTime, handleResetRatio, fro
             handleResetRatio()
         }
 
-
-
-
-
     }
 
     return (
         <div onClick={handleChoseRate}
             onMouseEnter={() => setAnim(true)}
             onMouseLeave={() => setAnim(false)}
-            className={classNames(s.rate/* , (tariffId == id || contractTariffId == id) && id && s.rate_active */)}
+            className={classNames(s.rate, (tariffId == id || contractTariffId == id) && id && s.rate_active)}
         >
             <div className={`${s.arrow} ${anim && s.arrow_anim}`}>
                 <IconRate />
@@ -88,10 +84,13 @@ const Rates = () => {
     const [activeRatio, setActiveRatio] = useState(0)
     const [warning, setWarning] = useState(false);
     const dispatch = useDispatch();
-    const { rate, rateWorker, sameTarification, ratesPartnership, tariffId, contractTariffId } = useSelector(selectorRates)
+    const { rate, rateWorker, sameTarification, ratesPartnership, unit, unitWorker, tariffId, contractTariffId } = useSelector(selectorRates)
     const { payType, customer, contract } = useSelector(selectorCustomer)
     const { fromPartnership } = useSelector(selectorManagers);
+    const [minValueState, setMinValueState] = useState(false);
+    const [minValueStateWorker, setMinValueStateWorker] = useState(false);
     const customerWorks = contract?.works ? contract?.works : customer?.works;
+
 
     useEffect(() => {
         if (customerWorks?.find(el => el.id != tariffId & el.id != contractTariffId) || !customerWorks) {
@@ -137,7 +136,7 @@ const Rates = () => {
                 PromptText={PromptRates}
             />
 
-            {/*  <Field text={'Единицы тарификации заказчику и исполнителю'}>
+            <Field text={'Единицы тарификации заказчику и исполнителю'}>
                 <SegmentButtons
                     style={2}
                     callback={(val) => dispatch(setSameTarification(val))}
@@ -156,9 +155,9 @@ const Rates = () => {
                         },
                     ]}
                 />
-            </Field> */}
+            </Field>
 
-            <div style={{ height: sameTarification ? /* '154px'  */'66px' : '220px' }} className={s.container}>
+            <div style={{ height: (sameTarification ? 225 : 277) + (((minValueState && !sameTarification) || minValueStateWorker) ? 42 : 0) + ((((unit == 1 || unit == 7) && sameTarification) || ((unitWorker == 1 || unitWorker == 7) && (unit == 1 || unit == 7) && !sameTarification)) ? 0 : 63) + (warning ? 18 : 0) + 'px' }} className={s.container}>
                 <div className={classNames(s.tarif, sameTarification && s.tarif_vis)}>
                     <RateBlock
                         fromPartnership={fromPartnership}
@@ -167,10 +166,12 @@ const Rates = () => {
                         handleResetRatio={handleResetRatio}
                         warning={warning}
                         payType={payType}
+                        minValueStateWorker={minValueStateWorker}
+                        setMinValueStateWorker={setMinValueStateWorker}
                     />
                 </div>
 
-                <div className={classNames(s.tarif, !sameTarification && s.tarif_vis)}>
+                <div className={classNames(s.tarif, s.tarif_twice, !sameTarification && s.tarif_vis)}>
                     <RateBlockTwice
                         fromPartnership={fromPartnership}
                         activeRatio={activeRatio}
@@ -178,6 +179,10 @@ const Rates = () => {
                         handleResetRatio={handleResetRatio}
                         warning={warning}
                         payType={payType}
+                        minValueState={minValueState}
+                        setMinValueState={setMinValueState}
+                        minValueStateWorker={minValueStateWorker}
+                        setMinValueStateWorker={setMinValueStateWorker}
                     />
                 </div>
             </div>

@@ -5,7 +5,10 @@ import { setPayType, setName, setCustomer, setPhone, setNoContactPerson } from '
 import { setPerformersNum, setTime } from '../store/reducer/Performers/slice';
 import { setService, setRequirements, setMinDurqtion, setDuration, setCommentSupervisor, setNotes, setPayNotes } from '../store/reducer/Details/slice';
 import { setAddress, setDopAdresses, setMetro, deleteMetro, setNoAddress, setAddressForReturn } from '../store/reducer/Address/slice';
-import { setRate, setRateWorker, setOrderSum, setUnit, setUnitWorker, setSameTarification } from '../store/reducer/Rates/slice';
+import {
+    setRate, setRateWorker, setOrderSum, setUnit, setUnitWorker, setSameTarification, setContractTariffId, setTariffId,
+    setExpectedAmount, setExpectedAmountWorker, setMinSum, setMinSumWorker
+} from '../store/reducer/Rates/slice';
 import { setManagerId, setPartnershipId, setFromPartnership, setAcceptStatus, setEmailPasport, setPartnerRate, setFromLk } from '../store/reducer/Managers/slice';
 import { setPartnership } from "../store/reducer/Partnership/slice";
 import { selectorPartnership } from "../store/reducer/Partnership/selector";
@@ -19,7 +22,7 @@ export const useWriteOrderDataHook = () => {
     const [data, setData] = useState({})
     const dispatch = useDispatch();
 
-    
+
 
     useEffect(() => {
         if (data.id) {
@@ -133,6 +136,11 @@ export const useWriteOrderDataHook = () => {
             dispatch(setUnit(data.work_unit_id ? data.work_unit_id : 1))
             dispatch(setUnitWorker(data.work_unit_id_worker ? data.work_unit_id_worker : 1))
             dispatch(setSameTarification(data.work_unit_id === data.work_unit_id_worker ? true : false))
+            dispatch(setExpectedAmount(data?.expected_amount ? data?.expected_amount : ''))
+            dispatch(setExpectedAmountWorker(data?.expected_amount_worker ? data?.expected_amount_worker : ''))
+            dispatch(setMinSum(data?.min_sum ? data?.min_sum : ''))
+            dispatch(setMinSumWorker(data?.min_sum_worker ? data?.min_sum_worker : ''))
+            data?.contract_tariff?.id ? dispatch(setContractTariffId(data?.contract_tariff?.id)) : dispatch(setTariffId(data?.tariff?.id))
             return
         }
     }, [data])

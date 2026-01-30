@@ -1,0 +1,46 @@
+.root {
+    overflow: hidden;
+    border-radius: 4px;
+    /*  border: 1px solid rgba(216, 228, 251, 0.55); */
+    outline: 1px solid rgba(216, 228, 251, 0.55);
+    background-color: #ffffff;
+    display: flex;
+    align-items: center;
+    padding-right: 12px;
+    box-sizing: border-box;
+
+    &_disabled {
+        background-color: rgba(212, 223, 243, 0.17);
+        color: #121922;
+    }
+
+    &_focus {
+        outline-color: #002CFB;
+    }
+}
+
+.input {
+    box-sizing: border-box;
+    height: 40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    outline: none;
+    border: none;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 16px;
+    transition: all 0.15s;
+
+    &::placeholder {
+        color: #71869D;
+    }
+
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

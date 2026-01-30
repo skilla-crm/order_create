@@ -22,7 +22,9 @@ const OrderSum = () => {
 
     useEffect(() => {
         dispatch(setPaySummError(false))
-    }, [orderSum])
+    }, [orderSum]);
+
+    
     return (
         <div className={s.container}>
             <Header

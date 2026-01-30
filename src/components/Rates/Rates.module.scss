@@ -87,9 +87,9 @@
     &_active {
         background-color: #e6efff;
 
-          &:hover {
-        background-color: #e6efff;
-    }
+        &:hover {
+            background-color: #e6efff;
+        }
     }
 }
 
@@ -122,27 +122,30 @@
 
 .container {
     width: 100%;
-
+    height: min-content;
     position: relative;
     transition: all 0.2s;
 }
 
 .tarif {
     width: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
     opacity: 0;
     visibility: hidden;
     transition: all 0.2s;
-    height: fit-content;
+    height: max-content;
     flex-shrink: 0;
-    max-height: 144px;
+    /*    max-height: 144px; */
+
+    &_twice {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
 
 
     &_vis {
         opacity: 1;
-        max-height: 230px;
+        /* max-height: 230px; */
         visibility: visible;
     }
 }

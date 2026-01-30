@@ -17,11 +17,26 @@ export const useOrderDataForSend = () => {
     const { additionalDates } = useSelector(selectorAdditionalDates);
     const { service, tags, commentSupervisor, notes, payNotes, minDuration, duration } = useSelector(selectorDetails);
     const { address, dopAdresses, metro, noAddress } = useSelector(selectorAddress);
-    const { rate, rateWorker, orderSum, unit, unitWorker, sameTarification, tariffId, contractTariffId } = useSelector(selectorRates);
+    const {
+        rate,
+        rateWorker,
+        orderSum,
+        unit,
+        unitWorker,
+        sameTarification,
+        tariffId,
+        contractTariffId,
+        expectedAmount,
+        expectedAmountWorker,
+        minAmount,
+        minAmountWorker,
+        minSum,
+        minSumWorker
+    } = useSelector(selectorRates);
     const { managerId, partnershipId, emailPasport, emailState, partnerRate } = useSelector(selectorManagers);
     const { partnership } = useSelector(selectorPartnership);
 
-    const formData = new FormData();
+    console.log(expectedAmount, expectedAmountWorker, minSum, minSumWorker)
 
     const dopDates = additionalDates.length > 0 ?
         additionalDates.map(el => {
@@ -105,13 +120,19 @@ export const useOrderDataForSend = () => {
         send_sms: isSms,
         work_unit_id: unit,
         work_unit_id_worker: sameTarification ? unit : unitWorker,
-        /* tariff_id: tariffId,
-        contract_tariff_id: contractTariffId */
+        tariff_id: tariffId,
+        contract_tariff_id: contractTariffId,
+        expected_amount: !sameTarification ? Number(expectedAmount) : null,
+        /*    min_amount: !sameTarification && minAmount ? minAmount : null, */
+        min_sum: !sameTarification && minSum ? minSum : null,
+        expected_amount_worker: expectedAmountWorker ? Number(expectedAmountWorker) : null,
+        /* min_amount_worker: minAmountWorker, */
+        min_sum_worker: minSumWorker ? minSumWorker : null
+
 
     }
 
     console.log(orderData)
-
     return { orderData };
 }
 

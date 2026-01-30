@@ -21,6 +21,8 @@ const TabsNumbers = ({ sub, value, setValue, max, min, maxVis, forPro }) => {
     const inputRef = useRef();
     const activeRef = useRef();
 
+
+
     const numbers = Array.from({ length: maxVis }, (n, i) => i + 1);
     const optionalNumbers = Array.from({ length: max - maxVis }, (n, i) => i + maxVis + 1);
 
@@ -112,7 +114,6 @@ const TabsNumbers = ({ sub, value, setValue, max, min, maxVis, forPro }) => {
                         </input>
 
                         <ul className={`${s.list} ${s.list_optional} ${optionalList && s.list_open}`}>
-
                             {optionalNumbers.map(el => {
                                 return <li key={el} ref={el == inputNumberValue ? activeRef : null} onMouseDown={handleTab} id={el} className={`${el == inputNumberValue && s.number_active} ${el < min && s.number_disabled}`}>{el}</li>
                             })}

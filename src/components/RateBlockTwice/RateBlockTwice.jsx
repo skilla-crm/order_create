@@ -1,38 +1,83 @@
 import s from './RateBlockTwice.module.scss';
-
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import classNames from 'classnames';
 //icons
 import { ReactComponent as IconWarning } from '../../images/icons/iconWarning.svg';
+import { ReactComponent as IconRuble } from '../../images/icons/IconRuble.svg';
 //selector
 import { selectorParametrs } from '../../store/reducer/Parametrs/selector';
 import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
 //slice
-import { setRate, setRateWorker, setUnit, setUnitWorker } from '../../store/reducer/Rates/slice';
+import {
+    setRate,
+    setRateWorker,
+    setUnit,
+    setUnitWorker,
+    setExpectedAmount,
+    setExpectedAmountWorker,
+    setMinAmount,
+    setMinAmountWorker,
+    setMinSum,
+    setMinSumWorker
+} from '../../store/reducer/Rates/slice';
 //components
 import InputNum from '../General/Input/InputNum';
 import InputList from '../General/InputList/InputList';
 import Field from '../General/Field/Field';
 import RatePercent from '../RatePercent/RatePercent';
+import InputFinancial from '../General/InputFinancial/InputFinancial';
+import Switch from '../General/Switch/Switch';
+import Tabs from '../General/Tabs/Tabs';
 //constants
 import { SUB_CUSTOMER, SUB_WORKER } from '../../constants/rates';
 
-const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRatio, warning, payType }) => {
+const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRatio, warning, payType, minValueState, setMinValueState, minValueStateWorker, setMinValueStateWorker }) => {
 
     const { unitList } = useSelector(selectorParametrs);
-    const { rate, rateWorker, unit, unitWorker } = useSelector(selectorRates);
+    const {
+        rate,
+        rateWorker,
+        unit,
+        unitWorker,
+        expectedAmount,
+        expectedAmountWorker,
+        minAmount,
+        minAmountWorker,
+        minSum,
+        minSumWorker
+    } = useSelector(selectorRates);
     const { rateError, rateWorkerError } = useSelector(selectorValidation);
-
+    const [minValueInput, setMinValueInput] = useState(false);
+    const [minValueType, setMinValueType] = useState('Руб');
     const dispatch = useDispatch();
 
+    useEffect(() => {
+        if(minSum > 0) {
+            setMinValueState(true)
+        }
+    }, [minSum])
 
+       useEffect(() => {
+        if(minSumWorker > 0) {
+            setMinValueStateWorker(true)
+        }
+    }, [minSumWorker])
 
+    useEffect(() => {
+        if (unit == 1 || unit == 7) {
+            dispatch(setExpectedAmount(''))
+        }
 
-
+         if (unitWorker == 1 || unitWorker == 7) {
+            dispatch(setExpectedAmountWorker(''))
+        }
+    }, [unit, unitWorker])
 
     return (
         <div className={s.root}>
-            <div style={{paddingBottom: warning ? '10px' : ''}} className={s.container}>
+            <div style={{ paddingBottom: warning ? '10px' : '' }} className={s.container}>
                 <h3>Заказчику</h3>
                 <Field text={'Единица тарификации'}>
                     <InputList
@@ -81,6 +126,59 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
 
 
                 </div>
+                <div className={classNames(s.expected, unit !== 1 && s.expected_vis)}>
+                    <InputNum
+                        sub={'Предполагаемое количество'}
+                        width={180}
+                        disabled={false}
+                        value={expectedAmount}
+                        setValue={(data) => dispatch(setExpectedAmount(data))}
+                        error={false}
+                        errorEmpity={rateWorkerError}
+                        maxValue={10}
+                        errorText={'Укажи ставку'}
+                    />
+                </div>
+
+
+                <Switch
+                    text={'Минимальная сумма за исполнителя'}
+                    switchState={minValueState}
+                    handleSwitch={() => {
+                        setMinValueState(!minValueState)
+                        dispatch(setMinSum(''))
+                    }}
+                />
+
+                <div className={classNames(s.min, minValueState && s.min_vis)}>
+                    {minValueType !== 'Руб' && <InputNum
+                        sub={'Минимальное значение'}
+                        width={180}
+                        disabled={false}
+                        value={minAmount}
+                        setValue={(data) => dispatch(setMinAmount(data))}
+                        error={false}
+                        errorEmpity={rateWorkerError}
+                        maxValue={10}
+                        errorText={'Укажи ставку'}
+                    />}
+                    {minValueType === 'Руб' &&
+                        <InputFinancial
+                            width={180}
+                            amount={minSum}
+                            setAmount={(data) => {
+                                dispatch(setMinSum(data))
+                            }}
+                            Icon={IconRuble}
+                        />
+                    }
+
+                    {/*   <Tabs
+                        value={minValueType}
+                        setValue={setMinValueType}
+                        tabList={['Шт', 'Руб']}
+                    /> */}
+                </div>
             </div>
 
             <div className={s.container}>
@@ -114,6 +212,60 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
 
                     </div>
 
+                </div>
+                <div className={classNames(s.expected, unitWorker !== 1 && s.expected_vis)}>
+                    <InputNum
+                        sub={'Предполагаемое количество'}
+                        width={180}
+                        disabled={false}
+                        value={expectedAmountWorker}
+                        setValue={(data) => dispatch(setExpectedAmountWorker(data))}
+                        error={false}
+                        errorEmpity={rateWorkerError}
+                        maxValue={10}
+                        errorText={'Укажи ставку'}
+                    />
+                </div>
+
+
+                <Switch
+                    text={'Минимальная сумма исполнителю'}
+                    switchState={minValueStateWorker}
+                    handleSwitch={() => {
+                        setMinValueStateWorker(!minValueStateWorker)
+                        dispatch(setMinSumWorker(''))
+                    }}
+                />
+
+                <div className={classNames(s.min, minValueStateWorker && s.min_vis)}>
+                    {minValueType !== 'Руб' && <InputNum
+                        sub={'Минимальное значение'}
+                        width={180}
+                        disabled={false}
+                        value={minAmountWorker}
+                        setValue={(data) => dispatch(setMinAmountWorker(data))}
+                        error={false}
+                        errorEmpity={rateWorkerError}
+                        maxValue={10}
+                        errorText={'Укажи ставку'}
+                    />}
+                    {minValueType === 'Руб' &&
+                        <InputFinancial
+                            width={180}
+                            amount={minSumWorker}
+                            setAmount={(data) => {
+                                dispatch(setMinSumWorker(data))
+
+                            }}
+                            Icon={IconRuble}
+                        />
+                    }
+
+                    {/*  <Tabs
+                        value={minValueType}
+                        setValue={setMinValueType}
+                        tabList={['Шт', 'Руб']}
+                    /> */}
                 </div>
             </div>
         </div>
