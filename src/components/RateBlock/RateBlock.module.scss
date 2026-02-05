@@ -130,6 +130,8 @@
     transition: all 0.2s;
 
     &_vis {
+        position: relative;
+        z-index: 2;
         opacity: 1;
         margin-top: 0;
         height: 42px;
@@ -138,13 +140,13 @@
 
 .expected {
     display: flex;
-    align-items: center;
+/*     align-items: center; */
     flex-shrink: 0;
     height: 0;
     overflow: hidden;
     margin-top: -12px;
     opacity: 0;
-    padding: 1px;
+   padding-left: 1px;
     transition: all 0.2s;
 
     &_vis {

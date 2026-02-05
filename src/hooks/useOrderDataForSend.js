@@ -108,7 +108,7 @@ export const useOrderDataForSend = () => {
         }),
         client_bit: service !== 8 ? Number(rate) : null,
         worker_bit: partnershipId !== null && partnershipId !== 0 ? partnerRate : service !== 8 ? Number(rateWorker) : null,
-        pay_summ: service == 8 ? orderSum : null,
+        pay_summ: (service == 8 || unit != 1) ? orderSum : null,
         supervisor_id: managerId == 0 ? null : managerId,
         to_partnership_id: partnershipId == 0 ? null : partnershipId,
         email_passport: service == 8 ? '' : emailPasport,

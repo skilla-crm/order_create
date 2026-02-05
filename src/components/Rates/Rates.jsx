@@ -157,7 +157,7 @@ const Rates = () => {
                 />
             </Field>
 
-            <div style={{ height: (sameTarification ? 225 : 277) + (((minValueState && !sameTarification) || minValueStateWorker) ? 42 : 0) + ((((unit == 1 || unit == 7) && sameTarification) || ((unitWorker == 1 || unitWorker == 7) && (unit == 1 || unit == 7) && !sameTarification)) ? 0 : 63) + (warning ? 18 : 0) + 'px' }} className={s.container}>
+            <div style={{ height: (sameTarification ? 225 : 277) + (((minValueState && !sameTarification) || minValueState) ? 42 : 0) + ((((unit == 1 || unit == 7) && sameTarification) || ((unitWorker == 1 || unitWorker == 7) && (unit == 1 || unit == 7) && !sameTarification)) ? 0 : 63) + (warning ? 18 : 0) + 'px' }} className={s.container}>
                 <div className={classNames(s.tarif, sameTarification && s.tarif_vis)}>
                     <RateBlock
                         fromPartnership={fromPartnership}
@@ -166,8 +166,8 @@ const Rates = () => {
                         handleResetRatio={handleResetRatio}
                         warning={warning}
                         payType={payType}
-                        minValueStateWorker={minValueStateWorker}
-                        setMinValueStateWorker={setMinValueStateWorker}
+                        minValueState={minValueState}
+                        setMinValueState={setMinValueState}
                     />
                 </div>
 

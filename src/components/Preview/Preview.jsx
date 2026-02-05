@@ -1,6 +1,6 @@
 import s from './Preview.module.scss';
 import { useContext, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import dayjs from 'dayjs';
 import InputMask from 'comigo-tech-react-input-mask/lib/react-input-mask.development';
 import { ParametrsContext } from '../../contexts/UserContext';
@@ -10,6 +10,9 @@ import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorDetails } from '../../store/reducer/Details/selector';
 import { selectorAddress } from '../../store/reducer/Address/selector';
 import { selectorRates } from '../../store/reducer/Rates/selector';
+import { selectorParametrs } from '../../store/reducer/Parametrs/selector';
+//slice
+import { setOrderSum } from '../../store/reducer/Rates/slice';
 //components
 import Overlay from './Overlay';
 import MapAddress from '../General/MapAddress/MapAddress';
@@ -21,19 +24,48 @@ import { adressStringUtility4, adressStringUtility5 } from '../../utils/AdressUt
 const tags2 = [{ id: 1, description: 'Паспорт' }]
 
 const Preview = () => {
+    const { unitList } = useSelector(selectorParametrs);
     const { requirements, city } = useContext(ParametrsContext)
     const { performersNum, date, time } = useSelector(selectorPerformers);
     const { customer, payType, name, phone, noContactPerson } = useSelector(selectorCustomer);
     const { tags, notes, minDuration, duration } = useSelector(selectorDetails);
     const { address, dopAdresses, defaultCordinate, noAddress } = useSelector(selectorAddress);
-    const { rate, rateWorker } = useSelector(selectorRates);
+    const {
+        rate,
+        rateWorker,
+        unit,
+        unitWorker,
+        expectedAmount,
+        expectedAmountWorker,
+        minAmount,
+        minAmountWorker,
+        minSum,
+        minSumWorker
+    } = useSelector(selectorRates);
     const [total, setTotal] = useState(0);
     const [totalMin, setTotalMin] = useState(0);
+    const unitName = unitList?.find(el => el.id == unit)?.name?.toLowerCase();
+    const unitWorkerName = unitList?.find(el => el.id == unitWorker)?.name?.toLowerCase()
+    const dispatch = useDispatch();
+
+    console.log(!total, !totalMin)
 
     useEffect(() => {
-        setTotal(rate * duration * performersNum)
-        setTotalMin(rate * minDuration * performersNum)
-    }, [rate, minDuration, duration, performersNum])
+        if (unit === 1) {
+            setTotal(rate * duration * performersNum)
+            setTotalMin(rate * minDuration * performersNum)
+            return
+        }
+
+        if (unit != 1) {
+            const expectedSum = rate * expectedAmount * performersNum
+            expectedAmount ? setTotal(expectedSum) : setTotal('')
+            setTotalMin(minSum)
+            dispatch(setOrderSum(expectedSum > minSum ? expectedSum : minSum))
+            return
+        }
+
+    }, [rate, minDuration, duration, performersNum, expectedAmount, minSum])
 
 
     return (
@@ -118,7 +150,7 @@ const Preview = () => {
                     <span>Ставка заказчику и исполнителю</span>
                     <div className={`${s.item} ${s.item_name}`}>
                         <Overlay active={(rate == '' || rateWorker == '')} />
-                        {rateWorker !== '' && rate !== '' && <p>{addSpaceNumber(rate)} / {addSpaceNumber(rateWorker)}</p>}
+                        {rateWorker !== '' && rate !== '' && <p>{addSpaceNumber(rate)} / {addSpaceNumber(rateWorker)} <span>({unit !== unitWorker ? `${unitName}/${unitWorkerName}` : `${unitName}`})</span></p>}
                     </div>
                 </div>
 
@@ -137,9 +169,10 @@ const Preview = () => {
             <div className={s.total}>
                 <p>Итого</p>
                 <div className={`${s.item} ${s.item_total}`}>
-                    {totalMin < total && <h2 className={s.title}>{addSpaceNumber(totalMin)} – {addSpaceNumber(total)} руб.</h2>}
+                    {totalMin < total && totalMin && <h2 className={s.title}>{addSpaceNumber(totalMin)} – {addSpaceNumber(total)} руб.</h2>}
                     {totalMin >= total && <h2 className={s.title}>{addSpaceNumber(totalMin)} руб.</h2>}
-                    <Overlay active={total == 0} />
+                    {!totalMin && total && <h2 className={s.title}>{addSpaceNumber(total)} руб.</h2>}
+                    <Overlay active={!total && !totalMin} />
                 </div>
 
             </div>
