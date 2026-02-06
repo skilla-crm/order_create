@@ -108,6 +108,8 @@
         text-wrap: nowrap;
         overflow: hidden;
     }
+
+   
     }
 
     &_date {
@@ -124,6 +126,10 @@
             overflow: hidden;
             text-wrap: nowrap;
             text-overflow: ellipsis;
+        }
+
+        span {
+            margin-left: 4px;
         }
     }
 

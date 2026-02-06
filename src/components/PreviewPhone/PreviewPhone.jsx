@@ -8,6 +8,7 @@ import { ReactComponent as Clock } from '../../images/icons/phone/clock.svg';
 import { ReactComponent as PartnerAvatar } from '../../images/icons/phone/partnerAvatar.svg';
 import ButtonImage from '../../images/icons/phone/Button.png';
 //selectors
+import { selectorParametrs } from '../../store/reducer/Parametrs/selector';
 import { selectorDetails } from '../../store/reducer/Details/selector';
 import { selectorPerformers } from '../../store/reducer/Performers/selector';
 import { selectorRates } from '../../store/reducer/Rates/selector';
@@ -24,16 +25,39 @@ import { addSpaceNumber } from '../../utils/addSpaceNumber';
 import { adressStringUtility4, adressStringUtility5 } from '../../utils/AdressUtility';
 
 const PreviewPhone = ({ activeType }) => {
+    const { unitList } = useSelector(selectorParametrs);
     const { partnerships, skilla_partnerships, requirements, city } = useContext(ParametrsContext);
     const { customer, payType } = useSelector(selectorCustomer);
     const { address, noAddress } = useSelector(selectorAddress);
     const { tags, commentSupervisor, duration } = useSelector(selectorDetails);
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
-    const { rateWorker } = useSelector(selectorRates);
+    const { rateWorker, unitWorker, expectedAmountWorker, minSumWorker } = useSelector(selectorRates);
     const { partnershipId } = useSelector(selectorManagers);
     const [anim, setAnim] = useState(false);
+    const [total, setTotal] = useState(0);
     const modalRef = useRef();
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const unitWorkerName = unitList?.find(el => el.id == unitWorker)?.name?.toLowerCase();
+    console.log(total)
+
+    useEffect(() => {
+        if (unitWorker === 1) {
+            setTotal(rateWorker * duration)
+            return
+        }
+
+        if (unitWorker != 1 && !expectedAmountWorker && !minSumWorker) {
+            setTotal(null)
+            return
+        }
+
+        if (unitWorker != 1) {
+            const expectedSum = rateWorker * expectedAmountWorker
+            expectedAmountWorker ? setTotal(expectedSum) : setTotal(minSumWorker)
+            return
+        }
+
+    }, [unitWorker, rateWorker, duration, performersNum, expectedAmountWorker, minSumWorker])
 
     useEffect(() => {
         setTimeout(() => {
@@ -88,9 +112,11 @@ const PreviewPhone = ({ activeType }) => {
                             <div className={s.rate}>
                                 <div className={`${s.item} ${s.item_rate} ${rateWorker == '' && s.item_rate3}`}>
                                     <Overlay active={rateWorker == ''} />
-                                    {rateWorker !== '' && <p>{addSpaceNumber(rateWorker * duration)}</p>}
+                                    {rateWorker !== '' && !total && !minSumWorker && <p>не указано</p>}
+                                    {rateWorker !== '' && (minSumWorker <= total || !minSumWorker) && total && <p>{addSpaceNumber(total)} ₽</p>}
+                                    {rateWorker !== '' && minSumWorker > total && <p>{addSpaceNumber(minSumWorker)} ₽</p>}
+                                    {rateWorker !== '' && minSumWorker && !total && <p>{addSpaceNumber(minSumWorker)} ₽</p>}
                                 </div>
-                                <p>₽</p>
                             </div>
 
                             <div className={s.rate_2}>
@@ -98,7 +124,7 @@ const PreviewPhone = ({ activeType }) => {
                                     <Overlay active={rateWorker == ''} />
                                     {rateWorker !== '' && <p>{addSpaceNumber(rateWorker)}</p>}
                                 </div>
-                                <p>₽/час</p>
+                                <p>₽/{unitWorkerName}</p>
                             </div>
 
                         </div>

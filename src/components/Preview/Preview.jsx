@@ -48,8 +48,6 @@ const Preview = () => {
     const unitWorkerName = unitList?.find(el => el.id == unitWorker)?.name?.toLowerCase()
     const dispatch = useDispatch();
 
-    console.log(!total, !totalMin)
-
     useEffect(() => {
         if (unit === 1) {
             setTotal(rate * duration * performersNum)
@@ -150,7 +148,7 @@ const Preview = () => {
                     <span>Ставка заказчику и исполнителю</span>
                     <div className={`${s.item} ${s.item_name}`}>
                         <Overlay active={(rate == '' || rateWorker == '')} />
-                        {rateWorker !== '' && rate !== '' && <p>{addSpaceNumber(rate)} / {addSpaceNumber(rateWorker)} <span>({unit !== unitWorker ? `${unitName}/${unitWorkerName}` : `${unitName}`})</span></p>}
+                        {rateWorker !== '' && rate !== '' && <p>{addSpaceNumber(rate)} / {addSpaceNumber(rateWorker)} <span>{unit !== unitWorker ? `${unitName}/${unitWorkerName}` : `${unitName}`}</span></p>}
                     </div>
                 </div>
 

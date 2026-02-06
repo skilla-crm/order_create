@@ -18,12 +18,35 @@ import Overlay from '../Preview/Overlay';
 import { addSpaceNumber } from '../../utils/addSpaceNumber';
 
 const PreviewApp = () => {
+
     const { types } = useContext(ParametrsContext)
     const { service, tags, commentSupervisor, notes, minDuration, duration } = useSelector(selectorDetails);
     const { performersNum, date, time, timerDisabled } = useSelector(selectorPerformers);
-    const { rate, rateWorker } = useSelector(selectorRates);
+    const { rateWorker, unitWorker, expectedAmountWorker, minSumWorker } = useSelector(selectorRates);
     const [activeType, setActiveType] = useState('');
-    const dispatch = useDispatch()
+    const [total, setTotal] = useState(0);
+    const dispatch = useDispatch();
+    console.log(total)
+
+
+    useEffect(() => {
+        if (unitWorker === 1) {
+            setTotal(rateWorker * duration)
+            return
+        }
+
+        if (unitWorker != 1 && !expectedAmountWorker && !minSumWorker) {
+            setTotal(null)
+            return
+        }
+
+        if (unitWorker != 1) {
+            const expectedSum = rateWorker * expectedAmountWorker
+            expectedAmountWorker ? setTotal(expectedSum) : setTotal(minSumWorker)
+            return
+        }
+
+    }, [unitWorker, rateWorker, minDuration, duration, performersNum, expectedAmountWorker, minSumWorker])
 
     useEffect(() => {
         const result = types?.find(el => el.id == service)
@@ -35,7 +58,7 @@ const PreviewApp = () => {
     }
 
     return (
-        
+
         <div className={s.app}>
             <div className={s.header}>
                 <h2 className={s.title}>В приложении</h2>
@@ -77,7 +100,10 @@ const PreviewApp = () => {
                         <div className={s.price}>
                             <div className={`${s.item} ${s.item_price}`}>
                                 <Overlay active={rateWorker == ''} />
-                                {rateWorker !== '' && <p>{addSpaceNumber(rateWorker * duration)} ₽</p>}
+                                {rateWorker !== '' && !total && !minSumWorker && <p>не указано</p>}
+                                {rateWorker !== '' && (minSumWorker <= total || !minSumWorker) && total && <p>{addSpaceNumber(total)} ₽</p>}
+                                {rateWorker !== '' && minSumWorker > total && <p>{addSpaceNumber(minSumWorker)} ₽</p>}
+                                {rateWorker !== '' && minSumWorker && !total && <p>{addSpaceNumber(minSumWorker)} ₽</p>}
                             </div>
                         </div>
                     </div>
@@ -92,9 +118,9 @@ const PreviewApp = () => {
                 </div>
             </div>
 
-           
+
         </div>
-      
+
     )
 }
 
