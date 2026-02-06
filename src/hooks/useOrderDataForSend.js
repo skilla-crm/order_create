@@ -124,7 +124,7 @@ export const useOrderDataForSend = () => {
         contract_tariff_id: contractTariffId,
         expected_amount: !sameTarification ? Number(expectedAmount) : null,
         /*    min_amount: !sameTarification && minAmount ? minAmount : null, */
-        min_sum: !sameTarification && minSum ? minSum : null,
+        min_sum: minSum ? minSum : null,
         expected_amount_worker: expectedAmountWorker ? Number(expectedAmountWorker) : null,
         /* min_amount_worker: minAmountWorker, */
         min_sum_worker: minSumWorker ? minSumWorker : null

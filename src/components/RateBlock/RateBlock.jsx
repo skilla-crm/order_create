@@ -53,6 +53,8 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
     const listRef = useRef();
     const buttonRef = useRef();
 
+   
+
 
     useEffect(() => {
         if (unit == 1 || unit == 7) {
@@ -192,13 +194,13 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                     errorText={'Укажи ставку'}
                 />
 
-                 <Field info={'Укажи предпологаемое кол-во для расчета предполагаемой стоимости заказа'}>
+                <Field info={'Укажи предпологаемое кол-во для расчета предполагаемой стоимости заказа'}>
 
-                 </Field>
+                </Field>
             </div>
 
             <Switch
-                text={'Минимальная сумма заказа'}
+                text={'Минимальная сумма за исполнителя'}
                 switchState={minValueState}
                 handleSwitch={() => {
                     setMinValueState(!minValueState)
@@ -227,7 +229,7 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                         width={180}
                         amount={minSum}
                         setAmount={(data) => {
-                                console.log(data)
+                            console.log(data)
                             dispatch(setMinSum(data))
 
                         }}

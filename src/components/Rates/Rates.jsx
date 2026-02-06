@@ -12,7 +12,7 @@ import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
 //slice
-import { setRate, setRateWorker, setSameTarification, setTariffId, setContractTariffId } from '../../store/reducer/Rates/slice';
+import { setRate, setRateWorker, setSameTarification, setTariffId, setContractTariffId, setMinSumWorker } from '../../store/reducer/Rates/slice';
 import { setMinDurqtion } from '../../store/reducer/Details/slice';
 import { setRateError, setRateWorkerError } from '../../store/reducer/Validation/slice';
 //utils
@@ -139,7 +139,10 @@ const Rates = () => {
             <Field text={'Единицы тарификации заказчику и исполнителю'}>
                 <SegmentButtons
                     style={2}
-                    callback={(val) => dispatch(setSameTarification(val))}
+                    callback={(val) => {
+                        dispatch(setSameTarification(val))
+                        dispatch(setMinSumWorker(''))
+                    }}
                     value={sameTarification}
                     controlRef={useRef()}
                     segments={[
