@@ -150,6 +150,7 @@
     transition: all 0.2s;
 
     &_vis {
+        overflow: visible;
         opacity: 1;
         margin-top: 0;
         height: 63px;

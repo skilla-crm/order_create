@@ -9,6 +9,7 @@ import { ReactComponent as IconRuble } from '../../images/icons/IconRuble.svg';
 import { selectorParametrs } from '../../store/reducer/Parametrs/selector';
 import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
+import { selectorPerformers } from '../../store/reducer/Performers/selector';
 //slice
 import {
     setRate,
@@ -48,12 +49,15 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
         minSum,
         minSumWorker } = useSelector(selectorRates);
     const { rateError, rateWorkerError } = useSelector(selectorValidation);
+    const { performersNum } = useSelector(selectorPerformers);
     const [minValueType, setMinValueType] = useState('Руб');
     const dispatch = useDispatch();
     const listRef = useRef();
     const buttonRef = useRef();
 
-   
+
+
+
 
 
     useEffect(() => {
@@ -183,10 +187,10 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                     sub={'Предполагаемое количество'}
                     width={180}
                     disabled={false}
-                    value={expectedAmount}
+                    value={expectedAmount ? expectedAmount * performersNum : ''}
                     setValue={(data) => {
-                        dispatch(setExpectedAmount(data))
-                        dispatch(setExpectedAmountWorker(data))
+                        dispatch(setExpectedAmount(Math.round(data / performersNum)))
+                        dispatch(setExpectedAmountWorker(Math.round(data / performersNum)))
                     }}
                     error={false}
                     errorEmpity={rateWorkerError}
@@ -194,7 +198,7 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                     errorText={'Укажи ставку'}
                 />
 
-                <Field info={'Укажи предпологаемое кол-во для расчета предполагаемой стоимости заказа'}>
+                <Field info={'Укажи предпологаемое кол-во для расчета стоимости заказа'}>
 
                 </Field>
             </div>

@@ -58,7 +58,7 @@ const Preview = () => {
         if (unit != 1) {
             const expectedSum = rate * expectedAmount * performersNum
             expectedAmount ? setTotal(expectedSum) : setTotal('')
-            setTotalMin(minSum)
+            setTotalMin(minSum * performersNum)
             dispatch(setOrderSum(expectedSum > minSum ? expectedSum : minSum))
             return
         }

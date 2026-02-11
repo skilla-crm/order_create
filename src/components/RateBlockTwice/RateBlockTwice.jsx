@@ -9,6 +9,7 @@ import { ReactComponent as IconRuble } from '../../images/icons/IconRuble.svg';
 import { selectorParametrs } from '../../store/reducer/Parametrs/selector';
 import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorValidation } from '../../store/reducer/Validation/selector';
+import { selectorPerformers } from '../../store/reducer/Performers/selector';
 //slice
 import {
     setRate,
@@ -48,19 +49,21 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
         minSum,
         minSumWorker
     } = useSelector(selectorRates);
+    const { performersNum } = useSelector(selectorPerformers);
     const { rateError, rateWorkerError } = useSelector(selectorValidation);
     const [minValueInput, setMinValueInput] = useState(false);
     const [minValueType, setMinValueType] = useState('Руб');
+
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if(minSum > 0) {
+        if (minSum > 0) {
             setMinValueState(true)
         }
     }, [minSum])
 
-       useEffect(() => {
-        if(minSumWorker > 0) {
+    useEffect(() => {
+        if (minSumWorker > 0) {
             setMinValueStateWorker(true)
         }
     }, [minSumWorker])
@@ -70,7 +73,7 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
             dispatch(setExpectedAmount(''))
         }
 
-         if (unitWorker == 1 || unitWorker == 7) {
+        if (unitWorker == 1 || unitWorker == 7) {
             dispatch(setExpectedAmountWorker(''))
         }
     }, [unit, unitWorker])
@@ -131,8 +134,8 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
                         sub={'Предполагаемое количество'}
                         width={180}
                         disabled={false}
-                        value={expectedAmount}
-                        setValue={(data) => dispatch(setExpectedAmount(data))}
+                        value={expectedAmount ? expectedAmount * performersNum : ''}
+                        setValue={(data) => dispatch(setExpectedAmount(data / performersNum))}
                         error={false}
                         errorEmpity={rateWorkerError}
                         maxValue={10}
@@ -182,7 +185,7 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
             </div>
 
             <div className={s.container}>
-                <h3>Исполнителю</h3>
+                <h3>Исполнителям</h3>
                 <Field text={'Единица тарификации'}>
                     <InputList
                         list={unitList}
@@ -218,8 +221,8 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
                         sub={'Предполагаемое количество'}
                         width={180}
                         disabled={false}
-                        value={expectedAmountWorker}
-                        setValue={(data) => dispatch(setExpectedAmountWorker(data))}
+                        value={expectedAmountWorker ? expectedAmountWorker * performersNum : ''}
+                        setValue={(data) => dispatch(setExpectedAmountWorker(data / performersNum))}
                         error={false}
                         errorEmpity={rateWorkerError}
                         maxValue={10}
