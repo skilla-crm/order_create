@@ -1,0 +1,38 @@
+name: Deploy Fronted Dashboard dev
+
+on:
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # Рабочая машина для выполнения
+    steps:
+    - name: Checkout code # 1. Получаем код
+      uses: actions/checkout@v3
+
+    - name: Setup Node.js # 2. Настраиваем Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22' # Укажите вашу версию
+
+    - name: Install dependencies # 3. Устанавливаем зависимости
+      run: npm install
+
+    - name: Build frontend # 4. Собираем фронтенд
+      run: npm run build_dev # Команда сборки вашего проекта (например, React, Vue, Angular)
+      env:
+        NODE_ENV: development
+        CI: false
+
+    - name: Deploy to server # 5. Деплой на сервер (пример с SSH)
+      uses: appleboy/scp-action@v0.1.7 # Популярный action для SCP
+      with:
+        host: ${{ secrets.SERVER_HOST_DEV }} # Хост сервера
+        username: ${{ secrets.SERVER_USERNAME_DEV }} # Имя пользователя
+        key: ${{ secrets.SSH_PRIVATE_KEY_DEV }} # Приватный ключ SSH
+        source: "build/static_order_create/" # Что копируем (обычно папка 'build' или 'dist')
+        target: "/var/www/fastuser/data/www/static.dev.skilla.ru/" # Куда копируем на сервере
+        strip_components: 1
+   
