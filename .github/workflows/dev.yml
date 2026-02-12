@@ -18,7 +18,7 @@ jobs:
         node-version: '22' # Укажите вашу версию
 
     - name: Install dependencies # 3. Устанавливаем зависимости
-      run: npm install
+      run: npm install --legacy-peer-deps
 
     - name: Build frontend # 4. Собираем фронтенд
       run: npm run build_dev # Команда сборки вашего проекта (например, React, Vue, Angular)
