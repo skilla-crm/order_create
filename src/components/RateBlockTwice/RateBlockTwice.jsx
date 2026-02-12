@@ -17,6 +17,8 @@ import {
     setUnit,
     setUnitWorker,
     setExpectedAmount,
+    setExpectedAmountAll,
+    setExpectedAmountWorkerAll,
     setExpectedAmountWorker,
     setMinAmount,
     setMinAmountWorker,
@@ -42,8 +44,8 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
         rateWorker,
         unit,
         unitWorker,
-        expectedAmount,
-        expectedAmountWorker,
+        expectedAmountAll,
+        expectedAmountWorkerAll,
         minAmount,
         minAmountWorker,
         minSum,
@@ -55,6 +57,14 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
     const [minValueType, setMinValueType] = useState('Руб');
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(setExpectedAmount((expectedAmountAll / performersNum).toFixed(2)))
+    }, [performersNum, expectedAmountAll])
+
+    useEffect(() => {
+        dispatch(setExpectedAmountWorker((expectedAmountWorkerAll / performersNum).toFixed(2)))
+    }, [performersNum, expectedAmountWorkerAll])
 
     useEffect(() => {
         if (minSum > 0) {
@@ -134,8 +144,8 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
                         sub={'Предполагаемое количество'}
                         width={180}
                         disabled={false}
-                        value={expectedAmount ? expectedAmount * performersNum : ''}
-                        setValue={(data) => dispatch(setExpectedAmount(data / performersNum))}
+                        value={expectedAmountAll}
+                        setValue={(data) => dispatch(setExpectedAmountAll(data))}
                         error={false}
                         errorEmpity={rateWorkerError}
                         maxValue={10}
@@ -143,15 +153,22 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
                     />
                 </div>
 
+                <div className={s.row}>
+                    <Switch
+                        text={'Минимальная сумма за исполнителя'}
+                        switchState={minValueState}
+                        handleSwitch={() => {
+                            setMinValueState(!minValueState)
+                            dispatch(setMinSum(''))
+                        }}
+                    />
 
-                <Switch
-                    text={'Минимальная сумма за исполнителя'}
-                    switchState={minValueState}
-                    handleSwitch={() => {
-                        setMinValueState(!minValueState)
-                        dispatch(setMinSum(''))
-                    }}
-                />
+                    <Field info={'Укажи минимальную стоимость исполнителя для заказчика'}>
+
+                    </Field>
+
+
+                </div>
 
                 <div className={classNames(s.min, minValueState && s.min_vis)}>
                     {minValueType !== 'Руб' && <InputNum
@@ -181,6 +198,8 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
                         setValue={setMinValueType}
                         tabList={['Шт', 'Руб']}
                     /> */}
+
+
                 </div>
             </div>
 
@@ -221,8 +240,8 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
                         sub={'Предполагаемое количество'}
                         width={180}
                         disabled={false}
-                        value={expectedAmountWorker ? expectedAmountWorker * performersNum : ''}
-                        setValue={(data) => dispatch(setExpectedAmountWorker(data / performersNum))}
+                        value={expectedAmountWorkerAll}
+                        setValue={(data) => dispatch(setExpectedAmountWorkerAll(data))}
                         error={false}
                         errorEmpity={rateWorkerError}
                         maxValue={10}
@@ -230,15 +249,20 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
                     />
                 </div>
 
+                <div className={s.row}>
+                    <Switch
+                        text={'Минимальная сумма исполнителю'}
+                        switchState={minValueStateWorker}
+                        handleSwitch={() => {
+                            setMinValueStateWorker(!minValueStateWorker)
+                            dispatch(setMinSumWorker(''))
+                        }}
+                    />
 
-                <Switch
-                    text={'Минимальная сумма исполнителю'}
-                    switchState={minValueStateWorker}
-                    handleSwitch={() => {
-                        setMinValueStateWorker(!minValueStateWorker)
-                        dispatch(setMinSumWorker(''))
-                    }}
-                />
+                    <Field info={'Укажи минимальную стоимость которую получит каждый исполнитель на заказе'}>
+
+                    </Field>
+                </div>
 
                 <div className={classNames(s.min, minValueStateWorker && s.min_vis)}>
                     {minValueType !== 'Руб' && <InputNum

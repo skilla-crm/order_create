@@ -101,9 +101,11 @@ const PreviewApp = () => {
                             <div className={`${s.item} ${s.item_price}`}>
                                 <Overlay active={rateWorker == ''} />
                                 {rateWorker !== '' && !total && !minSumWorker && <p>не указано</p>}
-                                {rateWorker !== '' && (minSumWorker <= total || !minSumWorker) && total && <p>{addSpaceNumber(total)} ₽</p>}
-                                {rateWorker !== '' && minSumWorker > total && <p>{addSpaceNumber(minSumWorker)} ₽</p>}
+                                {rateWorker !== '' && total && !minSumWorker ? <p>до {addSpaceNumber(total)} ₽</p> : ''}
                                 {rateWorker !== '' && minSumWorker && !total && <p>{addSpaceNumber(minSumWorker)} ₽</p>}
+                                {rateWorker !== '' && minSumWorker > total && <p>{addSpaceNumber(minSumWorker)} ₽</p>}
+                                {rateWorker !== '' && minSumWorker < total && minSumWorker && total && <p>{addSpaceNumber(minSumWorker)} - {addSpaceNumber(total)} ₽</p>}
+
                             </div>
                         </div>
                     </div>
