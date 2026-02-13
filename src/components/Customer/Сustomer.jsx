@@ -54,7 +54,7 @@ import Tooltip from '../General/Tooltip/Tooltip';
 import InputPartner from '../General/Input/InputPartner';
 import InputListContract from '../General/Input/InputListContract/InputListContract';
 import ButtonAdd from '../General/ButtonAdd/ButtonAdd';
-const role = document.getElementById(`root_order-create`).getAttribute('role');
+const role = document.getElementById(`root_order_create`).getAttribute('role');
 
 
 const Customer = ({ setAddCustomer, addCustomer, hiddenCustomer, setHiddenCustomer, loadParametrs, partnershipCompanies }) => {

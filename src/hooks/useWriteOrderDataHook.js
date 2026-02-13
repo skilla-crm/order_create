@@ -18,7 +18,7 @@ import { adressStringUtility } from '../utils/AdressUtility';
 export const useWriteOrderDataHook = () => {
 
 
-    const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
+    const pro = document.getElementById(`root_order_create`).getAttribute('ispro') == 1 ? true : false;
     const [data, setData] = useState({})
     const dispatch = useDispatch();
 

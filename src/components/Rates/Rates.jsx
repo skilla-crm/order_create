@@ -23,7 +23,7 @@ import Field from '../General/Field/Field';
 import SegmentButtons from '../General/SegmentButtons/SegmentButtons';
 import RateBlock from '../RateBlock/RateBlock';
 import RateBlockTwice from '../RateBlockTwice/RateBlockTwice';
-const role = document.getElementById(`root_order-create`).getAttribute('role');
+const role = document.getElementById(`root_order_create`).getAttribute('role');
 
 const Rate = ({ id, name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership, contractWork, width }) => {
     const { tariffId, contractTariffId } = useSelector(selectorRates);

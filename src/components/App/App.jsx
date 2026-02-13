@@ -64,8 +64,8 @@ import ErrorWindow from '../ErrorWindow/ErrorWindow';
 import PreviewPhone from '../PreviewPhone/PreviewPhone';
 import OrderSum from '../OrderSum/OrderSum';
 import Partnership from '../Partnership/Partnership';
-const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
-const role = document.getElementById(`root_order-create`).getAttribute('role');
+const pro = document.getElementById(`root_order_create`).getAttribute('ispro') == 1 ? true : false;
+const role = document.getElementById(`root_order_create`).getAttribute('role');
 const TEST = process.env.REACT_APP_TEST;
 
 const App = () => {

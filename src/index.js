@@ -6,7 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { store } from './store';
 import App from './components/App/App';
 
-const root = ReactDOM.createRoot(document.getElementById('root_order-create'));
+const root = ReactDOM.createRoot(document.getElementById('root_order_create'));
 root.render(
   <Provider store={store}>
     <BrowserRouter>

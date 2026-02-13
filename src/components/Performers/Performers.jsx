@@ -33,7 +33,7 @@ import { selectorManagers } from '../../store/reducer/Managers/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 //utils
 import { emailValidate } from '../../utils/EmailValidate';
-const role = document.getElementById(`root_order-create`).getAttribute('role');
+const role = document.getElementById(`root_order_create`).getAttribute('role');
 
 const Performers = () => {
     const [proCalendar, setProCalendar] = useState(false);

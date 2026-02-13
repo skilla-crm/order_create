@@ -22,7 +22,7 @@ import Header from '../General/Header/Header';
 import SegmentControl from '../General/SegmentControl/SegmentControl';
 import InputSelect from '../General/Input/InputSelect';
 import InputSelectPartner from '../General/Input/InputSelectPartner';
-const role = document.getElementById(`root_order-create`).getAttribute('role');
+const role = document.getElementById(`root_order_create`).getAttribute('role');
 
 
 const Manager = () => {
