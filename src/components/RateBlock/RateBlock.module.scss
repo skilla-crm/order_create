@@ -39,6 +39,7 @@
     }
 
     &_vis {
+        overflow: visible;
         margin-top: 6px;
         height: 16px;
         opacity: 1;
@@ -130,6 +131,7 @@
     transition: all 0.2s;
 
     &_vis {
+        overflow: visible;
         position: relative;
         z-index: 2;
         opacity: 1;

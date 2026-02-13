@@ -60,9 +60,14 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
 
     useEffect(() => {
         if (!sameTarification) {
-            dispatch(setExpectedAmountWorker((expectedAmountWorkerAll / performersNum).toFixed(2)))
+            if (unitWorker == 7) {
+                dispatch(setExpectedAmountWorker(1))
+                dispatch(setExpectedAmountWorkerAll(performersNum))
+            } else {
+                dispatch(setExpectedAmountWorker((expectedAmountWorkerAll / performersNum).toFixed(6)))
+            }
         }
-    }, [performersNum, expectedAmountWorkerAll, sameTarification])
+    }, [performersNum, expectedAmountWorkerAll, sameTarification, unitWorker])
 
     useEffect(() => {
         if (minSum > 0) {

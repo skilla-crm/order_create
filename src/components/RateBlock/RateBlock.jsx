@@ -18,6 +18,7 @@ import {
     setUnitWorker,
     setExpectedAmount,
     setExpectedAmountAll,
+    setExpectedAmountWorkerAll,
     setExpectedAmountWorker,
     setMinAmount,
     setMinAmountWorker,
@@ -36,13 +37,14 @@ import Tabs from '../General/Tabs/Tabs';
 import { SUB_CUSTOMER, SUB_WORKER, ratersChangeList } from '../../constants/rates';
 import classNames from 'classnames';
 
-const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRatio, warning, payType, minValueState, setMinValueState, minValueStateWorker, setMinValueStateWorker }) => {
+const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRatio, warning, payType, minValueState, setMinValueState, minValueStateWorker, setMinValueStateWorker, sameTarification }) => {
     const [ratioList, setRatioList] = useState(false);
     const { unitList } = useSelector(selectorParametrs);
     const {
         rate,
         rateWorker,
         unit,
+        unitWorker,
         expectedAmount,
         expectedAmountAll,
         expectedAmountWorker,
@@ -58,9 +60,18 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
     const buttonRef = useRef();
 
     useEffect(() => {
-        dispatch(setExpectedAmountWorker((expectedAmountAll / performersNum).toFixed(2)))
-        dispatch(setExpectedAmount((expectedAmountAll / performersNum).toFixed(2)))
-    }, [performersNum, expectedAmountAll])
+        if (unit == 7) {
+            dispatch(setExpectedAmountAll(performersNum))
+            dispatch(setExpectedAmount(1))
+            unitWorker == 7 && dispatch(setExpectedAmountWorkerAll(performersNum))
+            unitWorker == 7 && dispatch(setExpectedAmountWorker(1))
+
+        } else {
+            sameTarification && dispatch(setExpectedAmountWorker((expectedAmountAll / performersNum).toFixed(2)))
+            dispatch(setExpectedAmount((expectedAmountAll / performersNum).toFixed(2)))
+        }
+
+    }, [performersNum, expectedAmountAll, unit, sameTarification])
 
 
 
@@ -129,10 +140,13 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                     setValue={value => {
                         dispatch(setUnit(value))
                         dispatch(setUnitWorker(value))
+
                         if (value == 7) {
                             dispatch(setExpectedAmountAll(performersNum))
                         }
-                    }}
+
+                    }
+                    }
                     width={300}
                 />
             </Field>

@@ -52,6 +52,7 @@
     }
 
     &_vis {
+        overflow: visible;
         margin-top: 6px;
         height: 16px;
         opacity: 1;
@@ -141,6 +142,7 @@
     transition: all 0.2s;
 
     &_vis {
+        overflow: visible;
         opacity: 1;
         margin-top: 0;
         height: 42px;
@@ -160,6 +162,7 @@
     transition: all 0.2s;
 
     &_vis {
+        overflow: visible;
         opacity: 1;
         margin-top: 0;
         height: 63px;

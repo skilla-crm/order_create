@@ -11,8 +11,9 @@ import { ReactComponent as IconRate } from '../../images/icons/iconBackForward.s
 import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
+import { selectorParametrs } from '../../store/reducer/Parametrs/selector';
 //slice
-import { setRate, setRateWorker, setSameTarification, setTariffId, setContractTariffId, setMinSumWorker, setExpectedAmountWorker } from '../../store/reducer/Rates/slice';
+import { setRate, setRateWorker, setSameTarification, setTariffId, setContractTariffId, setMinSumWorker, setExpectedAmountWorker, setUnit, setUnitWorker } from '../../store/reducer/Rates/slice';
 import { setMinDurqtion } from '../../store/reducer/Details/slice';
 import { setRateError, setRateWorkerError } from '../../store/reducer/Validation/slice';
 //utils
@@ -25,8 +26,9 @@ import RateBlock from '../RateBlock/RateBlock';
 import RateBlockTwice from '../RateBlockTwice/RateBlockTwice';
 const role = document.getElementById(`root_order-create`).getAttribute('role');
 
-const Rate = ({ id, name, customerBit, workerBit, minTime, handleResetRatio, fromPartnership, contractWork, width }) => {
+const Rate = ({ id, name, customerBit, workerBit, min, handleResetRatio, fromPartnership, contractWork, unit, okei }) => {
     const { tariffId, contractTariffId } = useSelector(selectorRates);
+    const { unitList } = useSelector(selectorParametrs);
     const dispatch = useDispatch();
     const [anim, setAnim] = useState(false);
 
@@ -47,8 +49,18 @@ const Rate = ({ id, name, customerBit, workerBit, minTime, handleResetRatio, fro
 
             (fromPartnership == 0 || !fromPartnership) && dispatch(setRate(parseFloat(customerBit)))
             dispatch(setRateWorker(parseFloat(workerBit)))
-            minTime && Number(minTime) > 0 && dispatch(setMinDurqtion(Number(minTime)))
+            min && Number(min) > 0 && (unit?.toLowerCase() === 'час' || unit?.toLowerCase() === 'ч' || unit?.toLowerCase() === 'ед') && dispatch(setMinDurqtion(Number(min)))
             handleResetRatio()
+
+            const stateUnit = unitList?.find(el => el.name?.toLowerCase() === unit?.toLowerCase())
+
+            if (stateUnit) {
+                dispatch(setUnit(stateUnit.id))
+                dispatch(setUnitWorker(stateUnit.id))
+            }
+
+
+
         }
 
     }
@@ -59,19 +71,28 @@ const Rate = ({ id, name, customerBit, workerBit, minTime, handleResetRatio, fro
             onMouseLeave={() => setAnim(false)}
             className={classNames(s.rate, (tariffId == id || contractTariffId == id) && id && s.rate_active)}
         >
-            <div className={`${s.arrow} ${anim && s.arrow_anim}`}>
-                <IconRate />
-            </div>
 
-            <div className={s.name}>
+
+            <div style={{ width: "100%" }} className={s.name}>
+                <div className={`${s.arrow} ${anim && s.arrow_anim}`}>
+                    <IconRate />
+                </div>
                 <p>{name}</p>
             </div>
 
-            <div className={s.bit}>
+            <div style={{ width: "100px" }} className={s.unit}>
+                <p>{unit}</p>
+            </div>
+
+            <div style={{ width: "120px" }} className={s.min}>
+                <p>{min}</p>
+            </div>
+
+            <div style={{ width: "120px" }} className={s.unit}>
                 <p>{addSpaceNumber2(customerBit)}</p>
             </div>
 
-            <div className={s.bit}>
+            <div style={{ width: "120px" }} className={s.bit}>
                 <p>{addSpaceNumber2(workerBit)}</p>
             </div>
 
@@ -91,7 +112,6 @@ const Rates = () => {
     const [minValueStateWorker, setMinValueStateWorker] = useState(false);
     const [blockHeight, setBlockHeight] = useState('');
     const customerWorks = contract?.works ? contract?.works : customer?.works;
-    console.log(blockHeight, unit)
 
     useEffect(() => {
         let baseHeight = 277
@@ -107,7 +127,7 @@ const Rates = () => {
 
         }
 
-        if(warning) {
+        if (warning) {
             baseHeight += 18
         }
 
@@ -202,6 +222,7 @@ const Rates = () => {
                         setMinValueState={setMinValueState}
                         minValueStateWorker={minValueStateWorker}
                         setMinValueStateWorker={setMinValueStateWorker}
+                        sameTarification={sameTarification}
                     />
                 </div>
 
@@ -225,37 +246,60 @@ const Rates = () => {
 
 
             <div>
-                <span className={s.sub}>
-                    {SUB_PRICE}
-                </span>
-                {(payType !== 1 || customerWorks?.length == 0 || !customerWorks) && <ul className={`${s.block_list} ${s.block_list_2}`}>
-                    {(role === 'mainoperator' ? ratesPartnership : rates)?.map((el, i) => {
-                        return <Rate
-                            key={el.id}
-                            customerBit={el.client_bit}
-                            workerBit={el.worker_bit}
-                            name={`${el.label ? el.label : `Тариф ${i + 1}`}`}
-                            handleResetRatio={handleResetRatio}
-                            fromPartnership={fromPartnership}
-                        />
-                    })}
-                </ul>
+
+                <p style={{ fontWeight: '500px' }}>{SUB_PRICE}</p>
+
+
+                {(payType !== 1 || customerWorks?.length == 0 || !customerWorks) && <>
+                    <div className={s.subs}>
+                        <span style={{ width: "100%" }}>Наименование</span>
+                        {/*   <span style={{ width: "300px" }}></span> */}
+
+                        <span style={{ width: "120px" }}>Клиенту</span>
+                        <span style={{ width: "120px" }}>Исполнителям</span>
+                    </div>
+                    <ul className={`${s.block_list} ${s.block_list_2}`}>
+                        {(role === 'mainoperator' ? ratesPartnership : rates)?.map((el, i) => {
+                            return <Rate
+                                key={el.id}
+                                customerBit={el.client_bit}
+                                workerBit={el.worker_bit}
+                                name={`${el.label ? el.label : `Тариф ${i + 1}`}`}
+                                handleResetRatio={handleResetRatio}
+                                fromPartnership={fromPartnership}
+                            />
+                        })}
+                    </ul>
+                </>
                 }
 
-                {(payType == 1 && customerWorks?.length > 0) && < ul className={`${s.block_list}`}>
-                    {customerWorks?.map((el, i) => {
-                        return <Rate
-                            contractWork={contract?.works}
-                            key={el.id}
-                            id={el.id}
-                            fromPartnership={fromPartnership}
-                            customerBit={el.price?.replace(',', '.')}
-                            workerBit={el.bit?.replace(',', '.')}
-                            name={el.work}
-                            minTime={el?.min_time}
-                            handleResetRatio={handleResetRatio} />
-                    })}
-                </ul>
+                {(payType == 1 && customerWorks?.length > 0) && <>
+                    <div className={s.subs}>
+                        <span style={{ width: "100%" }}>Наименование</span>
+                        {/*   <span style={{ width: "300px" }}></span> */}
+                        <span style={{ width: "100px" }}>Ед. изм.</span>
+                        <span style={{ width: "120px" }}>Мин. единиц</span>
+                        <span style={{ width: "120px" }}>Клиенту</span>
+                        <span style={{ width: "120px" }}>Исполнителям</span>
+                    </div>
+
+                    < ul className={`${s.block_list}`}>
+                        {customerWorks?.map((el, i) => {
+                            return <Rate
+                                contractWork={contract?.works}
+                                key={el.id}
+                                id={el.id}
+                                fromPartnership={fromPartnership}
+                                customerBit={el.price?.replace(',', '.')}
+                                workerBit={el.bit?.replace(',', '.')}
+                                unit={el.unit}
+                                okei={el.okei}
+                                name={el.work}
+                                min={el?.min_time}
+                                handleResetRatio={handleResetRatio} />
+                        })}
+                    </ul>
+                </>
                 }
             </div>
 
