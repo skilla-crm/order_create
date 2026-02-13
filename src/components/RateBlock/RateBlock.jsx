@@ -17,6 +17,7 @@ import {
     setUnit,
     setUnitWorker,
     setExpectedAmount,
+    setExpectedAmountAll,
     setExpectedAmountWorker,
     setMinAmount,
     setMinAmountWorker,
@@ -35,7 +36,7 @@ import Tabs from '../General/Tabs/Tabs';
 import { SUB_CUSTOMER, SUB_WORKER, ratersChangeList } from '../../constants/rates';
 import classNames from 'classnames';
 
-const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRatio, warning, payType, minValueState, setMinValueState }) => {
+const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRatio, warning, payType, minValueState, setMinValueState, minValueStateWorker, setMinValueStateWorker }) => {
     const [ratioList, setRatioList] = useState(false);
     const { unitList } = useSelector(selectorParametrs);
     const {
@@ -43,6 +44,7 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
         rateWorker,
         unit,
         expectedAmount,
+        expectedAmountAll,
         expectedAmountWorker,
         minAmount,
         minAmountWorker,
@@ -55,7 +57,10 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
     const listRef = useRef();
     const buttonRef = useRef();
 
-
+    useEffect(() => {
+        dispatch(setExpectedAmountWorker((expectedAmountAll / performersNum).toFixed(2)))
+        dispatch(setExpectedAmount((expectedAmountAll / performersNum).toFixed(2)))
+    }, [performersNum, expectedAmountAll])
 
 
 
@@ -125,8 +130,7 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                         dispatch(setUnit(value))
                         dispatch(setUnitWorker(value))
                         if (value == 7) {
-                            dispatch(setExpectedAmountWorker(1))
-                            dispatch(setExpectedAmount(1))
+                            dispatch(setExpectedAmountAll(performersNum))
                         }
                     }}
                     width={300}
@@ -191,10 +195,9 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                     sub={'Предполагаемое количество'}
                     width={180}
                     disabled={false}
-                    value={expectedAmount ? expectedAmount * performersNum : ''}
+                    value={expectedAmountAll}
                     setValue={(data) => {
-                        dispatch(setExpectedAmount(Math.round(data / performersNum)))
-                        dispatch(setExpectedAmountWorker(Math.round(data / performersNum)))
+                        dispatch(setExpectedAmountAll(data))
                     }}
                     error={false}
                     errorEmpity={rateWorkerError}
@@ -207,17 +210,27 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                 </Field>
             </div>
 
-            <Switch
-                text={'Минимальная сумма за исполнителя'}
-                switchState={minValueState}
-                handleSwitch={() => {
-                    setMinValueState(!minValueState)
-                    dispatch(setMinAmount(''))
-                    dispatch(setMinAmountWorker(''))
-                    dispatch(setMinSum(''))
+            <div className={s.row}>
+                <Switch
+                    text={'Минимальная сумма за исполнителя'}
+                    switchState={minValueState}
+                    handleSwitch={() => {
+                        setMinValueState(!minValueState)
+                        /* dispatch(setMinAmount(''))
+                        dispatch(setMinAmountWorker('')) */
+                        dispatch(setMinSum(''))
 
-                }}
-            />
+                    }}
+                />
+
+                <Field info={'Укажи минимальную стоимость исполнителя для заказчика'}>
+
+                </Field>
+            </div>
+
+
+
+
 
             <div className={classNames(s.min, minValueState && s.min_vis)}>
                 {minValueType !== 'Руб' && <InputNum
@@ -239,6 +252,59 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                         setAmount={(data) => {
                             console.log(data)
                             dispatch(setMinSum(data))
+
+                        }}
+                        Icon={IconRuble}
+                    />
+                }
+
+                {/*  <Tabs
+                    value={minValueType}
+                    setValue={setMinValueType}
+                    tabList={['Шт', 'Руб']}
+                /> */}
+
+
+            </div>
+
+            <div className={s.row}>
+                <Switch
+                    text={'Минимальная сумма исполнителю'}
+                    switchState={minValueStateWorker}
+                    handleSwitch={() => {
+                        setMinValueStateWorker(!minValueStateWorker)
+                        /*   dispatch(setMinAmount(''))
+                          dispatch(setMinAmountWorker('')) */
+                        dispatch(setMinSumWorker(''))
+
+                    }}
+                />
+
+                <Field info={'Укажи минимальную стоимость которую получит каждый исполнитель на заказе'}>
+
+                </Field>
+            </div>
+
+            <div className={classNames(s.min, minValueStateWorker && s.min_vis)}>
+                {minValueType !== 'Руб' && <InputNum
+                    sub={'Минимальное значение'}
+                    width={180}
+                    disabled={false}
+                    value={minAmount}
+                    setValue={(data) => {
+                        dispatch(setMinAmount(data))
+                    }}
+                    error={false}
+                    maxValue={10}
+                    errorText={'Укажи ставку'}
+                />}
+                {minValueType === 'Руб' &&
+                    <InputFinancial
+                        width={180}
+                        amount={minSumWorker}
+                        setAmount={(data) => {
+                            console.log(data)
+                            dispatch(setMinSumWorker(data))
 
                         }}
                         Icon={IconRuble}

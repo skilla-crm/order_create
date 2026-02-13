@@ -12,7 +12,7 @@ import { selectorRates } from '../../store/reducer/Rates/selector';
 import { selectorCustomer } from '../../store/reducer/Customer/selector';
 import { selectorManagers } from '../../store/reducer/Managers/selector';
 //slice
-import { setRate, setRateWorker, setSameTarification, setTariffId, setContractTariffId, setMinSumWorker } from '../../store/reducer/Rates/slice';
+import { setRate, setRateWorker, setSameTarification, setTariffId, setContractTariffId, setMinSumWorker, setExpectedAmountWorker } from '../../store/reducer/Rates/slice';
 import { setMinDurqtion } from '../../store/reducer/Details/slice';
 import { setRateError, setRateWorkerError } from '../../store/reducer/Validation/slice';
 //utils
@@ -84,13 +84,39 @@ const Rates = () => {
     const [activeRatio, setActiveRatio] = useState(0)
     const [warning, setWarning] = useState(false);
     const dispatch = useDispatch();
-    const { rate, rateWorker, sameTarification, ratesPartnership, unit, unitWorker, tariffId, contractTariffId } = useSelector(selectorRates)
+    const { rate, rateWorker, sameTarification, ratesPartnership, unit, unitWorker, tariffId, contractTariffId, expectedAmount } = useSelector(selectorRates)
     const { payType, customer, contract } = useSelector(selectorCustomer)
     const { fromPartnership } = useSelector(selectorManagers);
     const [minValueState, setMinValueState] = useState(false);
     const [minValueStateWorker, setMinValueStateWorker] = useState(false);
+    const [blockHeight, setBlockHeight] = useState('');
     const customerWorks = contract?.works ? contract?.works : customer?.works;
+    console.log(blockHeight, unit)
 
+    useEffect(() => {
+        let baseHeight = 277
+
+
+        if (!sameTarification && (minValueStateWorker || minValueState)) {
+            baseHeight += 42
+
+        }
+
+        if (!sameTarification && (unit != 1 && unit != 7) || (unitWorker != 1 && unitWorker != 7)) {
+            baseHeight += 63
+
+        }
+
+        if(warning) {
+            baseHeight += 18
+        }
+
+        setBlockHeight(sameTarification ? '' : baseHeight)
+
+
+
+        /*  (sameTarification ? 225 : 277) + (((minValueState && !sameTarification) || minValueState) ? 42 : 0) + ((((unit == 1 || unit == 7) && sameTarification) || ((unitWorker == 1 || unitWorker == 7) && (unit == 1 || unit == 7) && !sameTarification)) ? 0 : 63) + (warning ? 18 : 0) */
+    }, [sameTarification, minValueState, minValueStateWorker, unit, unitWorker, warning]);
 
     useEffect(() => {
         if (customerWorks?.find(el => el.id != tariffId & el.id != contractTariffId) || !customerWorks) {
@@ -141,7 +167,10 @@ const Rates = () => {
                     style={2}
                     callback={(val) => {
                         dispatch(setSameTarification(val))
-                        dispatch(setMinSumWorker(''))
+
+                        if (val) {
+                            dispatch(setExpectedAmountWorker(expectedAmount))
+                        }
                     }}
                     value={sameTarification}
                     controlRef={useRef()}
@@ -160,7 +189,7 @@ const Rates = () => {
                 />
             </Field>
 
-            <div style={{ height: (sameTarification ? 225 : 277) + (((minValueState && !sameTarification) || minValueState) ? 42 : 0) + ((((unit == 1 || unit == 7) && sameTarification) || ((unitWorker == 1 || unitWorker == 7) && (unit == 1 || unit == 7) && !sameTarification)) ? 0 : 63) + (warning ? 18 : 0) + 'px' }} className={s.container}>
+            <div style={{ height: blockHeight ? blockHeight + 'px' : 'fit-content' }} className={s.container}>
                 <div className={classNames(s.tarif, sameTarification && s.tarif_vis)}>
                     <RateBlock
                         fromPartnership={fromPartnership}
@@ -171,6 +200,8 @@ const Rates = () => {
                         payType={payType}
                         minValueState={minValueState}
                         setMinValueState={setMinValueState}
+                        minValueStateWorker={minValueStateWorker}
+                        setMinValueStateWorker={setMinValueStateWorker}
                     />
                 </div>
 
@@ -186,6 +217,7 @@ const Rates = () => {
                         setMinValueState={setMinValueState}
                         minValueStateWorker={minValueStateWorker}
                         setMinValueStateWorker={setMinValueStateWorker}
+                        sameTarification={sameTarification}
                     />
                 </div>
             </div>

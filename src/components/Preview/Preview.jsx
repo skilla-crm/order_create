@@ -167,7 +167,7 @@ const Preview = () => {
             <div className={s.total}>
                 <p>Итого</p>
                 <div className={`${s.item} ${s.item_total}`}>
-                    {totalMin < total && totalMin && <h2 className={s.title}>{addSpaceNumber(totalMin)} – {addSpaceNumber(total)} руб.</h2>}
+                    {totalMin < total && totalMin && total ? <h2 className={s.title}>{addSpaceNumber(totalMin)} – {addSpaceNumber(total)} руб.</h2> : ''}
                     {totalMin >= total && <h2 className={s.title}>{addSpaceNumber(totalMin)} руб.</h2>}
                     {!totalMin && total && <h2 className={s.title}>{addSpaceNumber(total)} руб.</h2>}
                     <Overlay active={!total && !totalMin} />

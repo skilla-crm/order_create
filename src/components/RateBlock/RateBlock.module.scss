@@ -124,7 +124,7 @@
     flex-shrink: 0;
     height: 0;
     overflow: hidden;
-    margin-top: -12px;
+    margin-top: -20px;
     opacity: 0;
     padding: 1px;
     transition: all 0.2s;
@@ -155,4 +155,9 @@
         margin-top: 0;
         height: 63px;
     }
+}
+
+.row {
+    display: flex;
+    align-items: center;
 }

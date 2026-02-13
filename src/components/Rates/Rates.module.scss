@@ -134,12 +134,15 @@
     transition: all 0.2s;
     height: max-content;
     flex-shrink: 0;
+    pointer-events: none;
     /*    max-height: 144px; */
 
     &_twice {
         position: absolute;
         left: 0;
         top: 0;
+        visibility: hidden;
+        pointer-events: none;
     }
 
 
@@ -147,5 +150,6 @@
         opacity: 1;
         /* max-height: 230px; */
         visibility: visible;
+        pointer-events: auto;
     }
 }

@@ -13,6 +13,8 @@ const initialState = {
     contractTariffId: '',
     expectedAmount: '',
     expectedAmountWorker: '',
+    expectedAmountAll: '',
+    expectedAmountWorkerAll: '',
     minAmount: '',
     minAmountWorker: '',
     minSum: '',
@@ -69,6 +71,14 @@ const RatesSlice = createSlice({
             state.expectedAmountWorker = action.payload;
         },
 
+        setExpectedAmountAll(state, action) {
+            state.expectedAmountAll = action.payload;
+        },
+
+        setExpectedAmountWorkerAll(state, action) {
+            state.expectedAmountWorkerAll = action.payload;
+        },
+
         setMinAmount(state, action) {
             state.minAmount = action.payload;
         },
@@ -100,6 +110,9 @@ export const {
 
     setExpectedAmount,
     setExpectedAmountWorker,
+    setExpectedAmountAll,
+    setExpectedAmountWorkerAll,
+
     setMinAmount,
     setMinAmountWorker,
     setMinSum,

@@ -7,7 +7,7 @@ import { setService, setRequirements, setMinDurqtion, setDuration, setCommentSup
 import { setAddress, setDopAdresses, setMetro, deleteMetro, setNoAddress, setAddressForReturn } from '../store/reducer/Address/slice';
 import {
     setRate, setRateWorker, setOrderSum, setUnit, setUnitWorker, setSameTarification, setContractTariffId, setTariffId,
-    setExpectedAmount, setExpectedAmountWorker, setMinSum, setMinSumWorker
+    setExpectedAmount, setExpectedAmountWorker, setMinSum, setMinSumWorker, setExpectedAmountAll, setExpectedAmountWorkerAll
 } from '../store/reducer/Rates/slice';
 import { setManagerId, setPartnershipId, setFromPartnership, setAcceptStatus, setEmailPasport, setPartnerRate, setFromLk } from '../store/reducer/Managers/slice';
 import { setPartnership } from "../store/reducer/Partnership/slice";
@@ -136,8 +136,8 @@ export const useWriteOrderDataHook = () => {
             dispatch(setUnit(data.work_unit_id ? data.work_unit_id : 1))
             dispatch(setUnitWorker(data.work_unit_id_worker ? data.work_unit_id_worker : 1))
             dispatch(setSameTarification(data.work_unit_id === data.work_unit_id_worker ? true : false))
-            dispatch(setExpectedAmount(data?.expected_amount ? data?.expected_amount : ''))
-            dispatch(setExpectedAmountWorker(data?.expected_amount_worker ? data?.expected_amount_worker : ''))
+            dispatch(setExpectedAmountAll(data?.expected_amount ? data?.expected_amount * data.worker_count : ''))
+            dispatch(setExpectedAmountWorkerAll(data?.expected_amount_worker ? data?.expected_amount_worker * data.worker_count : ''))
             dispatch(setMinSum(data?.min_sum ? data?.min_sum : ''))
             dispatch(setMinSumWorker(data?.min_sum_worker ? data?.min_sum_worker : ''))
             data?.contract_tariff?.id ? dispatch(setContractTariffId(data?.contract_tariff?.id)) : dispatch(setTariffId(data?.tariff?.id))

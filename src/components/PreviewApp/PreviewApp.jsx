@@ -26,7 +26,7 @@ const PreviewApp = () => {
     const [activeType, setActiveType] = useState('');
     const [total, setTotal] = useState(0);
     const dispatch = useDispatch();
-    console.log(total)
+    console.log(total, expectedAmountWorker)
 
 
     useEffect(() => {
