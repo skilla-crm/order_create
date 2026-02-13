@@ -61,7 +61,7 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
 
 
     useEffect(() => {
-        if (unit == 1 || unit == 7) {
+        if (unit == 1) {
             dispatch(setExpectedAmountWorker(''))
         }
     }, [unit])
@@ -124,6 +124,10 @@ const RateBlock = ({ fromPartnership, activeRatio, setActiveRatio, handleResetRa
                     setValue={value => {
                         dispatch(setUnit(value))
                         dispatch(setUnitWorker(value))
+                        if (value == 7) {
+                            dispatch(setExpectedAmountWorker(1))
+                            dispatch(setExpectedAmount(1))
+                        }
                     }}
                     width={300}
                 />

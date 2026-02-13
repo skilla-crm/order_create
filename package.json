@@ -80,8 +80,8 @@
     "ymaps": "^0.2.1"
   },
   "scripts": {
-    "start": "node scripts/start.js",
-    "prod": "env-cmd -f .env.production node scripts/start.js",
+    "dev": "node scripts/start.js",
+    "start": "env-cmd -f .env.production node scripts/start.js",
     "build": "node scripts/build.js",
     "build_dev": "env-cmd -f .env.development node scripts/build.js",
     "test": "node scripts/test.js"

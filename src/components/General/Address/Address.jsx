@@ -50,8 +50,10 @@ const Address = ({ sub, address, setAddress, user, defaultCordinate, first, hand
     const handleSelectAddress = (el) => {
         const data = el.address;
         const { city, street, house, apartment } = addressUtility(data.component);
+        console.log(city, street, house, apartment)
         getAddressExact(`${city} ${street} ${house}`)
             .then(res => {
+               
                 const data = res.data.response?.GeoObjectCollection?.featureMember?.[0]?.GeoObject?.Point;
                 const cordinate = data ? data.pos.split(' ') : null
                 setAddress({

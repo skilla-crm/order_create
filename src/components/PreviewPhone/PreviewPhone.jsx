@@ -113,16 +113,16 @@ const PreviewPhone = ({ activeType }) => {
                                 <div className={`${s.item} ${s.item_rate} ${rateWorker == '' && s.item_rate3}`}>
                                     <Overlay active={rateWorker == ''} />
                                     {rateWorker !== '' && !total && !minSumWorker && <p>не указано</p>}
-                                    {rateWorker !== '' && (minSumWorker <= total || !minSumWorker) && total && <p>{addSpaceNumber(total)} ₽</p>}
-                                    {rateWorker !== '' && minSumWorker > total && <p>{addSpaceNumber(minSumWorker)} ₽</p>}
-                                    {rateWorker !== '' && minSumWorker && !total && <p>{addSpaceNumber(minSumWorker)} ₽</p>}
+                                    {rateWorker !== '' && (minSumWorker <= total || !minSumWorker) && total ? <p>{addSpaceNumber(total)} ₽</p> : ''}
+                                    {rateWorker !== '' && minSumWorker > total ? <p>{addSpaceNumber(minSumWorker)} ₽</p> : ''}
+                                    {rateWorker !== '' && minSumWorker && !total ? <p>{addSpaceNumber(minSumWorker)} ₽</p> : ''}
                                 </div>
                             </div>
 
                             <div className={s.rate_2}>
                                 <div className={`${s.item} ${s.item_rate2} ${rateWorker == '' && s.item_rate3}`}>
                                     <Overlay active={rateWorker == ''} />
-                                    {rateWorker !== '' && <p>{addSpaceNumber(rateWorker)}</p>}
+                                    {rateWorker !== '' ? <p>{addSpaceNumber(rateWorker)}</p> : ''}
                                 </div>
                                 <p>₽/{unitWorkerName}</p>
                             </div>
