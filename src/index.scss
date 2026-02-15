@@ -1,10 +1,9 @@
-@import './vendor/normalize.css';
-@import './vendor/fonts/fonts.css';
+/* @import './vendor/normalize.css';
+@import './vendor/fonts/fonts.css'; */
 @import './vendor/constants.scss';
 
 
 body {
-  font-family: 'Inter', 'sans-serif';
   font-size: 16px;
   font-style: normal;
   color: var(--color-text-primary);
@@ -29,7 +28,6 @@ button:focus {
 ;
 
 button {
-  font-family: Inter;
   background: none;
   border: none;
   padding: 0;
