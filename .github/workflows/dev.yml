@@ -1,4 +1,4 @@
-name: Deploy Fronted Dashboard dev
+name: Deploy Fronted OrderCreate dev
 
 on:
   push:
