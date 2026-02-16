@@ -22,6 +22,7 @@ jobs:
 
     - name: Export environment variables and build
       run: |
+        # Экспортируем переменные в shell
         export REACT_APP_API_KEY_GEOSADGEST="${{ secrets.REACT_APP_API_KEY_GEOSADGEST }}"
         export REACT_APP_API_KEY_MAP="${{ secrets.REACT_APP_API_KEY_MAP }}"
         export REACT_APP_TOKEN_DADATA="${{ secrets.REACT_APP_TOKEN_DADATA }}"
@@ -31,6 +32,10 @@ jobs:
       env:
         NODE_ENV: development
         CI: false
+        REACT_APP_API_KEY_GEOSADGEST: ${{ secrets.REACT_APP_API_KEY_GEOSADGEST }}
+        REACT_APP_API_KEY_MAP: ${{ secrets.REACT_APP_API_KEY_MAP }}
+        REACT_APP_TOKEN_DADATA: ${{ secrets.REACT_APP_TOKEN_DADATA }}
+
 
     - name: Deploy to server # 5. Деплой на сервер (пример с SSH)
       uses: appleboy/scp-action@v0.1.7 # Популярный action для SCP
