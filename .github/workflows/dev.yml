@@ -25,8 +25,8 @@ jobs:
       env:
         NODE_ENV: development
         CI: false
-        REACT_APP_API_KEY_GEOSADGEST: '123123123123111111'
-        REACT_APP_API_KEY_MAP: '234234234'
+        REACT_APP_API_KEY_GEOSADGEST: ${{ secrets.REACT_APP_API_KEY_GEOSADGEST }}
+        REACT_APP_API_KEY_MAP: ${{ secrets.REACT_APP_API_KEY_MAP }}
         REACT_APP_TOKEN_DADATA: ${{ secrets.REACT_APP_TOKEN_DADATA }}
 
     - name: Deploy to server # 5. Деплой на сервер (пример с SSH)
