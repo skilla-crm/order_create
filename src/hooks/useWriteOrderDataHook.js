@@ -21,6 +21,7 @@ export const useWriteOrderDataHook = () => {
     const pro = document.getElementById(`root_order-create`).getAttribute('ispro') == 1 ? true : false;
     const [data, setData] = useState({})
     const dispatch = useDispatch();
+    console.log(data)
 
 
 
@@ -138,8 +139,8 @@ export const useWriteOrderDataHook = () => {
             dispatch(setSameTarification(data.work_unit_id === data.work_unit_id_worker ? true : false))
             dispatch(setExpectedAmountAll(data?.expected_amount ? data?.expected_amount * data.worker_count : ''))
             dispatch(setExpectedAmountWorkerAll(data?.expected_amount_worker ? data?.expected_amount_worker * data.worker_count : ''))
-            dispatch(setMinSum(data?.min_sum ? data?.min_sum : ''))
-            dispatch(setMinSumWorker(data?.min_sum_worker ? data?.min_sum_worker : ''))
+            dispatch(setMinSum(Number(data?.min_sum) ? Number(data?.min_sum) : ''))
+            dispatch(setMinSumWorker(Number(data?.min_sum_worker) ? Number(data?.min_sum_worker) : ''))
             data?.contract_tariff?.id ? dispatch(setContractTariffId(data?.contract_tariff?.id)) : dispatch(setTariffId(data?.tariff?.id))
             return
         }
