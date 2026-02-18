@@ -36,6 +36,7 @@ const Preview = () => {
         unit,
         unitWorker,
         expectedAmount,
+        expectedAmountAll,
         expectedAmountWorker,
         minAmount,
         minAmountWorker,
@@ -56,8 +57,8 @@ const Preview = () => {
         }
 
         if (unit != 1) {
-            const expectedSum = rate * expectedAmount * performersNum
-            expectedAmount ? setTotal(expectedSum) : setTotal('')
+            const expectedSum = rate * expectedAmountAll
+            expectedAmountAll ? setTotal(expectedSum) : setTotal('')
             setTotalMin(minSum * performersNum)
             dispatch(setOrderSum(expectedSum > minSum ? expectedSum : minSum))
             return
@@ -168,8 +169,8 @@ const Preview = () => {
                 <p>Итого</p>
                 <div className={`${s.item} ${s.item_total}`}>
                     {totalMin < total && totalMin && total ? <h2 className={s.title}>{addSpaceNumber(totalMin)} – {addSpaceNumber(total)} руб.</h2> : ''}
-                    {totalMin >= total && <h2 className={s.title}>{addSpaceNumber(totalMin)} руб.</h2>}
-                    {!totalMin && total && <h2 className={s.title}>{addSpaceNumber(total)} руб.</h2>}
+                    {totalMin >= total ? <h2 className={s.title}>{addSpaceNumber(totalMin)} руб.</h2> : ''}
+                    {!totalMin && total ? <h2 className={s.title}>{addSpaceNumber(total)} руб.</h2> : ''}
                     <Overlay active={!total && !totalMin} />
                 </div>
 

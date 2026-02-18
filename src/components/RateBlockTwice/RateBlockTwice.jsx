@@ -158,6 +158,8 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
                         maxValue={10}
                         errorText={'Укажи ставку'}
                     />
+                    <Field info={'Укажи предпологаемое кол-во для расчета стоимости заказа'}>
+                    </Field>
                 </div>
 
                 <div className={s.row}>
@@ -257,6 +259,9 @@ const RateBlockTwice = ({ fromPartnership, activeRatio, setActiveRatio, handleRe
                         maxValue={10}
                         errorText={'Укажи ставку'}
                     />
+
+                    <Field info={'Укажи предпологаемое кол-во для расчета стоимости заказа для исполнителя'}>
+                    </Field>
                 </div>
 
                 <div className={s.row}>
