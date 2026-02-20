@@ -52,13 +52,13 @@ const Rate = ({ id, name, customerBit, workerBit, min, handleResetRatio, fromPar
             min && Number(min) > 0 && (unit?.toLowerCase() === 'час' || unit?.toLowerCase() === 'ч' || unit?.toLowerCase() === 'ед') && dispatch(setMinDurqtion(Number(min)))
             handleResetRatio()
 
-            const stateUnit = unitList?.find(el => el.name?.toLowerCase() === unit?.toLowerCase())
+           /*  const stateUnit = unitList?.find(el => el.name?.toLowerCase() === unit?.toLowerCase())
 
             if (stateUnit) {
                 dispatch(setUnit(stateUnit.id))
                 dispatch(setUnitWorker(stateUnit.id))
             }
-
+ */
 
 
         }
